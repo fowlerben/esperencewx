@@ -1,4 +1,4 @@
-name: Update Weather
+name: Esperencewx
 
 on:
   schedule:
@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Fetch weather data
         run: |
@@ -25,9 +25,13 @@ jobs:
 
           curl -s "$URL" -o raw.json
 
-- name: Debug output
-  run: |
-    cat raw.json
+      - name: Extract data
+        run: |
+          jq '{
+            temperature: .sensors[0].data[0].temp,
+            humidity: .sensors[0].data[0].hum,
+            wind: .sensors[0].data[0].wind_speed_avg_last_1_min
+          }' raw.json > weather.json
 
       - name: Commit weather.json
         run: |
