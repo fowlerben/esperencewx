@@ -1,46 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Live Weather</title>
+  <title>My Weather Station</title>
   <style>
-    body {
-      font-family: Arial;
-      text-align: center;
-      background: #0b1c2c;
-      color: white;
-    }
-    .data-card {
-      margin: 20px auto;
+    body { font-family: Arial; text-align: center; }
+    .card {
+      display: inline-block;
       padding: 20px;
-      width: 300px;
-      background: #132f4c;
+      margin: 10px;
       border-radius: 10px;
-    }
-    h2 {
-      margin: 10px 0;
+      background: #f2f2f2;
     }
   </style>
 </head>
 <body>
 
-  <h1>My Weather Station</h1>
+<h1>Live Weather</h1>
 
-  <div class="data-card">
-    <h2>Temperature</h2>
-    <p id="temp">Loading...</p>
-  </div>
+<div class="card">
+  <h2>Temperature</h2>
+  <p id="temp">--</p>
+</div>
 
-  <div class="data-card">
-    <h2>Humidity</h2>
-    <p id="humidity">Loading...</p>
-  </div>
+<div class="card">
+  <h2>Humidity</h2>
+  <p id="humidity">--</p>
+</div>
 
-  <div class="data-card">
-    <h2>Wind Speed</h2>
-    <p id="wind">Loading...</p>
-  </div>
+<div class="card">
+  <h2>Wind Speed</h2>
+  <p id="wind">--</p>
+</div>
 
-  <script src="script.js"></script>
+<script>
+async function loadWeather() {
+  const response = await fetch("https://YOUR_BACKEND_URL/weather");
+  const data = await response.json();
+
+  document.getElementById("temp").innerText = data.temperature + " °C";
+  document.getElementById("humidity").innerText = data.humidity + " %";
+  document.getElementById("wind").innerText = data.wind_speed + " km/h";
+}
+
+// refresh every 30 seconds
+loadWeather();
+setInterval(loadWeather, 30000);
+</script>
 
 </body>
 </html>
