@@ -1,0 +1,34 @@
+name: Esperencewx
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  esperencewx:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Fetch weather data
+        run: |
+          TIMESTAMP=$(date +%s)
+
+          PARAMS="api-key${{ secrets.WL_API_KEY }}station-id${{ secrets.WL_STATION_ID }}t${TIMESTAMP}"
+
+          SIGNATURE=$(printf "%s" "$PARAMS" | openssl dgst -sha256 -hmac "${{ secrets.WL_API_SECRET }}" | awk '{print $2}')
+
+          URL="https://api.weatherlink.com/v2/current/${{ secrets.WL_STATION_ID }}?api-key=${{ secrets.WL_API_KEY }}&t=${TIMESTAMP}&api-signature=${SIGNATURE}"
+
+          curl -s "$URL" -o raw.json
+
+      - name: Show raw data debug
+        run: |
+          echo "===== RAW JSON BELOW ====="
+          cat raw.json
