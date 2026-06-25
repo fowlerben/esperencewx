@@ -1,19 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Weather Station</title>
+  <title>Live Weather</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: #0b1c2c;
+      color: white;
+    }
+    .data-card {
+      margin: 20px auto;
+      padding: 20px;
+      width: 300px;
+      background: #132f4c;
+      border-radius: 10px;
+    }
+    h2 {
+      margin: 10px 0;
+    }
+  </style>
 </head>
 <body>
 
-<h1>Live Weather Data</h1>
+  <h1>My Weather Station</h1>
 
-<div id="weather">
-    Loading data...
-</div>
+  <div class="data-card">
+    <h2>Temperature</h2>
+    <p id="temp">Loading...</p>
+  </div>
 
-<script>
-// YOUR API FETCH CODE WILL GO HERE
-</script>
+  <div class="data-card">
+    <h2>Humidity</h2>
+    <p id="humidity">Loading...</p>
+  </div>
+
+  <div class="data-card">
+    <h2>Wind Speed</h2>
+    <p id="wind">Loading...</p>
+  </div>
+
+  <script src="script.js"></script>
 
 </body>
 </html>
