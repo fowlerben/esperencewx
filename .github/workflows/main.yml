@@ -1,0 +1,12 @@
+name: Weather Runner
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print test message
+        run: echo "WORKFLOW IS RUNNING"
