@@ -1,5 +1,1 @@
-{
-  "temperature": null,
-  "humidity": null,
-  "wind": null
-}
+{"code":"404","message":"Unable to find weather station settings"}
