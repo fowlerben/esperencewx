@@ -25,13 +25,9 @@ jobs:
 
           curl -s "$URL" -o raw.json
 
-      - name: Extract data
-        run: |
-          jq '{
-            temperature: .sensors[0].data[0].temp,
-            humidity: .sensors[0].data[0].hum,
-            wind: .sensors[0].data[0].wind_speed_avg_last_1_min
-          }' raw.json > weather.json
+- name: Debug output
+  run: |
+    cat raw.json
 
       - name: Commit weather.json
         run: |
