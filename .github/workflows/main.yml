@@ -2,11 +2,34 @@ name: Weather Runner
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+
+permissions:
+  contents: write
 
 jobs:
-  test:
+  weather:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Print test message
-        run: echo "WORKFLOW IS RUNNING"
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch Weather
+        run: |
+          TIMESTAMP=$(date +%s)
+
+          PARAMS="api-key${{ secrets.WL_API_KEY }}station-id${{ secrets.WL_STATION_ID }}t${TIMESTAMP}"
+
+          SIGNATURE=$(printf "%s" "$PARAMS" | openssl dgst -sha256 -hmac "${{ secrets.WL_API_SECRET }}" | awk '{print $2}')
+
+          URL="https://api.weatherlink.com/v2/current/${{ secrets.WL_STATION_ID }}?api-key=${{ secrets.WL_API_KEY }}&t=${TIMESTAMP}&api-signature=${SIGNATURE}"
+
+          curl -s "$URL" -o raw.json
+
+      - name: ✅ SHOW RAW DATA
+        run: |
+          echo "===== RAW JSON BELOW ====="
+          cat raw.json
+``
