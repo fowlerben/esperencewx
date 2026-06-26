@@ -3,117 +3,155 @@ const apiKey = "d86cfab380f54255acfab380f5b255a0";
 
 const url = `https://api.weather.com/v2/pws/observations/current?stationId=${stationId}&format=json&units=m&apiKey=${apiKey}`;
 
+// --- helpers ---
+function format(v) {
+  if (v === undefined || v === null || isNaN(v)) return "N/A";
+  return parseFloat(v).toFixed(1);
+}
+
+function windDirToCompass(deg) {
+  if (!deg && deg !== 0) return "N/A";
+  const dirs = ["N","NE","E","SE","S","SW","W","NW"];
+  return dirs[Math.round(deg / 45) % 8];
+}
+
+// --- storage ---
 let history = JSON.parse(localStorage.getItem("history")) || [];
 
-// --- SAVE ---
+// --- save ---
 function saveHistory() {
   localStorage.setItem("history", JSON.stringify(history));
 }
 
-// --- ADD DATA ---
+// --- store observation ---
 function store(obs) {
-  const now = new Date();
-  const entry = {
-    time: now.toISOString(),
+  history.push({
+    time: new Date().toISOString(),
     temp: obs.metric?.temp,
     humidity: obs.humidity,
-    dew: obs.metric?.dewpt,
     wind: obs.metric?.windSpeed,
-    pressure: obs.metric?.pressure,
-    rain: obs.metric?.precipTotal,
-    solar: obs.solarRadiation,
-    uv: obs.uv
-  };
+    pressure: obs.metric?.pressure
+  });
 
-  history.push(entry);
-
-  // Keep ~3 days max
-  const cutoff = Date.now() - (3 * 86400000);
-  history = history.filter(d => new Date(d.time).getTime() > cutoff);
+  // keep only today
+  const today = new Date().toISOString().slice(0,10);
+  history = history.filter(d => d.time.startsWith(today));
 
   saveHistory();
 }
 
-// --- FILTER BY DATE ---
-function getDayData(dateStr) {
-  return history.filter(d => d.time.startsWith(dateStr));
+// --- chart cleanup ---
+let charts = [];
+
+function clearCharts() {
+  charts.forEach(c => c.destroy());
+  charts = [];
 }
 
-// --- EXTRACT SERIES ---
-function series(data, key) {
-  return data.map(d => ({
-    x: new Date(d.time),
-    y: d[key] ?? null
-  }));
-}
-
-// --- CREATE CHART ---
+// --- build chart ---
 function makeChart(id, label, data) {
-  new Chart(document.getElementById(id), {
-    type: 'line',
+  const chart = new Chart(document.getElementById(id), {
+    type: "line",
     data: {
       datasets: [{
-        label: label,
-        data: data,
-        borderColor: '#38bdf8',
+        label,
+        data,
+        borderColor: "#38bdf8",
         tension: 0.2
       }]
     },
     options: {
       parsing: false,
       scales: {
-        x: {
-          type: 'time',
-          time: {
-            unit: 'hour'
-          }
-        },
-        y: {
-          beginAtZero: false
-        }
+        x: { type: "time", time: { unit: "hour" } },
+        y: { beginAtZero: false }
       }
     }
   });
+
+  charts.push(chart);
 }
 
-// --- DRAW ALL ---
-function draw(dateStr) {
-  const data = getDayData(dateStr);
+// --- draw charts ---
+function drawCharts() {
+  if (history.length === 0) return;
 
-  if (data.length === 0) return;
+  clearCharts();
 
-  makeChart("tempChart", "Temperature", series(data, "temp"));
-  makeChart("humidityChart", "Humidity", series(data, "humidity"));
-  makeChart("dewChart", "Dew Point", series(data, "dew"));
-  makeChart("windChart", "Wind Speed", series(data, "wind"));
-  makeChart("pressureChart", "Pressure", series(data, "pressure"));
-  makeChart("rainChart", "Rainfall Total", series(data, "rain"));
-  makeChart("solarChart", "Solar Radiation", series(data, "solar"));
-  makeChart("uvChart", "UV Index", series(data, "uv"));
+  const mapSeries = key =>
+    history.map(d => ({ x: new Date(d.time), y: d[key] ?? null }));
+
+  makeChart("tempChart", "Temperature", mapSeries("temp"));
+  makeChart("humidityChart", "Humidity", mapSeries("humidity"));
+  makeChart("windChart", "Wind Speed", mapSeries("wind"));
+  makeChart("pressureChart", "Pressure", mapSeries("pressure"));
 }
 
-// --- FETCH LOOP ---
+// --- main load ---
 function loadWeather() {
   fetch(url)
     .then(res => res.json())
     .then(data => {
       const obs = data.observations[0];
+
+      // ✅ store history
       store(obs);
 
-      const today = new Date().toISOString().slice(0,10);
-      draw(today);
+      // ✅ LIVE DASHBOARD
+      const temp = format(obs.metric?.temp);
+      const humidity = format(obs.humidity);
+      const windSpeed = format(obs.metric?.windSpeed);
+      const pressure = format(obs.metric?.pressure);
+      const rain = format(obs.metric?.precipTotal);
+
+      const windDeg = obs.winddir;
+      let windDisplay = "N/A";
+
+      if (!isNaN(windDeg)) {
+        windDisplay = `${parseFloat(windDeg).toFixed(1)}° (${windDirToCompass(windDeg)})`;
+      }
+
+      document.getElementById("dashboard").innerHTML = `
+        <div class="grid">
+
+          <div class="card">
+            <div class="title">Temperature</div>
+            <div class="value">${temp}°C</div>
+          </div>
+
+          <div class="card">
+            <div class="title">Humidity</div>
+            <div class="value">${humidity}%</div>
+          </div>
+
+          <div class="card">
+            <div class="title">Wind</div>
+            <div class="value">${windSpeed} km/h</div>
+            <div class="small">${windDisplay}</div>
+          </div>
+
+          <div class="card">
+            <div class="title">Pressure</div>
+            <div class="value">${pressure} hPa</div>
+          </div>
+
+          <div class="card">
+            <div class="title">Rainfall Today</div>
+            <div class="value">${rain} mm</div>
+          </div>
+
+        </div>
+      `;
+
+      // ✅ redraw charts
+      drawCharts();
+    })
+    .catch(() => {
+      document.getElementById("dashboard").innerText =
+        "Error loading weather data";
     });
 }
 
-// --- DATE PICKER ---
-const picker = document.getElementById("datePicker");
-const todayStr = new Date().toISOString().slice(0,10);
-picker.value = todayStr;
-
-picker.addEventListener("change", () => {
-  draw(picker.value);
-});
-
-// --- RUN ---
+// run
 loadWeather();
 setInterval(loadWeather, 15000);
