@@ -4,12 +4,16 @@ const apiKey = "d86cfab380f54255acfab380f5b255a0";
 const url = `https://api.weather.com/v2/pws/observations/current?stationId=${stationId}&format=json&units=m&apiKey=${apiKey}`;
 
 function format(value) {
-  if (value === undefined || value === null || isNaN(value)) return "N/A";
+  if (value === undefined || value === null || isNaN(value)) {
+    return "N/A";
+  }
   return parseFloat(value).toFixed(1);
 }
 
+// ✅ Compass conversion
 function windDirToCompass(deg) {
   if (deg === undefined || deg === null || isNaN(deg)) return "N/A";
+
   const dirs = ["N","NE","E","SE","S","SW","W","NW"];
   return dirs[Math.round(deg / 45) % 8];
 }
@@ -22,70 +26,54 @@ function loadWeather() {
 
       const temp = format(obs.metric?.temp);
       const humidity = format(obs.humidity);
-      const dew = format(obs.metric?.dewpt);
-      const wind = format(obs.metric?.windSpeed);
+      const dewPoint = format(obs.metric?.dewpt);
+
+      const windSpeed = format(obs.metric?.windSpeed);
+
+      // ✅ Wind direction (fixed)
+      const windDeg = obs.winddir;
+      let windDisplay = "N/A";
+
+      if (windDeg !== undefined && !isNaN(windDeg)) {
+        const compass = windDirToCompass(windDeg);
+        windDisplay = `${parseFloat(windDeg).toFixed(1)}° (${compass})`;
+      }
+
       const pressure = format(obs.metric?.pressure);
-      const rain = format(obs.metric?.precipTotal);
+
+      // ✅ Rainfall = TODAY
+      const rainfallToday = format(obs.metric?.precipTotal);
+
       const solar = format(obs.solarRadiation);
       const uv = format(obs.uv);
 
-      let windDisplay = "N/A";
-      if (!isNaN(obs.winddir)) {
-        windDisplay =
-          `${parseFloat(obs.winddir).toFixed(1)}° (${windDirToCompass(obs.winddir)})`;
-      }
-
       document.getElementById("weather").innerHTML = `
-        <div class="grid">
+        <h2>Current Conditions</h2>
 
-          <div class="card">
-            <div class="title">Temperature</div>
-            <div class="value">${temp}°C</div>
-          </div>
+        <p><strong>Temperature:</strong> ${temp} °C</p>
+        <p><strong>Humidity:</strong> ${humidity} %</p>
+        <p><strong>Dew Point:</strong> ${dewPoint} °C</p>
 
-          <div class="card">
-            <div class="title">Humidity</div>
-            <div class="value">${humidity}%</div>
-          </div>
+        <p><strong>Wind:</strong> ${windSpeed} km/h (${windDisplay})</p>
 
-          <div class="card">
-            <div class="title">Dew Point</div>
-            <div class="value">${dew}°C</div>
-          </div>
+        <p><strong>Pressure:</strong> ${pressure} hPa</p>
 
-          <div class="card">
-            <div class="title">Wind</div>
-            <div class="value">${wind} km/h</div>
-            <div>${windDisplay}</div>
-          </div>
+        <h3>Rain</h3>
+        <p><strong>Rainfall Today:</strong> ${rainfallToday} mm</p>
 
-          <div class="card">
-            <div class="title">Pressure</div>
-            <div class="value">${pressure} hPa</div>
-          </div>
-
-          <div class="card">
-            <div class="title">Rainfall Today</div>
-            <div class="value">${rain} mm</div>
-          </div>
-
-          <div class="card">
-            <div class="title">Solar Radiation</div>
-            <div class="value">${solar}</div>
-          </div>
-
-          <div class="card">
-            <div class="title">UV Index</div>
-            <div class="value">${uv}</div>
-          </div>
-
-        </div>
+        <h3>Solar</h3>
+        <p><strong>Solar Radiation:</strong> ${solar} W/m²</p>
+        <p><strong>UV Index:</strong> ${uv}</p>
       `;
     })
     .catch(() => {
-      document.getElementById("weather").innerText = "Error loading data";
+      document.getElementById("weather").innerText =
+        "Error loading weather data";
     });
 }
 
+// ✅ Run once
 loadWeather();
+
+// ✅ Refresh every 15 seconds
 setInterval(loadWeather, 15000);
