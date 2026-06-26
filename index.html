@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Esperence Weather</title>
+  <title>Esperence Weather Station</title>
 
   <style>
     body {
@@ -15,6 +15,7 @@
 
     h1 {
       text-align: center;
+      margin-bottom: 20px;
     }
 
     .grid {
@@ -32,26 +33,30 @@
     .title {
       font-size: 14px;
       color: #94a3b8;
+      margin-bottom: 5px;
     }
 
     .value {
-      font-size: 30px;
+      font-size: 32px;
       font-weight: bold;
     }
 
     .small {
       font-size: 14px;
       color: #cbd5f5;
+      margin-top: 5px;
     }
   </style>
 </head>
+
 <body>
 
 <h1>Esperence Weather Station</h1>
 
-<div id="weather">Loading...</div>
+<div id="weather">Loading data...</div>
 
-<script src="script_restart.js"></script>
+<!-- ✅ CORRECT SCRIPT TAG (this was breaking everything before) -->
+<script src="script_working.js"></script>
 
 </body>
 </html>
