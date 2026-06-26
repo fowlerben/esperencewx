@@ -16,7 +16,7 @@ function windDirToCompass(deg) {
   return dirs[Math.round(deg / 45) % 8];
 }
 
-// ✅ Daily extremes storage (now includes solar + UV)
+// ✅ LOAD FROM LOCAL STORAGE
 let extremes = {
   tempMax: null,
   tempMin: null,
@@ -33,9 +33,21 @@ let extremes = {
   day: new Date().getDate()
 };
 
+const saved = localStorage.getItem("extremes");
+if (saved) {
+  try {
+    extremes = JSON.parse(saved);
+  } catch {}
+}
+
+function saveExtremes() {
+  localStorage.setItem("extremes", JSON.stringify(extremes));
+}
+
 function updateExtremes(obs) {
   const today = new Date().getDate();
 
+  // Reset at midnight
   if (extremes.day !== today) {
     extremes = {
       tempMax: null,
@@ -98,6 +110,9 @@ function updateExtremes(obs) {
   if (!isNaN(uv)) {
     extremes.uvMax = extremes.uvMax === null ? uv : Math.max(extremes.uvMax, uv);
   }
+
+  // ✅ SAVE AFTER UPDATE
+  saveExtremes();
 }
 
 function loadWeather() {
