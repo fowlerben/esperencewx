@@ -2,50 +2,15 @@
 <html>
 <head>
   <title>My Weather Station</title>
-  <style>
-    body { font-family: Arial; text-align: center; }
-    .card {
-      display: inline-block;
-      padding: 20px;
-      margin: 10px;
-      border-radius: 10px;
-      background: #f2f2f2;
-    }
-  </style>
 </head>
 <body>
+  <h1>My Weather Station</h1>
+  
+  <div id="weather">
+    Loading data...
+  </div>
 
-<h1>Live Weather</h1>
-
-<div class="card">
-  <h2>Temperature</h2>
-  <p id="temp">--</p>
-</div>
-
-<div class="card">
-  <h2>Humidity</h2>
-  <p id="humidity">--</p>
-</div>
-
-<div class="card">
-  <h2>Wind Speed</h2>
-  <p id="wind">--</p>
-</div>
-
-<script>
-async function loadWeather() {
-  const response = await fetch("https://YOUR_BACKEND_URL/weather");
-  const data = await response.json();
-
-  document.getElementById("temp").innerText = data.temperature + " °C";
-  document.getElementById("humidity").innerText = data.humidity + " %";
-  document.getElementById("wind").innerText = data.wind_speed + " km/h";
-}
-
-// refresh every 30 seconds
-loadWeather();
-setInterval(loadWeather, 30000);
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
+``
