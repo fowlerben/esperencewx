@@ -3,118 +3,95 @@ const apiKey = "d86cfab380f54255acfab380f5b255a0";
 
 const url = `https://api.weather.com/v2/pws/observations/current?stationId=${stationId}&format=json&units=m&apiKey=${apiKey}`;
 
+// --- Format helper ---
 function format(value) {
-  if (value === undefined || value === null || isNaN(value)) {
-    return "N/A";
-  }
+  if (value === undefined || value === null || isNaN(value)) return "N/A";
   return parseFloat(value).toFixed(1);
 }
 
+// --- Wind compass ---
 function windDirToCompass(deg) {
   if (deg === undefined || deg === null || isNaN(deg)) return "N/A";
   const dirs = ["N","NE","E","SE","S","SW","W","NW"];
   return dirs[Math.round(deg / 45) % 8];
 }
 
-// ✅ LOAD FROM LOCAL STORAGE
-let extremes = {
-  tempMax: null,
-  tempMin: null,
-  dpMax: null,
-  dpMin: null,
-  humMax: null,
-  humMin: null,
-  windMax: null,
-  gustMax: null,
-  pressureMax: null,
-  pressureMin: null,
-  solarMax: null,
-  uvMax: null,
+// --- LOAD STORAGE ---
+let extremes = JSON.parse(localStorage.getItem("extremes")) || {
   day: new Date().getDate()
 };
 
-const saved = localStorage.getItem("extremes");
-if (saved) {
-  try {
-    extremes = JSON.parse(saved);
-  } catch {}
-}
+let rainHistory = JSON.parse(localStorage.getItem("rainHistory")) || [];
 
-function saveExtremes() {
+// --- SAVE FUNCTIONS ---
+function saveData() {
   localStorage.setItem("extremes", JSON.stringify(extremes));
+  localStorage.setItem("rainHistory", JSON.stringify(rainHistory));
 }
 
-function updateExtremes(obs) {
+// --- RESET DAILY EXTREMES ---
+function resetIfNewDay() {
   const today = new Date().getDate();
-
-  // Reset at midnight
   if (extremes.day !== today) {
-    extremes = {
-      tempMax: null,
-      tempMin: null,
-      dpMax: null,
-      dpMin: null,
-      humMax: null,
-      humMin: null,
-      windMax: null,
-      gustMax: null,
-      pressureMax: null,
-      pressureMin: null,
-      solarMax: null,
-      uvMax: null,
-      day: today
-    };
+    extremes = { day: today };
   }
-
-  const temp = obs.metric?.temp;
-  const dp = obs.metric?.dewpt;
-  const hum = obs.humidity;
-  const wind = obs.metric?.windSpeed;
-  const gust = obs.metric?.windGust;
-  const pressure = obs.metric?.pressure;
-  const solar = obs.solarRadiation;
-  const uv = obs.uv;
-
-  if (!isNaN(temp)) {
-    extremes.tempMax = extremes.tempMax === null ? temp : Math.max(extremes.tempMax, temp);
-    extremes.tempMin = extremes.tempMin === null ? temp : Math.min(extremes.tempMin, temp);
-  }
-
-  if (!isNaN(dp)) {
-    extremes.dpMax = extremes.dpMax === null ? dp : Math.max(extremes.dpMax, dp);
-    extremes.dpMin = extremes.dpMin === null ? dp : Math.min(extremes.dpMin, dp);
-  }
-
-  if (!isNaN(hum)) {
-    extremes.humMax = extremes.humMax === null ? hum : Math.max(extremes.humMax, hum);
-    extremes.humMin = extremes.humMin === null ? hum : Math.min(extremes.humMin, hum);
-  }
-
-  if (!isNaN(wind)) {
-    extremes.windMax = extremes.windMax === null ? wind : Math.max(extremes.windMax, wind);
-  }
-
-  if (!isNaN(gust)) {
-    extremes.gustMax = extremes.gustMax === null ? gust : Math.max(extremes.gustMax, gust);
-  }
-
-  if (!isNaN(pressure)) {
-    extremes.pressureMax = extremes.pressureMax === null ? pressure : Math.max(extremes.pressureMax, pressure);
-    extremes.pressureMin = extremes.pressureMin === null ? pressure : Math.min(extremes.pressureMin, pressure);
-  }
-
-  if (!isNaN(solar)) {
-    extremes.solarMax = extremes.solarMax === null ? solar : Math.max(extremes.solarMax, solar);
-  }
-
-  if (!isNaN(uv)) {
-    extremes.uvMax = extremes.uvMax === null ? uv : Math.max(extremes.uvMax, uv);
-  }
-
-  // ✅ SAVE AFTER UPDATE
-  saveExtremes();
 }
 
+// --- UPDATE EXTREMES ---
+function updateExtremes(obs) {
+  resetIfNewDay();
+
+  function update(key, value, type = "max") {
+    if (isNaN(value)) return;
+    if (extremes[key] === undefined) extremes[key] = value;
+
+    if (type === "max") extremes[key] = Math.max(extremes[key], value);
+    if (type === "min") extremes[key] = Math.min(extremes[key], value);
+  }
+
+  update("tempMax", obs.metric?.temp, "max");
+  update("tempMin", obs.metric?.temp, "min");
+
+  update("dpMax", obs.metric?.dewpt, "max");
+  update("dpMin", obs.metric?.dewpt, "min");
+
+  update("humMax", obs.humidity, "max");
+  update("humMin", obs.humidity, "min");
+
+  update("windMax", obs.metric?.windSpeed);
+  update("gustMax", obs.metric?.windGust);
+
+  update("pressureMax", obs.metric?.pressure, "max");
+  update("pressureMin", obs.metric?.pressure, "min");
+
+  update("solarMax", obs.solarRadiation);
+  update("uvMax", obs.uv);
+}
+
+// --- RAIN CALCULATIONS ---
+function updateRain(obs) {
+  const now = Date.now();
+  const total = Number(obs.metric?.precipTotal) || 0;
+
+  rainHistory.push({ time: now, total });
+
+  // Keep last 24 hours
+  rainHistory = rainHistory.filter(r => now - r.time < 86400000);
+}
+
+function calcRain(ms) {
+  const now = Date.now();
+  const current = rainHistory[rainHistory.length - 1];
+
+  if (!current) return 0;
+
+  const past = rainHistory.find(r => now - r.time >= ms);
+  if (!past) return 0;
+
+  return Math.max(0, current.total - past.total);
+}
+
+// --- MAIN LOAD ---
 function loadWeather() {
   fetch(url)
     .then(res => res.json())
@@ -122,23 +99,29 @@ function loadWeather() {
       const obs = data.observations[0];
 
       updateExtremes(obs);
+      updateRain(obs);
+      saveData();
 
       const temp = format(obs.metric?.temp);
       const humidity = format(obs.humidity);
       const dewPoint = format(obs.metric?.dewpt);
+
       const windSpeed = format(obs.metric?.windSpeed);
-
       const windDeg = obs.winddir;
-      let windDisplay = "N/A";
 
-      if (windDeg !== undefined && !isNaN(windDeg)) {
+      let windDisplay = "N/A";
+      if (!isNaN(windDeg)) {
         windDisplay = `${parseFloat(windDeg).toFixed(1)}° (${windDirToCompass(windDeg)})`;
       }
 
       const pressure = format(obs.metric?.pressure);
-      const rainfall = format(obs.metric?.precipTotal);
+      const rainToday = format(obs.metric?.precipTotal);
       const solar = format(obs.solarRadiation);
       const uv = format(obs.uv);
+
+      const rain15 = format(calcRain(15 * 60 * 1000));
+      const rain1h = format(calcRain(60 * 60 * 1000));
+      const rain24 = format(calcRain(24 * 60 * 60 * 1000));
 
       document.getElementById("weather").innerHTML = `
         <div class="grid">
@@ -176,7 +159,8 @@ function loadWeather() {
 
           <div class="card">
             <div class="title">Rainfall Today</div>
-            <div class="value">${rainfall} mm</div>
+            <div class="value">${rainToday} mm</div>
+            <div class="small">15m: ${rain15} | 1h: ${rain1h} | 24h: ${rain24}</div>
           </div>
 
           <div class="card">
