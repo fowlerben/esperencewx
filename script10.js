@@ -186,7 +186,8 @@ function loadWeather() {
       `;
     })
     .catch(() => {
-      document.getElementById("weather").innerText = "Error loading weather data";
+      document.getElementById("weather").innerText =
+        "Error loading weather data";
     });
 }
 
