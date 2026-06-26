@@ -1,6 +1,6 @@
 // 🔴 STEP 1: PUT YOUR DETAILS HERE
 const stationId = "IGEELO181";  
-const apiKey = "DXzF45W4";
+const apiKey = "d86cfab380f54255acfab380f5b255a0";
 
 
 // 🔴 STEP 2: BUILD THE API URL
