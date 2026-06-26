@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <title>Esperence Weather</title>
 
-  <!-- ✅ FIXED Chart.js -->
-  <script src="https://net/npm/chart.js</script>
+  <!-- ✅ Proper Chart.js import -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     body {
@@ -65,3 +65,19 @@
 
 <body>
 
+<h1>Esperence Weather</h1>
+
+<div id="dashboard">Loading...</div>
+
+<div class="charts">
+  <canvas id="tempChart"></canvas>
+  <canvas id="humidityChart"></canvas>
+  <canvas id="windChart"></canvas>
+  <canvas id="pressureChart"></canvas>
+</div>
+
+<!-- ✅ THIS LINE IS THE CRITICAL FIX -->
+<script src="script9.js"></script>
+
+</body>
+</html>
