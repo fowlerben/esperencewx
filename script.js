@@ -10,7 +10,7 @@ function format(value) {
   return parseFloat(value).toFixed(1);
 }
 
-// ✅ Compass
+// ✅ Compass conversion
 function windDirToCompass(deg) {
   if (deg === undefined || deg === null || isNaN(deg)) return "N/A";
   const dirs = ["N","NE","E","SE","S","SW","W","NW"];
@@ -102,6 +102,7 @@ function loadWeather() {
 
       const windSpeed = format(obs.metric?.windSpeed);
 
+      // ✅ Wind direction
       const windDeg = obs.winddir;
       let windDisplay = "N/A";
 
@@ -143,6 +144,8 @@ function loadWeather() {
     });
 }
 
-// ✅ Run + refresh
+// ✅ Run immediately
 loadWeather();
+
+// ✅ Refresh every 15 seconds
 setInterval(loadWeather, 15000);
