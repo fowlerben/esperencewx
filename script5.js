@@ -16,6 +16,7 @@ function windDirToCompass(deg) {
   return dirs[Math.round(deg / 45) % 8];
 }
 
+// ✅ Daily extremes storage (now includes solar + UV)
 let extremes = {
   tempMax: null,
   tempMin: null,
@@ -27,6 +28,8 @@ let extremes = {
   gustMax: null,
   pressureMax: null,
   pressureMin: null,
+  solarMax: null,
+  uvMax: null,
   day: new Date().getDate()
 };
 
@@ -34,12 +37,21 @@ function updateExtremes(obs) {
   const today = new Date().getDate();
 
   if (extremes.day !== today) {
-    extremes.day = today;
-    extremes.tempMax = extremes.tempMin =
-    extremes.dpMax = extremes.dpMin =
-    extremes.humMax = extremes.humMin =
-    extremes.windMax = extremes.gustMax =
-    extremes.pressureMax = extremes.pressureMin = null;
+    extremes = {
+      tempMax: null,
+      tempMin: null,
+      dpMax: null,
+      dpMin: null,
+      humMax: null,
+      humMin: null,
+      windMax: null,
+      gustMax: null,
+      pressureMax: null,
+      pressureMin: null,
+      solarMax: null,
+      uvMax: null,
+      day: today
+    };
   }
 
   const temp = obs.metric?.temp;
@@ -48,6 +60,8 @@ function updateExtremes(obs) {
   const wind = obs.metric?.windSpeed;
   const gust = obs.metric?.windGust;
   const pressure = obs.metric?.pressure;
+  const solar = obs.solarRadiation;
+  const uv = obs.uv;
 
   if (!isNaN(temp)) {
     extremes.tempMax = extremes.tempMax === null ? temp : Math.max(extremes.tempMax, temp);
@@ -75,6 +89,14 @@ function updateExtremes(obs) {
   if (!isNaN(pressure)) {
     extremes.pressureMax = extremes.pressureMax === null ? pressure : Math.max(extremes.pressureMax, pressure);
     extremes.pressureMin = extremes.pressureMin === null ? pressure : Math.min(extremes.pressureMin, pressure);
+  }
+
+  if (!isNaN(solar)) {
+    extremes.solarMax = extremes.solarMax === null ? solar : Math.max(extremes.solarMax, solar);
+  }
+
+  if (!isNaN(uv)) {
+    extremes.uvMax = extremes.uvMax === null ? uv : Math.max(extremes.uvMax, uv);
   }
 }
 
@@ -144,12 +166,14 @@ function loadWeather() {
 
           <div class="card">
             <div class="title">Solar Radiation</div>
-            <div class="value">${solar}</div>
+            <div class="value">${solar} W/m²</div>
+            <div class="small">Max ${format(extremes.solarMax)}</div>
           </div>
 
           <div class="card">
             <div class="title">UV Index</div>
             <div class="value">${uv}</div>
+            <div class="small">Max ${format(extremes.uvMax)}</div>
           </div>
 
         </div>
