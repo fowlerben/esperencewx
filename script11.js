@@ -10,14 +10,12 @@ function format(value) {
   return parseFloat(value).toFixed(1);
 }
 
-// ✅ Compass conversion
 function windDirToCompass(deg) {
   if (deg === undefined || deg === null || isNaN(deg)) return "N/A";
   const dirs = ["N","NE","E","SE","S","SW","W","NW"];
   return dirs[Math.round(deg / 45) % 8];
 }
 
-// ✅ Daily extremes storage
 let extremes = {
   tempMax: null,
   tempMin: null,
@@ -35,21 +33,13 @@ let extremes = {
 function updateExtremes(obs) {
   const today = new Date().getDate();
 
-  // Reset at midnight
   if (extremes.day !== today) {
-    extremes = {
-      tempMax: null,
-      tempMin: null,
-      dpMax: null,
-      dpMin: null,
-      humMax: null,
-      humMin: null,
-      windMax: null,
-      gustMax: null,
-      pressureMax: null,
-      pressureMin: null,
-      day: today
-    };
+    extremes.day = today;
+    extremes.tempMax = extremes.tempMin =
+    extremes.dpMax = extremes.dpMin =
+    extremes.humMax = extremes.humMin =
+    extremes.windMax = extremes.gustMax =
+    extremes.pressureMax = extremes.pressureMin = null;
   }
 
   const temp = obs.metric?.temp;
@@ -99,53 +89,76 @@ function loadWeather() {
       const temp = format(obs.metric?.temp);
       const humidity = format(obs.humidity);
       const dewPoint = format(obs.metric?.dewpt);
-
       const windSpeed = format(obs.metric?.windSpeed);
 
-      // ✅ Wind direction
       const windDeg = obs.winddir;
       let windDisplay = "N/A";
 
       if (windDeg !== undefined && !isNaN(windDeg)) {
-        const compass = windDirToCompass(windDeg);
-        windDisplay = `${parseFloat(windDeg).toFixed(1)}° (${compass})`;
+        windDisplay = `${parseFloat(windDeg).toFixed(1)}° (${windDirToCompass(windDeg)})`;
       }
 
       const pressure = format(obs.metric?.pressure);
-      const rainfallToday = format(obs.metric?.precipTotal);
-
+      const rainfall = format(obs.metric?.precipTotal);
       const solar = format(obs.solarRadiation);
       const uv = format(obs.uv);
 
       document.getElementById("weather").innerHTML = `
-        <h2>Current Conditions</h2>
+        <div class="grid">
 
-        <p><strong>Temperature:</strong> ${temp} °C (Max: ${format(extremes.tempMax)} / Min: ${format(extremes.tempMin)})</p>
-        <p><strong>Humidity:</strong> ${humidity} % (Max: ${format(extremes.humMax)} / Min: ${format(extremes.humMin)})</p>
-        <p><strong>Dew Point:</strong> ${dewPoint} °C (Max: ${format(extremes.dpMax)} / Min: ${format(extremes.dpMin)})</p>
+          <div class="card">
+            <div class="title">Temperature</div>
+            <div class="value">${temp}°</div>
+            <div class="small">Max ${format(extremes.tempMax)} / Min ${format(extremes.tempMin)}</div>
+          </div>
 
-        <p><strong>Wind:</strong> ${windSpeed} km/h (${windDisplay})</p>
-        <p><strong>Max Wind:</strong> ${format(extremes.windMax)} km/h</p>
-        <p><strong>Max Gust:</strong> ${format(extremes.gustMax)} km/h</p>
+          <div class="card">
+            <div class="title">Humidity</div>
+            <div class="value">${humidity}%</div>
+            <div class="small">Max ${format(extremes.humMax)} / Min ${format(extremes.humMin)}</div>
+          </div>
 
-        <p><strong>Pressure:</strong> ${pressure} hPa (Max: ${format(extremes.pressureMax)} / Min: ${format(extremes.pressureMin)})</p>
+          <div class="card">
+            <div class="title">Dew Point</div>
+            <div class="value">${dewPoint}°</div>
+            <div class="small">Max ${format(extremes.dpMax)} / Min ${format(extremes.dpMin)}</div>
+          </div>
 
-        <h3>Rain</h3>
-        <p><strong>Rainfall Today:</strong> ${rainfallToday} mm</p>
+          <div class="card">
+            <div class="title">Wind</div>
+            <div class="value">${windSpeed} km/h</div>
+            <div class="small">${windDisplay}</div>
+            <div class="small">Max ${format(extremes.windMax)} | Gust ${format(extremes.gustMax)}</div>
+          </div>
 
-        <h3>Solar</h3>
-        <p><strong>Solar Radiation:</strong> ${solar} W/m²</p>
-        <p><strong>UV Index:</strong> ${uv}</p>
+          <div class="card">
+            <div class="title">Pressure</div>
+            <div class="value">${pressure} hPa</div>
+            <div class="small">Max ${format(extremes.pressureMax)} / Min ${format(extremes.pressureMin)}</div>
+          </div>
+
+          <div class="card">
+            <div class="title">Rainfall Today</div>
+            <div class="value">${rainfall} mm</div>
+          </div>
+
+          <div class="card">
+            <div class="title">Solar Radiation</div>
+            <div class="value">${solar}</div>
+          </div>
+
+          <div class="card">
+            <div class="title">UV Index</div>
+            <div class="value">${uv}</div>
+          </div>
+
+        </div>
       `;
     })
     .catch(() => {
-      document.getElementById("weather").innerText =
-        "Error loading weather data";
+      document.getElementById("weather").innerText = "Error loading weather data";
     });
 }
 
-// ✅ Run immediately
 loadWeather();
-
-// ✅ Refresh every 15 seconds
 setInterval(loadWeather, 15000);
