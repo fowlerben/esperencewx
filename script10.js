@@ -16,7 +16,7 @@ function windDirToCompass(deg) {
   return dirs[Math.round(deg / 45) % 8];
 }
 
-// ✅ Load stored extremes
+// ✅ Load saved extremes
 let extremes = JSON.parse(localStorage.getItem("extremes")) || {
   tempMax: null,
   tempMin: null,
