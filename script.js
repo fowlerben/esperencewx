@@ -10,47 +10,37 @@ function format(value) {
   return Number(value).toFixed(1);
 }
 
-fetch(url)
-  .then(res => res.json())
-  .then(data => {
-    const obs = data.observations[0];
+// --- Wind direction to compass ---
+function windDirToCompass(deg) {
+  if (deg === undefined || deg === null) return "N/A";
+  const dirs = ["N","NE","E","SE","S","SW","W","NW"];
+  return dirs[Math.round(deg / 45) % 8];
+}
 
-    const temp = format(obs.metric?.temp);
-    const humidity = format(obs.humidity);
+// --- Rain storage ---
+let rainHistory = []; // {time, total}
 
-    const windSpeed = format(obs.metric?.windSpeed);
-    const windDir = format(obs.winddir);
+// --- Load function ---
+function loadWeather() {
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      const obs = data.observations[0];
 
-    const pressure = format(obs.metric?.pressure);
-    const dewPoint = format(obs.metric?.dewpt);
+      const now = Date.now();
+      const rainTotalRaw = obs.metric?.precipTotal || 0;
 
-    const rainRate = format(obs.metric?.precipRate);
-    const rainTotal = format(obs.metric?.precipTotal);
+      // --- Store rainfall history ---
+      rainHistory.push({ time: now, total: rainTotalRaw });
 
-    const solar = format(obs.solarRadiation);
-    const uv = format(obs.uv);
+      // Keep only last 24h
+      rainHistory = rainHistory.filter(r => now - r.time < 86400000);
 
-    document.getElementById("weather").innerHTML = `
-      <h2>Current Conditions</h2>
+      // --- Helper: calculate rainfall over period ---
+      function calcRain(ms) {
+        const past = rainHistory.find(r => now - r.time >= ms);
+        if (!past) return 0;
+        return rainTotalRaw - past.total;
+      }
 
-      <p><strong>Temperature:</strong> ${temp} °C</p>
-      <p><strong>Humidity:</strong> ${humidity} %</p>
-      <p><strong>Dew Point:</strong> ${dewPoint} °C</p>
-
-      <p><strong>Wind:</strong> ${windSpeed} km/h (${windDir}°)</p>
-
-      <p><strong>Pressure:</strong> ${pressure} hPa</p>
-
-      <h3>Rain</h3>
-      <p><strong>Rate:</strong> ${rainRate} mm/hr</p>
-      <p><strong>Total:</strong> ${rainTotal} mm</p>
-
-      <h3>Solar</h3>
-      <p><strong>Solar Radiation:</strong> ${solar} W/m²</p>
-      <p><strong>UV Index:</strong> ${uv}</p>
-    `;
-  })
-  .catch(err => {
-    console.error(err);
-    document.getElementById("weather").innerText = "Error loading weather data";
-  });
+      const rain15m = calcRain(15 * 60 * 1000);
