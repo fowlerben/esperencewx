@@ -75,7 +75,6 @@ function updateRain(obs) {
 
   rainHistory.push({ time: now, total });
 
-  // Keep last 24 hours
   rainHistory = rainHistory.filter(r => now - r.time < 86400000);
 }
 
