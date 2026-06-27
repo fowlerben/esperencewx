@@ -71,7 +71,6 @@
 
 <script>
 
-// conversions
 function toC(f) { return ((f - 32) * 5/9).toFixed(1); }
 function mphToKmh(m) { return (m * 1.60934).toFixed(1); }
 function inToMm(i) { return (i * 25.4).toFixed(1); }
@@ -83,78 +82,109 @@ function degToCompass(deg) {
   return dirs[Math.round(deg / 22.5) % 16];
 }
 
-// ✅ clock
 function updateTime() {
   document.getElementById("time").innerText =
     new Date().toLocaleString("en-AU", { timeZone: "Australia/Brisbane" });
 }
+
 setInterval(updateTime, 1000);
 updateTime();
 
-// ✅ main logic
 async function loadWeather() {
 
   const res = await fetch("/esperencewx/weather.json?" + Date.now());
   const data = await res.json();
 
-  let vals = {};
+  let iss = null;
+  let wind = null;
+  let baro = null;
+  let solar = null;
 
   data.sensors.forEach(sensor => {
+
     if (!sensor.data) return;
 
     const d = sensor.data[0];
 
-    Object.keys(d).forEach(key => {
-      if (d[key] !== null && d[key] !== undefined) {
-        vals[key] = d[key];
-      }
-    });
+    // ✅ ISS (main sensor ONLY)
+    if (d.temp !== undefined && d.hum !== undefined) {
+      iss = d;
+    }
+
+    // ✅ wind sensor
+    if (d.wind_speed_avg_last_10_min !== undefined) {
+      wind = d;
+    }
+
+    // ✅ barometer
+    if (d.bar_sea_level !== undefined) {
+      baro = d;
+    }
+
+    // ✅ solar
+    if (d.solar_rad !== undefined) {
+      solar = d;
+    }
+
   });
 
-  document.getElementById("temp").innerText = vals.temp ? toC(vals.temp)+" °C" : "N/A";
-  document.getElementById("dew").innerText = vals.dew_point ? toC(vals.dew_point)+" °C" : "N/A";
-  document.getElementById("heat").innerText = vals.heat_index ? toC(vals.heat_index)+" °C" : "N/A";
-  document.getElementById("chill").innerText = vals.wind_chill ? toC(vals.wind_chill)+" °C" : "N/A";
-  document.getElementById("thw").innerText = vals.thw_index ? toC(vals.thw_index)+" °C" : "N/A";
-  document.getElementById("thsw").innerText = vals.thsw_index ? toC(vals.thsw_index)+" °C" : "N/A";
+  if (!iss) return;
 
-  document.getElementById("hum").innerText = vals.hum ? vals.hum+" %" : "N/A";
-  document.getElementById("pressure").innerText = vals.bar_sea_level ? inHgToHpa(vals.bar_sea_level)+" hPa" : "N/A";
+  // ✅ ISS values (restored correctly)
+  document.getElementById("temp").innerText = toC(iss.temp) + " °C";
+  document.getElementById("dew").innerText = iss.dew_point ? toC(iss.dew_point) + " °C" : "N/A";
+  document.getElementById("heat").innerText = iss.heat_index ? toC(iss.heat_index) + " °C" : "N/A";
+  document.getElementById("chill").innerText = iss.wind_chill ? toC(iss.wind_chill) + " °C" : "N/A";
+  document.getElementById("thw").innerText = iss.thw_index ? toC(iss.thw_index) + " °C" : "N/A";
+  document.getElementById("thsw").innerText = iss.thsw_index ? toC(iss.thsw_index) + " °C" : "N/A";
 
-  document.getElementById("solar").innerText = vals.solar_rad ? vals.solar_rad+" W/m²" : "N/A";
-  document.getElementById("uv").innerText = vals.uv_index ?? "N/A";
+  document.getElementById("hum").innerText = iss.hum + " %";
 
-  document.getElementById("rain_rate").innerText = vals.rain_rate ? inToMm(vals.rain_rate)+" mm/hr" : "0";
-  document.getElementById("rain15").innerText = vals.rainfall_last_15_min ? inToMm(vals.rainfall_last_15_min)+" mm" : "0";
-  document.getElementById("rain60").innerText = vals.rainfall_last_60_min ? inToMm(vals.rainfall_last_60_min)+" mm" : "0";
-  document.getElementById("rainday").innerText = vals.rainfall_daily ? inToMm(vals.rainfall_daily)+" mm" : "0";
+  // ✅ pressure fixed
+  document.getElementById("pressure").innerText =
+    baro ? inHgToHpa(baro.bar_sea_level) + " hPa" : "N/A";
 
-  document.getElementById("et").innerText = vals.et_day ? inToMm(vals.et_day)+" mm" : "N/A";
+  // ✅ solar fixed
+  document.getElementById("solar").innerText =
+    solar ? solar.solar_rad + " W/m²" : "N/A";
 
-  const dir = vals.wind_dir_scalar_avg_last_10_min ?? 0;
+  document.getElementById("uv").innerText =
+    solar && solar.uv_index !== undefined ? solar.uv_index : "N/A";
 
-  document.getElementById("wind").innerText =
-    vals.wind_speed_last !== undefined
-      ? mphToKmh(vals.wind_speed_last)+" km/h ("+dir+"°, "+degToCompass(dir)+")"
-      : "N/A";
+  // ✅ rain stays from ISS
+  document.getElementById("rain_rate").innerText = iss.rain_rate ? inToMm(iss.rain_rate) + " mm/hr" : "0";
+  document.getElementById("rain15").innerText = iss.rainfall_last_15_min ? inToMm(iss.rainfall_last_15_min) + " mm" : "0";
+  document.getElementById("rain60").innerText = iss.rainfall_last_60_min ? inToMm(iss.rainfall_last_60_min) + " mm" : "0";
+  document.getElementById("rainday").innerText = iss.rainfall_daily ? inToMm(iss.rainfall_daily) + " mm" : "0";
 
-  document.getElementById("wind2").innerText =
-    vals.wind_speed_avg_last_2_min ? mphToKmh(vals.wind_speed_avg_last_2_min)+" km/h" : "N/A";
+  document.getElementById("et").innerText = iss.et_day ? inToMm(iss.et_day) + " mm" : "N/A";
 
-  document.getElementById("wind10").innerText =
-    vals.wind_speed_avg_last_10_min ? mphToKmh(vals.wind_speed_avg_last_10_min)+" km/h" : "N/A";
+  // ✅ wind fixed
+  if (wind) {
+    const dir = wind.wind_dir_scalar_avg_last_10_min ?? 0;
 
-  document.getElementById("wind60").innerText =
-    vals.wind_speed_avg_last_60_min ? mphToKmh(vals.wind_speed_avg_last_60_min)+" km/h" : "N/A";
+    document.getElementById("wind").innerText =
+      mphToKmh(wind.wind_speed_last) + " km/h (" + dir + "°, " + degToCompass(dir) + ")";
 
-  document.getElementById("gust").innerText =
-    vals.wind_speed_hi_last_60_min ? mphToKmh(vals.wind_speed_hi_last_60_min)+" km/h" : "N/A";
+    document.getElementById("wind2").innerText =
+      wind.wind_speed_avg_last_2_min ? mphToKmh(wind.wind_speed_avg_last_2_min) + " km/h" : "N/A";
 
-  document.getElementById("extra1").innerText = vals.temp_in ? toC(vals.temp_in)+" °C" : "N/A";
-  document.getElementById("extra2").innerText = vals.temp_2 ? toC(vals.temp_2)+" °C" : "N/A";
-  document.getElementById("extra3").innerText = vals.temp_3 ? toC(vals.temp_3)+" °C" : "N/A";
+    document.getElementById("wind10").innerText =
+      wind.wind_speed_avg_last_10_min ? mphToKmh(wind.wind_speed_avg_last_10_min) + " km/h" : "N/A";
 
-  document.getElementById("leaf").innerText = vals.leaf_wetness_1 ?? "N/A";
+    document.getElementById("wind60").innerText =
+      wind.wind_speed_avg_last_60_min ? mphToKmh(wind.wind_speed_avg_last_60_min) + " km/h" : "N/A";
+
+    document.getElementById("gust").innerText =
+      wind.wind_speed_hi_last_60_min ? mphToKmh(wind.wind_speed_hi_last_60_min) + " km/h" : "N/A";
+  }
+
+  // ✅ extra sensors untouched
+  document.getElementById("extra1").innerText = iss.temp_in ? toC(iss.temp_in) + " °C" : "N/A";
+  document.getElementById("extra2").innerText = iss.temp_2 ? toC(iss.temp_2) + " °C" : "N/A";
+  document.getElementById("extra3").innerText = iss.temp_3 ? toC(iss.temp_3) + " °C" : "N/A";
+
+  document.getElementById("leaf").innerText = iss.leaf_wetness_1 ?? "N/A";
 
 }
 
