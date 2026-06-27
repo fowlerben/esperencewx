@@ -1,16 +1,43 @@
 <!DOCTYPE html>
 <html>
-: 220px;<head>
+<head>
+  <title>Esperence Weather</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: #0b1e2d;
+      color: white;
     }
 
-    h1 { margin-top: 20px; }
-    h2 { font-size: 16px; margin: 5px 0; }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .card {
+      background: #1f3b4d;
+      padding: 15px;
+      margin: 10px;
+      border-radius: 10px;
+      width: 220px;
+    }
+
+    h1 {
+      margin-top: 20px;
+    }
+
+    h2 {
+      font-size: 16px;
+      margin: 5px 0;
+    }
   </style>
 </head>
 <body>
 
 <h1>Esperence Weather Station</h1>
-<h2 id="time"></h2> <!-- ✅ NEW TIME DISPLAY -->
+<h2 id="time"></h2>
 
 <div class="container">
 
@@ -55,14 +82,13 @@ function mphToKmh(m) { return (m * 1.60934).toFixed(1); }
 function inToMm(i) { return (i * 25.4).toFixed(1); }
 function inHgToHpa(p) { return (p * 33.8639).toFixed(1); }
 
-// ✅ 16-point compass
 function degToCompass(deg) {
   const dirs = ["N","NNE","NE","ENE","E","ESE","SE","SSE",
                 "S","SSW","SW","WSW","W","WNW","NW","NNW"];
   return dirs[Math.round(deg / 22.5) % 16];
 }
 
-// ✅ NEW: Live clock (UTC+10 / Brisbane)
+// ✅ Live time (UTC+10)
 function updateTime() {
   const now = new Date();
   document.getElementById("time").innerText =
@@ -72,6 +98,7 @@ function updateTime() {
 setInterval(updateTime, 1000);
 updateTime();
 
+// ✅ Weather load
 async function loadWeather() {
   try {
     const res = await fetch("/esperencewx/weather.json?" + Date.now());
@@ -138,7 +165,7 @@ async function loadWeather() {
   }
 }
 
-// ✅ CHANGED: 15 seconds (was 30)
+// ✅ 15-second update
 loadWeather();
 setInterval(loadWeather, 15000);
 
@@ -146,24 +173,3 @@ setInterval(loadWeather, 15000);
 
 </body>
 </html>
-
-  <title>Esperence Weather</title>
-  <style>
-    body {
-      font-family: Arial;
-      text-align: center;
-      background: #0b1e2d;
-      color: white;
-    }
-
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .card {
-      background: #1f3b4d;
-      padding: 15px;
-      margin: 10px;
-      border-radius: 10px;
