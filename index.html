@@ -41,43 +41,38 @@
 <script>
 async function loadWeather() {
   try {
-    // ✅ FULL absolute path (this fixes the problem)
-    const res = await fetch("/esperencewx/weather.json?cache=" + Date.now());
-
-    if (!res.ok) {
-      throw new Error("Fetch failed: " + res.status);
-    }
-
+    const res = await fetch("/esperencewx/weather.json?" + Date.now());
     const data = await res.json();
 
-    let temp = null;
-    let hum = null;
-    let wind = null;
+    let temp = "N/A";
+    let hum = "N/A";
+    let wind = "N/A";
 
-    for (const sensor of data.sensors) {
-      if (!sensor.data || !sensor.data[0]) continue;
+    if (data && data.sensors && Array.isArray(data.sensors)) {
+      data.sensors.forEach(sensor => {
+        if (!sensor.data || !sensor.data[0]) return;
 
-      const d = sensor.data[0];
+        const d = sensor.data[0];
 
-      if (d.temp !== undefined && temp === null) temp = d.temp;
-      if (d.hum !== undefined && hum === null) hum = d.hum;
-      if (d.wind_speed_avg_last_1_min !== undefined && wind === null) {
-        wind = d.wind_speed_avg_last_1_min;
-      }
+        if (d.temp !== undefined && temp === "N/A") {
+          temp = d.temp + " °C";
+        }
+
+        if (d.hum !== undefined && hum === "N/A") {
+          hum = d.hum + " %";
+        }
+
+        if (d.wind_speed_avg_last_1_min !== undefined && wind === "N/A") {
+          wind = d.wind_speed_avg_last_1_min + " km/h";
+        }
+      });
     }
 
-    document.getElementById("temp").innerText =
-      temp !== null ? temp + " °C" : "N/A";
-
-    document.getElementById("humidity").innerText =
-      hum !== null ? hum + " %" : "N/A";
-
-    document.getElementById("wind").innerText =
-      wind !== null ? wind + " km/h" : "N/A";
+    document.getElementById("temp").innerText = temp;
+    document.getElementById("humidity").innerText = hum;
+    document.getElementById("wind").innerText = wind;
 
   } catch (err) {
-    console.error("ERROR:", err);
-
     document.getElementById("temp").innerText = "Error";
     document.getElementById("humidity").innerText = "Error";
     document.getElementById("wind").innerText = "Error";
@@ -90,4 +85,3 @@ setInterval(loadWeather, 30000);
 
 </body>
 </html>
-``
