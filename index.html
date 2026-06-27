@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Esperence Weather</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: #0b1e2d;
+      color: white;
+    }
+
+    .card {
+      display: inline-block;
+      background: #1f3b4d;
+      padding: 20px;
+      margin: 10px;
+      border-radius: 12px;
+      min-width: 150px;
+    }
+
+    h1 {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Esperence Weather Station</h1>
+
+<div class="card">
+  <h2>🌡 Temperature</h2>
+  <p id="temp">--</p>
+</div>
+
+<div class="card">
+  <h2>💧 Humidity</h2>
+  <p id="humidity">--</p>
+</div>
+
+<div class="card">
+  <h2>🌬 Wind</h2>
+  <p id="wind">--</p>
+</div>
+
+<script>
+async function loadWeather() {
+  try {
+    const res = await fetch("weather.json?" + Date.now());
+    const data = await res.json();
+
+    document.getElementById("temp").innerText = data.temperature + " °C";
+    document.getElementById("humidity").innerText = data.humidity + " %";
+    document.getElementById("wind").innerText = data.wind + " km/h";
+  } catch (e) {
+    console.log("Error loading weather", e);
+  }
+}
+
+loadWeather();
+setInterval(loadWeather, 30000);
+</script>
+
+</body>
+</html>
