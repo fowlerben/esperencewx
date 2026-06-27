@@ -1,9 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Esperence Weather</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: #0b1e2d;
+      color: white;
+    }
+    .card {
+      display: inline-block;
+      background: #1f3b4d;
+      padding: 20px;
+      margin: 10px;
+      border-radius: 12px;
+      min-width: 150px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Esperence Weather Station</h1>
+
+<div class="card">
+  <h2>🌡 Temperature</h2>
+  <p id="temp">Loading...</p>
+</div>
+
+<div class="card">
+  <h2>💧 Humidity</h2>
+  <p id="humidity">Loading...</p>
+</div>
+
+<div class="card">
+  <h2>🌬 Wind</h2>
+  <p id="wind">Loading...</p>
+</div>
+
 <script>
 async function loadWeather() {
   try {
     const res = await fetch("/esperencewx/weather.json?" + Date.now());
-    const text = await res.text();
-    const data = JSON.parse(text);
+    const data = await res.json();
 
     let temp = "N/A";
     let hum = "N/A";
@@ -11,23 +50,23 @@ async function loadWeather() {
 
     if (data && data.sensors) {
       data.sensors.forEach(sensor => {
-        if (!sensor.data) return;
+        if (!sensor.data || !sensor.data[0]) return;
 
-        sensor.data.forEach(d => {
-          if (d.temp !== undefined && temp === "N/A") {
-            // ✅ Convert F → C
-            const c = (5/9) * (d.temp - 32);
-            temp = c.toFixed(1) + " °C";
-          }
+        const d = sensor.data[0];
 
-          if (d.hum !== undefined && hum === "N/A") {
-            hum = d.hum + " %";
-          }
+        if (d.temp !== undefined && temp === "N/A") {
+          // ✅ Convert F → C safely
+          const c = (d.temp - 32) * 5 / 9;
+          temp = c.toFixed(1) + " °C";
+        }
 
-          if (d.wind_speed_avg_last_1_min !== undefined && wind === "N/A") {
-            wind = d.wind_speed_avg_last_1_min.toFixed(1) + " km/h";
-          }
-        });
+        if (d.hum !== undefined && hum === "N/A") {
+          hum = d.hum + " %";
+        }
+
+        if (d.wind_speed_avg_last_1_min !== undefined && wind === "N/A") {
+          wind = d.wind_speed_avg_last_1_min.toFixed(1) + " km/h";
+        }
       });
     }
 
@@ -45,3 +84,6 @@ async function loadWeather() {
 loadWeather();
 setInterval(loadWeather, 30000);
 </script>
+
+</body>
+</html>
