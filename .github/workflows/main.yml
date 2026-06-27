@@ -14,9 +14,16 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Get station list
+      - name: Get station list (SIGNED REQUEST)
         run: |
-          URL="https://api.weatherlink.com/v2/stations?api-key=${{ secrets.WL_API_KEY }}"
+          TIMESTAMP=$(date +%s)
+
+          PARAMS="api-key${{ secrets.WL_API_KEY }}t${TIMESTAMP}"
+
+          SIGNATURE=$(printf "%s" "$PARAMS" | openssl dgst -sha256 -hmac "${{ secrets.WL_API_SECRET }}" | awk '{print $2}')
+
+          URL="https://api.weatherlink.com/v2/stations?api-key=${{ secrets.WL_API_KEY }}&t=${TIMESTAMP}&api-signature=${SIGNATURE}"
+
           curl -s "$URL" > weather.json
 
       - name: Commit station list
@@ -26,3 +33,4 @@ jobs:
           git add weather.json
           git commit -m "station list" || echo "no changes"
           git push
+``
