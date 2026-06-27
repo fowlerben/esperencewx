@@ -1,27 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Esperence Weather</title>
-  <style>
-    body {
-      font-family: Arial;
-      text-align: center;
-      background: #0b1e2d;
-      color: white;
-    }
-
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .card {
-      background: #1f3b4d;
-      padding: 15px;
-      margin: 10px;
-      border-radius: 10px;
-      width: 220px;
+: 220px;<head>
     }
 
     h1 { margin-top: 20px; }
@@ -31,6 +10,7 @@
 <body>
 
 <h1>Esperence Weather Station</h1>
+<h2 id="time"></h2> <!-- ✅ NEW TIME DISPLAY -->
 
 <div class="container">
 
@@ -75,12 +55,22 @@ function mphToKmh(m) { return (m * 1.60934).toFixed(1); }
 function inToMm(i) { return (i * 25.4).toFixed(1); }
 function inHgToHpa(p) { return (p * 33.8639).toFixed(1); }
 
-// 16-point compass
+// ✅ 16-point compass
 function degToCompass(deg) {
   const dirs = ["N","NNE","NE","ENE","E","ESE","SE","SSE",
                 "S","SSW","SW","WSW","W","WNW","NW","NNW"];
   return dirs[Math.round(deg / 22.5) % 16];
 }
+
+// ✅ NEW: Live clock (UTC+10 / Brisbane)
+function updateTime() {
+  const now = new Date();
+  document.getElementById("time").innerText =
+    now.toLocaleString("en-AU", { timeZone: "Australia/Brisbane" });
+}
+
+setInterval(updateTime, 1000);
+updateTime();
 
 async function loadWeather() {
   try {
@@ -89,7 +79,6 @@ async function loadWeather() {
 
     let d = null;
 
-    // find first valid sensor block
     data.sensors.forEach(sensor => {
       if (sensor.data && sensor.data[0] && !d) {
         d = sensor.data[0];
@@ -98,7 +87,6 @@ async function loadWeather() {
 
     if (!d) return;
 
-    // ✅ Temperature group
     document.getElementById("temp").innerText = d.temp ? toC(d.temp) + " °C" : "N/A";
     document.getElementById("dew").innerText = d.dew_point ? toC(d.dew_point) + " °C" : "N/A";
     document.getElementById("heat").innerText = d.heat_index ? toC(d.heat_index) + " °C" : "N/A";
@@ -106,24 +94,19 @@ async function loadWeather() {
     document.getElementById("thw").innerText = d.thw_index ? toC(d.thw_index) + " °C" : "N/A";
     document.getElementById("thsw").innerText = d.thsw_index ? toC(d.thsw_index) + " °C" : "N/A";
 
-    // ✅ Humidity + pressure
     document.getElementById("hum").innerText = d.hum ? d.hum + " %" : "N/A";
     document.getElementById("pressure").innerText = d.bar_sea_level ? inHgToHpa(d.bar_sea_level) + " hPa" : "N/A";
 
-    // ✅ Solar + UV
     document.getElementById("solar").innerText = d.solar_rad ? d.solar_rad + " W/m²" : "N/A";
     document.getElementById("uv").innerText = d.uv_index ?? "N/A";
 
-    // ✅ Rain
     document.getElementById("rain_rate").innerText = d.rain_rate ? inToMm(d.rain_rate) + " mm/hr" : "0";
     document.getElementById("rain15").innerText = d.rainfall_last_15_min ? inToMm(d.rainfall_last_15_min) + " mm" : "0";
     document.getElementById("rain60").innerText = d.rainfall_last_60_min ? inToMm(d.rainfall_last_60_min) + " mm" : "0";
     document.getElementById("rainday").innerText = d.rainfall_daily ? inToMm(d.rainfall_daily) + " mm" : "0";
 
-    // ✅ ET
     document.getElementById("et").innerText = d.et_day ? inToMm(d.et_day) + " mm" : "N/A";
 
-    // ✅ Wind
     const dir = d.wind_dir_scalar_avg_last_10_min ?? 0;
     const compass = degToCompass(dir);
 
@@ -144,12 +127,10 @@ async function loadWeather() {
     document.getElementById("gust").innerText =
       d.wind_speed_hi_last_60_min ? mphToKmh(d.wind_speed_hi_last_60_min) + " km/h" : "N/A";
 
-    // ✅ Extra temps
     document.getElementById("extra1").innerText = d.temp_in ? toC(d.temp_in) + " °C" : "N/A";
     document.getElementById("extra2").innerText = d.temp_2 ? toC(d.temp_2) + " °C" : "N/A";
     document.getElementById("extra3").innerText = d.temp_3 ? toC(d.temp_3) + " °C" : "N/A";
 
-    // ✅ Leaf wetness
     document.getElementById("leaf").innerText = d.leaf_wetness_1 ?? "N/A";
 
   } catch (err) {
@@ -157,10 +138,32 @@ async function loadWeather() {
   }
 }
 
+// ✅ CHANGED: 15 seconds (was 30)
 loadWeather();
-setInterval(loadWeather, 30000);
+setInterval(loadWeather, 15000);
 
 </script>
 
 </body>
 </html>
+
+  <title>Esperence Weather</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: #0b1e2d;
+      color: white;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .card {
+      background: #1f3b4d;
+      padding: 15px;
+      margin: 10px;
+      border-radius: 10px;
