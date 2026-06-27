@@ -23,181 +23,137 @@
       border-radius: 10px;
       width: 220px;
     }
-
-    select {
-      margin-top: 10px;
-    }
-
-    .compass {
-      margin-top: 10px;
-      font-size: 20px;
-    }
   </style>
 </head>
 <body>
 
 <h1>Esperence Weather Station</h1>
-<h2 id="time">--</h2>
+<h2 id="time"></h2>
 
 <div class="container">
 
 <div class="card"><h2>Temperature</h2><p id="temp"></p></div>
-<div class="card"><h2>Wet Bulb</h2><p id="wetbulb"></p></div>
+<div class="card"><h2>Wet Bulb</h2><p id="wet"></p></div>
+<div class="card"><h2>Dew Point</h2><p id="dew"></p></div>
 <div class="card"><h2>Humidity</h2><p id="hum"></p></div>
 <div class="card"><h2>Pressure</h2><p id="pressure"></p></div>
 
-<div class="card">
-  <h2>Rain Today</h2>
-  <p id="rain"></p>
-</div>
+<div class="card"><h2>Rain Today</h2><p id="rain"></p></div>
 
 <div class="card">
   <h2>Wind</h2>
   <p id="wind"></p>
-  <div class="compass" id="compass"></div>
-
-  <select id="windPeriod">
+  <select id="period">
     <option value="2">2 min</option>
     <option value="10" selected>10 min</option>
-    <option value="60">1 hour</option>
+    <option value="60">1 hr</option>
   </select>
-</div>
-
-<div class="card">
-  <h2>Daily High</h2>
-  <p id="high"></p>
-  <h2>Daily Low</h2>
-  <p id="low"></p>
 </div>
 
 </div>
 
 <script>
 
-// ✅ conversions
-function toC(f) { return ((f - 32) * 5/9); }
-function mphToKmh(m) { return m * 1.60934; }
-function inHgToHpa(p) { return p * 33.8639; }
-function inToMm(i) { return i * 25.4; }
+// conversions
+const toC = f => (f - 32) * 5/9;
+const mphToKmh = m => m * 1.60934;
+const inHgToHpa = p => p * 33.8639;
+const inToMm = i => i * 25.4;
 
-// ✅ compass conversion
-function degToCompass(deg) {
-  const dirs = ["N","NNE","NE","ENE","E","ESE","SE","SSE",
-                "S","SSW","SW","WSW","W","WNW","NW","NNW"];
-  return dirs[Math.round(deg / 22.5) % 16];
+// wet bulb
+function wetBulb(T, RH){
+  return T * Math.atan(0.151977 * Math.sqrt(RH + 8.313659))
 }
 
-// ✅ wet bulb approximation
-function wetBulb(T, RH) {
-  return T * Math.atan(0.151977 * Math.sqrt(RH + 8.313659)) +
-         Math.atan(T + RH) -
-         Math.atan(RH - 1.676331) +
-         0.00391838 * Math.pow(RH, 1.5) *
-         Math.atan(0.023101 * RH) - 4.686035;
+// compass
+function degToCompass(deg){
+  const dirs=["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"]
+  return dirs[Math.round(deg/22.5)%16]
 }
 
-function updateTime() {
-  const now = new Date();
+// time
+setInterval(()=>{
   document.getElementById("time").innerText =
-    now.toLocaleString("en-AU", { timeZone: "Australia/Brisbane" });
-}
+    new Date().toLocaleString("en-AU",{timeZone:"Australia/Brisbane"})
+},1000)
 
-// ✅ highs/lows using localStorage
-function updateHighLow(tempC) {
-  const today = new Date().toDateString();
-  let stored = JSON.parse(localStorage.getItem("temps") || "{}");
+async function loadWeather(){
 
-  if (!stored.date || stored.date !== today) {
-    stored = {
-      date: today,
-      high: tempC,
-      low: tempC,
-      highTime: new Date().toLocaleTimeString(),
-      lowTime: new Date().toLocaleTimeString()
-    };
-  }
+  const res = await fetch("/esperencewx/weather.json?"+Date.now())
+  const data = await res.json()
 
-  if (tempC > stored.high) {
-    stored.high = tempC;
-    stored.highTime = new Date().toLocaleTimeString();
-  }
+  // variables
+  let temp, dew, hum, pressure
+  let wind2, wind10, wind60, dir
+  let rain
 
-  if (tempC < stored.low) {
-    stored.low = tempC;
-    stored.lowTime = new Date().toLocaleTimeString();
-  }
+  data.sensors.forEach(sensor=>{
+    if(!sensor.data) return
 
-  localStorage.setItem("temps", JSON.stringify(stored));
+    const d = sensor.data[0]
 
-  document.getElementById("high").innerText =
-    stored.high.toFixed(1) + " °C @ " + stored.highTime;
+    // ✅ temperature block
+    if(d.temp !== undefined) temp = d.temp
+    if(d.dew_point !== undefined) dew = d.dew_point
+    if(d.hum !== undefined) hum = d.hum
 
-  document.getElementById("low").innerText =
-    stored.low.toFixed(1) + " °C @ " + stored.lowTime;
-}
+    // ✅ pressure (different sensor!)
+    if(d.bar_sea_level !== undefined) pressure = d.bar_sea_level
 
-async function loadWeather() {
-  try {
-    const res = await fetch("/esperencewx/weather.json?" + Date.now());
-    const data = await res.json();
+    // ✅ wind (different sensor!)
+    if(d.wind_speed_avg_last_2_min !== undefined) wind2 = d.wind_speed_avg_last_2_min
+    if(d.wind_speed_avg_last_10_min !== undefined) wind10 = d.wind_speed_avg_last_10_min
+    if(d.wind_speed_avg_last_60_min !== undefined) wind60 = d.wind_speed_avg_last_60_min
+    if(d.wind_dir_scalar_avg_last_10_min !== undefined) dir = d.wind_dir_scalar_avg_last_10_min
 
-    let d = null;
-    data.sensors.forEach(s => {
-      if (s.data && s.data[0] && !d) d = s.data[0];
-    });
+    // ✅ rain
+    if(d.rainfall_daily !== undefined) rain = d.rainfall_daily
+  })
 
-    if (!d) return;
+  // ✅ temperature display
+  const tempC = toC(temp)
+  document.getElementById("temp").innerText = tempC.toFixed(1)+" °C"
 
-    // ✅ temperature
-    const tempC = toC(d.temp);
-    document.getElementById("temp").innerText = tempC.toFixed(1) + " °C";
+  document.getElementById("dew").innerText =
+    dew ? toC(dew).toFixed(1)+" °C" : "N/A"
 
-    updateHighLow(tempC);
+  document.getElementById("hum").innerText =
+    hum ? hum+" %" : "N/A"
 
-    // ✅ humidity
-    document.getElementById("hum").innerText = d.hum + " %";
+  // ✅ pressure fixed
+  document.getElementById("pressure").innerText =
+    pressure ? inHgToHpa(pressure).toFixed(1)+" hPa" : "N/A"
 
-    // ✅ pressure (fixed)
-    document.getElementById("pressure").innerText =
-      d.bar_sea_level ? inHgToHpa(d.bar_sea_level).toFixed(1) + " hPa" : "N/A";
+  // ✅ rain precision
+  document.getElementById("rain").innerText =
+    rain ? inToMm(rain).toFixed(2)+" mm" : "0.00 mm"
 
-    // ✅ rainfall (extra decimal)
-    document.getElementById("rain").innerText =
-      d.rainfall_daily ? inToMm(d.rainfall_daily).toFixed(2) + " mm" : "0.00 mm";
+  // ✅ wind (FIXED — no NaN)
+  let speed = 0
+  const p = document.getElementById("period").value
 
-    // ✅ wet bulb
-    const wb = wetBulb(tempC, d.hum);
-    document.getElementById("wetbulb").innerText = wb.toFixed(1) + " °C";
+  if(p==="2") speed = wind2
+  if(p==="10") speed = wind10
+  if(p==="60") speed = wind60
 
-    // ✅ wind
-    const period = document.getElementById("windPeriod").value;
-
-    let speed = 0;
-    if (period === "2") speed = d.wind_speed_avg_last_2_min;
-    if (period === "10") speed = d.wind_speed_avg_last_10_min;
-    if (period === "60") speed = d.wind_speed_avg_last_60_min;
-
-    const kmh = mphToKmh(speed);
-    const dir = d.wind_dir_scalar_avg_last_10_min || 0;
-
+  if(!speed) {
+    document.getElementById("wind").innerText="N/A"
+  } else {
+    const kmh = mphToKmh(speed)
     document.getElementById("wind").innerText =
-      kmh.toFixed(1) + " km/h (" + dir + "°, " + degToCompass(dir) + ")";
-
-    // ✅ simple compass visual
-    document.getElementById("compass").innerText =
-      "🧭 " + degToCompass(dir);
-
-  } catch (err) {
-    console.log(err);
+      kmh.toFixed(1)+" km/h ("+dir+"°, "+degToCompass(dir)+")"
   }
+
+  // ✅ wet bulb
+  if(temp && hum){
+    const wb = wetBulb(tempC, hum)
+    document.getElementById("wet").innerText = wb.toFixed(1)+" °C"
+  }
+
 }
 
-// ✅ refresh loop
-updateTime();
-setInterval(updateTime, 1000);
-
-loadWeather();
-setInterval(loadWeather, 15000);
+loadWeather()
+setInterval(loadWeather,15000)
 
 </script>
 
