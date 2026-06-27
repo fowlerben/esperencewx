@@ -17,6 +17,15 @@
       border-radius: 12px;
       min-width: 150px;
     }
+    pre {
+      text-align: left;
+      background: black;
+      color: lime;
+      padding: 10px;
+      margin-top: 20px;
+      max-height: 300px;
+      overflow: auto;
+    }
   </style>
 </head>
 <body>
@@ -38,33 +47,36 @@
   <p id="wind">Loading...</p>
 </div>
 
+<h2>DEBUG OUTPUT</h2>
+<pre id="debug">Loading JSON...</pre>
+
 <script>
 async function loadWeather() {
   try {
     const res = await fetch("/esperencewx/weather.json?" + Date.now());
-    const data = await res.json();
+    const text = await res.text();
 
+    // Show RAW JSON on page
+    document.getElementById("debug").innerText = text;
+
+    const data = JSON.parse(text);
+
+    // Try safest possible lookup
     let temp = "N/A";
     let hum = "N/A";
     let wind = "N/A";
 
-    if (data && data.sensors && Array.isArray(data.sensors)) {
+    if (data && data.sensors) {
       data.sensors.forEach(sensor => {
-        if (!sensor.data || !sensor.data[0]) return;
+        if (!sensor.data) return;
 
-        const d = sensor.data[0];
-
-        if (d.temp !== undefined && temp === "N/A") {
-          temp = d.temp + " °C";
-        }
-
-        if (d.hum !== undefined && hum === "N/A") {
-          hum = d.hum + " %";
-        }
-
-        if (d.wind_speed_avg_last_1_min !== undefined && wind === "N/A") {
-          wind = d.wind_speed_avg_last_1_min + " km/h";
-        }
+        sensor.data.forEach(d => {
+          if (d.temp && temp === "N/A") temp = d.temp + " °C";
+          if (d.hum && hum === "N/A") hum = d.hum + " %";
+          if (d.wind_speed_avg_last_1_min && wind === "N/A") {
+            wind = d.wind_speed_avg_last_1_min + " km/h";
+          }
+        });
       });
     }
 
@@ -73,6 +85,7 @@ async function loadWeather() {
     document.getElementById("wind").innerText = wind;
 
   } catch (err) {
+    document.getElementById("debug").innerText = "ERROR: " + err;
     document.getElementById("temp").innerText = "Error";
     document.getElementById("humidity").innerText = "Error";
     document.getElementById("wind").innerText = "Error";
@@ -80,7 +93,6 @@ async function loadWeather() {
 }
 
 loadWeather();
-setInterval(loadWeather, 30000);
 </script>
 
 </body>
