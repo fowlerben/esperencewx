@@ -33,11 +33,9 @@
 <div class="container">
 
 <div class="card"><h2>Temperature</h2><p id="temp"></p></div>
-<div class="card"><h2>Wet Bulb</h2><p id="wet"></p></div>
-<div class="card"><h2>Dew Point</h2><p id="dew"></p></div>
 <div class="card"><h2>Humidity</h2><p id="hum"></p></div>
+<div class="card"><h2>Dew Point</h2><p id="dew"></p></div>
 <div class="card"><h2>Pressure</h2><p id="pressure"></p></div>
-
 <div class="card"><h2>Rain Today</h2><p id="rain"></p></div>
 
 <div class="card">
@@ -54,106 +52,101 @@
 
 <script>
 
-// conversions
+// ✅ conversions
 const toC = f => (f - 32) * 5/9;
 const mphToKmh = m => m * 1.60934;
 const inHgToHpa = p => p * 33.8639;
 const inToMm = i => i * 25.4;
 
-// wet bulb
-function wetBulb(T, RH){
-  return T * Math.atan(0.151977 * Math.sqrt(RH + 8.313659))
-}
-
-// compass
 function degToCompass(deg){
-  const dirs=["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"]
-  return dirs[Math.round(deg/22.5)%16]
+  const dirs=["N","NNE","NE","ENE","E","ESE","SE","SSE",
+              "S","SSW","SW","WSW","W","WNW","NW","NNW"];
+  return dirs[Math.round(deg/22.5)%16];
 }
 
-// time
+// ✅ time
 setInterval(()=>{
   document.getElementById("time").innerText =
-    new Date().toLocaleString("en-AU",{timeZone:"Australia/Brisbane"})
-},1000)
+    new Date().toLocaleString("en-AU",{timeZone:"Australia/Brisbane"});
+},1000);
 
 async function loadWeather(){
 
-  const res = await fetch("/esperencewx/weather.json?"+Date.now())
-  const data = await res.json()
+  const res = await fetch("/esperencewx/weather.json?"+Date.now());
+  const data = await res.json();
 
-  // variables
-  let temp, dew, hum, pressure
-  let wind2, wind10, wind60, dir
-  let rain
+  let iss = null;      // outdoor sensor
+  let windS = null;    // wind sensor
+  let baro = null;     // pressure sensor
 
-  data.sensors.forEach(sensor=>{
-    if(!sensor.data) return
+  data.sensors.forEach(sensor => {
 
-    const d = sensor.data[0]
+    if(!sensor.data) return;
 
-    // ✅ temperature block
-    if(d.temp !== undefined) temp = d.temp
-    if(d.dew_point !== undefined) dew = d.dew_point
-    if(d.hum !== undefined) hum = d.hum
+    const d = sensor.data[0];
 
-    // ✅ pressure (different sensor!)
-    if(d.bar_sea_level !== undefined) pressure = d.bar_sea_level
+    // ✅ ISS (main outdoor data)
+    if(d.temp !== undefined && d.hum !== undefined){
+      iss = d;
+    }
 
-    // ✅ wind (different sensor!)
-    if(d.wind_speed_avg_last_2_min !== undefined) wind2 = d.wind_speed_avg_last_2_min
-    if(d.wind_speed_avg_last_10_min !== undefined) wind10 = d.wind_speed_avg_last_10_min
-    if(d.wind_speed_avg_last_60_min !== undefined) wind60 = d.wind_speed_avg_last_60_min
-    if(d.wind_dir_scalar_avg_last_10_min !== undefined) dir = d.wind_dir_scalar_avg_last_10_min
+    // ✅ wind sensor
+    if(d.wind_speed_avg_last_10_min !== undefined){
+      windS = d;
+    }
 
-    // ✅ rain
-    if(d.rainfall_daily !== undefined) rain = d.rainfall_daily
-  })
+    // ✅ pressure sensor
+    if(d.bar_sea_level !== undefined){
+      baro = d;
+    }
 
-  // ✅ temperature display
-  const tempC = toC(temp)
-  document.getElementById("temp").innerText = tempC.toFixed(1)+" °C"
+  });
 
+  if(!iss) return;
+
+  // ✅ temperature
+  const tempC = toC(iss.temp);
+  document.getElementById("temp").innerText = tempC.toFixed(1) + " °C";
+
+  document.getElementById("hum").innerText = iss.hum + " %";
   document.getElementById("dew").innerText =
-    dew ? toC(dew).toFixed(1)+" °C" : "N/A"
+    iss.dew_point ? toC(iss.dew_point).toFixed(1) + " °C" : "N/A";
 
-  document.getElementById("hum").innerText =
-    hum ? hum+" %" : "N/A"
-
-  // ✅ pressure fixed
+  // ✅ pressure (correct sensor)
   document.getElementById("pressure").innerText =
-    pressure ? inHgToHpa(pressure).toFixed(1)+" hPa" : "N/A"
+    baro ? inHgToHpa(baro.bar_sea_level).toFixed(1) + " hPa" : "N/A";
 
-  // ✅ rain precision
+  // ✅ rain
   document.getElementById("rain").innerText =
-    rain ? inToMm(rain).toFixed(2)+" mm" : "0.00 mm"
+    iss.rainfall_daily ? inToMm(iss.rainfall_daily).toFixed(2) + " mm" : "0.00 mm";
 
-  // ✅ wind (FIXED — no NaN)
-  let speed = 0
-  const p = document.getElementById("period").value
+  // ✅ wind (fixed selector)
+  if(windS){
 
-  if(p==="2") speed = wind2
-  if(p==="10") speed = wind10
-  if(p==="60") speed = wind60
+    const p = document.getElementById("period").value;
 
-  if(!speed) {
-    document.getElementById("wind").innerText="N/A"
-  } else {
-    const kmh = mphToKmh(speed)
-    document.getElementById("wind").innerText =
-      kmh.toFixed(1)+" km/h ("+dir+"°, "+degToCompass(dir)+")"
-  }
+    let speed = 0;
 
-  // ✅ wet bulb
-  if(temp && hum){
-    const wb = wetBulb(tempC, hum)
-    document.getElementById("wet").innerText = wb.toFixed(1)+" °C"
+    if(p==="2") speed = windS.wind_speed_avg_last_2_min;
+    if(p==="10") speed = windS.wind_speed_avg_last_10_min;
+    if(p==="60") speed = windS.wind_speed_avg_last_60_min;
+
+    const dir = windS.wind_dir_scalar_avg_last_10_min;
+
+    if(speed !== undefined){
+      const kmh = mphToKmh(speed);
+      document.getElementById("wind").innerText =
+        kmh.toFixed(1) + " km/h (" + dir + "°, " + degToCompass(dir) + ")";
+    } else {
+      document.getElementById("wind").innerText = "N/A";
+    }
+
   }
 
 }
 
-loadWeather()
-setInterval(loadWeather,15000)
+loadWeather();
+setInterval(loadWeather,15000);
 
 </script>
 
