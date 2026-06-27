@@ -1,7 +1,8 @@
-const stationId = "IGEELO181";
-const apiKey = "d86cfab380f54255acfab380f5b255a0";
+const stationId = "YOUR_WEATHERLINK_STATION_ID";
+const apiKey = "YOUR_WEATHERLINK_API_KEY";
 
-const url = `https://api.weather.com/v2/pws/observations/current?stationId=${stationId}&format=json&units=m&apiKey=${apiKey}`;
+// ✅ WeatherLink endpoint
+const url = `https://api.weatherlink.com/v2/current/${stationId}?api-key=${apiKey}`;
 
 // --- Format helper ---
 function format(value) {
@@ -23,13 +24,13 @@ let extremes = JSON.parse(localStorage.getItem("extremes")) || {
 
 let rainHistory = JSON.parse(localStorage.getItem("rainHistory")) || [];
 
-// --- SAVE FUNCTIONS ---
+// --- SAVE ---
 function saveData() {
   localStorage.setItem("extremes", JSON.stringify(extremes));
   localStorage.setItem("rainHistory", JSON.stringify(rainHistory));
 }
 
-// --- RESET DAILY EXTREMES ---
+// --- RESET DAILY ---
 function resetIfNewDay() {
   const today = new Date().getDate();
   if (extremes.day !== today) {
@@ -38,7 +39,7 @@ function resetIfNewDay() {
 }
 
 // --- UPDATE EXTREMES ---
-function updateExtremes(obs) {
+function updateExtremes(data) {
   resetIfNewDay();
 
   function update(key, value, type = "max") {
@@ -49,39 +50,37 @@ function updateExtremes(obs) {
     if (type === "min") extremes[key] = Math.min(extremes[key], value);
   }
 
-  update("tempMax", obs.metric?.temp, "max");
-  update("tempMin", obs.metric?.temp, "min");
+  update("tempMax", data.temp, "max");
+  update("tempMin", data.temp, "min");
 
-  update("dpMax", obs.metric?.dewpt, "max");
-  update("dpMin", obs.metric?.dewpt, "min");
+  update("dpMax", data.dew_point, "max");
+  update("dpMin", data.dew_point, "min");
 
-  update("humMax", obs.humidity, "max");
-  update("humMin", obs.humidity, "min");
+  update("humMax", data.humidity, "max");
+  update("humMin", data.humidity, "min");
 
-  update("windMax", obs.metric?.windSpeed);
-  update("gustMax", obs.metric?.windGust);
+  update("windMax", data.wind_speed);
+  update("gustMax", data.wind_gust);
 
-  update("pressureMax", obs.metric?.pressure, "max");
-  update("pressureMin", obs.metric?.pressure, "min");
+  update("pressureMax", data.barometric_pressure, "max");
+  update("pressureMin", data.barometric_pressure, "min");
 
-  update("solarMax", obs.solarRadiation);
-  update("uvMax", obs.uv);
+  update("solarMax", data.solar_radiation);
+  update("uvMax", data.uv_index);
 }
 
-// --- RAIN CALCULATIONS ---
-function updateRain(obs) {
+// --- RAIN ---
+function updateRain(data) {
   const now = Date.now();
-  const total = Number(obs.metric?.precipTotal) || 0;
+  const total = Number(data.rainfall_daily) || 0;
 
   rainHistory.push({ time: now, total });
-
   rainHistory = rainHistory.filter(r => now - r.time < 86400000);
 }
 
 function calcRain(ms) {
   const now = Date.now();
   const current = rainHistory[rainHistory.length - 1];
-
   if (!current) return 0;
 
   const past = rainHistory.find(r => now - r.time >= ms);
@@ -94,33 +93,37 @@ function calcRain(ms) {
 function loadWeather() {
   fetch(url)
     .then(res => res.json())
-    .then(data => {
-      if (!data || !data.observations || data.observations.length === 0) {
-        throw new Error("No data");
+    .then(json => {
+
+      if (!json || !json.sensors) {
+        throw new Error("No station data");
       }
 
-      const obs = data.observations[0];
+      // ✅ WeatherLink structure
+      const sensor = json.sensors[0].data[0];
 
-      updateExtremes(obs);
-      updateRain(obs);
+      const data = {
+        temp: sensor.temp,
+        humidity: sensor.hum,
+        dew_point: sensor.dew_point,
+        wind_speed: sensor.wind_speed,
+        wind_dir: sensor.wind_dir,
+        wind_gust: sensor.wind_gust,
+        barometric_pressure: sensor.bar,
+        rainfall_daily: sensor.rainfall_daily,
+        solar_radiation: sensor.solar_rad,
+        uv_index: sensor.uv
+      };
+
+      updateExtremes(data);
+      updateRain(data);
       saveData();
 
-      const temp = format(obs.metric?.temp);
-      const humidity = format(obs.humidity);
-      const dewPoint = format(obs.metric?.dewpt);
-
-      const windSpeed = format(obs.metric?.windSpeed);
-      const windDeg = obs.winddir;
-
       let windDisplay = "N/A";
-      if (!isNaN(windDeg)) {
-        windDisplay = `${parseFloat(windDeg).toFixed(1)}° (${windDirToCompass(windDeg)})`;
+      if (!isNaN(data.wind_dir)) {
+        windDisplay =
+          `${parseFloat(data.wind_dir).toFixed(1)}° (${windDirToCompass(data.wind_dir)})`;
       }
-
-      const pressure = format(obs.metric?.pressure);
-      const rainToday = format(obs.metric?.precipTotal);
-      const solar = format(obs.solarRadiation);
-      const uv = format(obs.uv);
 
       const rain15 = format(calcRain(15 * 60 * 1000));
       const rain1h = format(calcRain(60 * 60 * 1000));
@@ -131,51 +134,45 @@ function loadWeather() {
 
           <div class="card">
             <div class="title">Temperature</div>
-            <div class="value">${temp}°</div>
+            <div class="value">${format(data.temp)}°</div>
             <div class="small">Max ${format(extremes.tempMax)} / Min ${format(extremes.tempMin)}</div>
           </div>
 
           <div class="card">
             <div class="title">Humidity</div>
-            <div class="value">${humidity}%</div>
-            <div class="small">Max ${format(extremes.humMax)} / Min ${format(extremes.humMin)}</div>
+            <div class="value">${format(data.humidity)}%</div>
           </div>
 
           <div class="card">
             <div class="title">Dew Point</div>
-            <div class="value">${dewPoint}°</div>
-            <div class="small">Max ${format(extremes.dpMax)} / Min ${format(extremes.dpMin)}</div>
+            <div class="value">${format(data.dew_point)}°</div>
           </div>
 
           <div class="card">
             <div class="title">Wind</div>
-            <div class="value">${windSpeed} km/h</div>
+            <div class="value">${format(data.wind_speed)} km/h</div>
             <div class="small">${windDisplay}</div>
-            <div class="small">Max ${format(extremes.windMax)} | Gust ${format(extremes.gustMax)}</div>
           </div>
 
           <div class="card">
             <div class="title">Pressure</div>
-            <div class="value">${pressure} hPa</div>
-            <div class="small">Max ${format(extremes.pressureMax)} / Min ${format(extremes.pressureMin)}</div>
+            <div class="value">${format(data.barometric_pressure)} hPa</div>
           </div>
 
           <div class="card">
             <div class="title">Rainfall Today</div>
-            <div class="value">${rainToday} mm</div>
+            <div class="value">${format(data.rainfall_daily)} mm</div>
             <div class="small">15m: ${rain15} | 1h: ${rain1h} | 24h: ${rain24}</div>
           </div>
 
           <div class="card">
             <div class="title">Solar Radiation</div>
-            <div class="value">${solar} W/m²</div>
-            <div class="small">Max ${format(extremes.solarMax)}</div>
+            <div class="value">${format(data.solar_radiation)} W/m²</div>
           </div>
 
           <div class="card">
             <div class="title">UV Index</div>
-            <div class="value">${uv}</div>
-            <div class="small">Max ${format(extremes.uvMax)}</div>
+            <div class="value">${format(data.uv_index)}</div>
           </div>
 
         </div>
@@ -183,9 +180,10 @@ function loadWeather() {
     })
     .catch(() => {
       document.getElementById("weather").innerText =
-        "Error loading weather data";
+        "Error loading WeatherLink data";
     });
 }
 
 loadWeather();
 setInterval(loadWeather, 15000);
+``
