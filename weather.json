@@ -1,1 +1,1 @@
-{"code":"404","message":"Unable to find weather station settings"}
+{"code":"401","message":"API call timestamp parameter \"t\" is stale. The timestamp you provide must be within a range that is plus or minus 300 seconds of the API server's internal clock."}
