@@ -41,7 +41,13 @@
 <script>
 async function loadWeather() {
   try {
-    const res = await fetch("weather.json?" + Date.now());
+    // ✅ FULL absolute path (this fixes the problem)
+    const res = await fetch("/esperencewx/weather.json?cache=" + Date.now());
+
+    if (!res.ok) {
+      throw new Error("Fetch failed: " + res.status);
+    }
+
     const data = await res.json();
 
     let temp = null;
@@ -70,7 +76,11 @@ async function loadWeather() {
       wind !== null ? wind + " km/h" : "N/A";
 
   } catch (err) {
-    console.error(err);
+    console.error("ERROR:", err);
+
+    document.getElementById("temp").innerText = "Error";
+    document.getElementById("humidity").innerText = "Error";
+    document.getElementById("wind").innerText = "Error";
   }
 }
 
@@ -80,3 +90,4 @@ setInterval(loadWeather, 30000);
 
 </body>
 </html>
+``
