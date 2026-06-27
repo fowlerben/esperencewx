@@ -1,4 +1,7 @@
-<!DOCTYPE html><>Esperence Weather</title>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Esperence Weather</title>
   <style>
     body {
       font-family: Arial;
@@ -8,9 +11,7 @@
       text-align: center;
     }
 
-    h1 {
-      margin: 10px 0;
-    }
+    h1 { margin: 10px 0; }
 
     #time {
       margin-bottom: 20px;
@@ -50,18 +51,19 @@
 <h1>Esperence Weather Station</h1>
 <h2 id="time"></h2>
 
-<!-- ✅ PRIMARY CONDITIONS -->
+<!-- ✅ PRIMARY -->
 <div class="section">
   <h2>Current Conditions</h2>
   <div class="grid">
     <div class="card"><div>Temperature</div><div class="value" id="temp"></div></div>
     <div class="card"><div>Dew Point</div><div class="value" id="dew"></div></div>
+    <div class="card"><div>Wet Bulb</div><div class="value" id="wetbulb"></div></div>
     <div class="card"><div>Humidity</div><div class="value" id="hum"></div></div>
     <div class="card"><div>Pressure</div><div class="value" id="pressure"></div></div>
   </div>
 </div>
 
-<!-- ✅ HEAT / COMFORT -->
+<!-- ✅ HEAT -->
 <div class="section">
   <h2>Heat & Comfort</h2>
   <div class="grid">
@@ -76,11 +78,11 @@
 <div class="section">
   <h2>Wind</h2>
   <div class="grid">
-    <div class="card"><div>Current Wind</div><div class="value" id="wind"></div></div>
-    <div class="card"><div>2 min Avg</div><div class="value" id="wind2"></div></div>
-    <div class="card"><div>10 min Avg</div><div class="value" id="wind10"></div></div>
-    <div class="card"><div>1 hr Avg</div><div class="value" id="wind60"></div></div>
-    <div class="card"><div>Gust (1 hr)</div><div class="value" id="gust"></div></div>
+    <div class="card"><div>Current</div><div class="value" id="wind"></div></div>
+    <div class="card"><div>2 min</div><div class="value" id="wind2"></div></div>
+    <div class="card"><div>10 min</div><div class="value" id="wind10"></div></div>
+    <div class="card"><div>1 hour</div><div class="value" id="wind60"></div></div>
+    <div class="card"><div>Gust</div><div class="value" id="gust"></div></div>
   </div>
 </div>
 
@@ -109,9 +111,9 @@
 <div class="section">
   <h2>Extras</h2>
   <div class="grid">
-    <div class="card"><div>Temp Sensor 1</div><div class="value" id="extra1"></div></div>
-    <div class="card"><div>Temp Sensor 2</div><div class="value" id="extra2"></div></div>
-    <div class="card"><div>Temp Sensor 3</div><div class="value" id="extra3"></div></div>
+    <div class="card"><div>Temp 1</div><div class="value" id="extra1"></div></div>
+    <div class="card"><div>Temp 2</div><div class="value" id="extra2"></div></div>
+    <div class="card"><div>Temp 3</div><div class="value" id="extra3"></div></div>
     <div class="card"><div>Leaf Wetness</div><div class="value" id="leaf"></div></div>
   </div>
 </div>
@@ -119,10 +121,19 @@
 <script>
 
 // conversions
-function toC(f) { return ((f - 32) * 5/9).toFixed(1); }
+function toC(f) { return (f - 32) * 5/9; }
 function mphToKmh(m) { return (m * 1.60934).toFixed(1); }
 function inToMm(i) { return (i * 25.4).toFixed(1); }
 function inHgToHpa(p) { return (p * 33.8639).toFixed(1); }
+
+// ✅ wet bulb formula
+function wetBulb(T, RH) {
+  return T * Math.atan(0.151977 * Math.sqrt(RH + 8.313659)) +
+         Math.atan(T + RH) -
+         Math.atan(RH - 1.676331) +
+         0.00391838 * Math.pow(RH, 1.5) *
+         Math.atan(0.023101 * RH) - 4.686035;
+}
 
 function degToCompass(deg) {
   const dirs = ["N","NNE","NE","ENE","E","ESE","SE","SSE",
@@ -143,7 +154,7 @@ async function loadWeather() {
   const res = await fetch("/esperencewx/weather.json?" + Date.now());
   const data = await res.json();
 
-  let d = null, pressure = null, solar = null, uv = null, extra = {};
+  let d = null, pressure=null, solar=null, uv=null, leaf=null, extra={};
 
   data.sensors.forEach(sensor => {
     if (!sensor.data) return;
@@ -151,8 +162,11 @@ async function loadWeather() {
 
     if (s.temp !== undefined && s.hum !== undefined && !d) d = s;
     if (s.bar_sea_level !== undefined) pressure = s.bar_sea_level;
+
     if (s.solar_rad !== undefined) solar = s.solar_rad;
     if (s.uv_index !== undefined) uv = s.uv_index;
+
+    if (s.wet_leaf_1 !== undefined) leaf = s.wet_leaf_1;
 
     if (s.temp_1 !== undefined) extra.temp1 = s.temp_1;
     if (s.temp_2 !== undefined) extra.temp2 = s.temp_2;
@@ -161,50 +175,45 @@ async function loadWeather() {
 
   if (!d) return;
 
-  document.getElementById("temp").innerText = toC(d.temp) + " °C";
-  document.getElementById("dew").innerText = d.dew_point ? toC(d.dew_point) + " °C" : "N/A";
-  document.getElementById("heat").innerText = d.heat_index ? toC(d.heat_index) + " °C" : "N/A";
-  document.getElementById("chill").innerText = d.wind_chill ? toC(d.wind_chill) + " °C" : "N/A";
-  document.getElementById("thw").innerText = d.thw_index ? toC(d.thw_index) + " °C" : "N/A";
-  document.getElementById("thsw").innerText = d.thsw_index ? toC(d.thsw_index) + " °C" : "N/A";
+  const tempC = toC(d.temp);
+  document.getElementById("temp").innerText = tempC.toFixed(1)+" °C";
+  document.getElementById("dew").innerText = d.dew_point ? toC(d.dew_point).toFixed(1)+" °C":"N/A";
+  document.getElementById("hum").innerText = d.hum+" %";
 
-  document.getElementById("hum").innerText = d.hum + " %";
-  document.getElementById("pressure").innerText = pressure ? inHgToHpa(pressure) + " hPa" : "N/A";
+  // ✅ wet bulb
+  const wb = wetBulb(tempC, d.hum);
+  document.getElementById("wetbulb").innerText = wb.toFixed(1)+" °C";
 
-  document.getElementById("solar").innerText = solar ? solar + " W/m²" : "N/A";
+  document.getElementById("pressure").innerText = pressure ? inHgToHpa(pressure)+" hPa":"N/A";
+
+  document.getElementById("solar").innerText = solar ? solar+" W/m²":"N/A";
   document.getElementById("uv").innerText = uv ?? "N/A";
 
-  document.getElementById("rain_rate").innerText = d.rain_rate ? inToMm(d.rain_rate) + " mm/hr" : "0";
-  document.getElementById("rain15").innerText = d.rainfall_last_15_min ? inToMm(d.rainfall_last_15_min) + " mm" : "0";
-  document.getElementById("rain60").innerText = d.rainfall_last_60_min ? inToMm(d.rainfall_last_60_min) + " mm" : "0";
-  document.getElementById("rainday").innerText = d.rainfall_daily ? inToMm(d.rainfall_daily) + " mm" : "0";
+  document.getElementById("rain_rate").innerText = d.rain_rate ? inToMm(d.rain_rate)+" mm/hr":"0";
+  document.getElementById("rain15").innerText = d.rainfall_last_15_min ? inToMm(d.rainfall_last_15_min)+" mm":"0";
+  document.getElementById("rain60").innerText = d.rainfall_last_60_min ? inToMm(d.rainfall_last_60_min)+" mm":"0";
+  document.getElementById("rainday").innerText = d.rainfall_daily ? inToMm(d.rainfall_daily)+" mm":"0";
 
-  document.getElementById("et").innerText = d.et_day ? inToMm(d.et_day) + " mm" : "N/A";
+  document.getElementById("et").innerText = d.et_day ? inToMm(d.et_day)+" mm":"N/A";
 
   const dir = d.wind_dir_scalar_avg_last_10_min ?? 0;
-
   document.getElementById("wind").innerText =
-    d.wind_speed_last !== undefined
-      ? mphToKmh(d.wind_speed_last) + " km/h (" + dir + "°, " + degToCompass(dir) + ")"
-      : "N/A";
+    mphToKmh(d.wind_speed_last)+" km/h ("+dir+"°, "+degToCompass(dir)+")";
 
   document.getElementById("wind2").innerText =
-    d.wind_speed_avg_last_2_min ? mphToKmh(d.wind_speed_avg_last_2_min) + " km/h" : "N/A";
-
+    d.wind_speed_avg_last_2_min ? mphToKmh(d.wind_speed_avg_last_2_min)+" km/h":"N/A";
   document.getElementById("wind10").innerText =
-    d.wind_speed_avg_last_10_min ? mphToKmh(d.wind_speed_avg_last_10_min) + " km/h" : "N/A";
-
+    d.wind_speed_avg_last_10_min ? mphToKmh(d.wind_speed_avg_last_10_min)+" km/h":"N/A";
   document.getElementById("wind60").innerText =
-    d.wind_speed_avg_last_60_min ? mphToKmh(d.wind_speed_avg_last_60_min) + " km/h" : "N/A";
-
+    d.wind_speed_avg_last_60_min ? mphToKmh(d.wind_speed_avg_last_60_min)+" km/h":"N/A";
   document.getElementById("gust").innerText =
-    d.wind_speed_hi_last_60_min ? mphToKmh(d.wind_speed_hi_last_60_min) + " km/h" : "N/A";
+    d.wind_speed_hi_last_60_min ? mphToKmh(d.wind_speed_hi_last_60_min)+" km/h":"N/A";
 
-  document.getElementById("extra1").innerText = extra.temp1 ? toC(extra.temp1) + " °C" : "N/A";
-  document.getElementById("extra2").innerText = extra.temp2 ? toC(extra.temp2) + " °C" : "N/A";
-  document.getElementById("extra3").innerText = extra.temp3 ? toC(extra.temp3) + " °C" : "N/A";
+  document.getElementById("extra1").innerText = extra.temp1 ? toC(extra.temp1).toFixed(1)+" °C":"N/A";
+  document.getElementById("extra2").innerText = extra.temp2 ? toC(extra.temp2).toFixed(1)+" °C":"N/A";
+  document.getElementById("extra3").innerText = extra.temp3 ? toC(extra.temp3).toFixed(1)+" °C":"N/A";
 
-  document.getElementById("leaf").innerText = d.leaf_wetness_1 ?? "N/A";
+  document.getElementById("leaf").innerText = leaf ?? "N/A";
 }
 
 loadWeather();
@@ -214,5 +223,3 @@ setInterval(loadWeather, 15000);
 
 </body>
 </html>
-<html>
-<head>
