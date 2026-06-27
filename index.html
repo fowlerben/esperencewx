@@ -24,62 +24,116 @@
       width: 220px;
     }
 
-    h1 { margin-top: 20px; }
-    h2 { font-size: 16px; margin: 5px 0; }
+    select {
+      margin-top: 10px;
+    }
+
+    .compass {
+      margin-top: 10px;
+      font-size: 20px;
+    }
   </style>
 </head>
 <body>
 
 <h1>Esperence Weather Station</h1>
+<h2 id="time">--</h2>
 
 <div class="container">
 
-  <div class="card"><h2>Temperature</h2><p id="temp"></p></div>
-  <div class="card"><h2>Dew Point</h2><p id="dew"></p></div>
-  <div class="card"><h2>Heat Index</h2><p id="heat"></p></div>
-  <div class="card"><h2>Wind Chill</h2><p id="chill"></p></div>
-  <div class="card"><h2>THW Index</h2><p id="thw"></p></div>
-  <div class="card"><h2>THSW Index</h2><p id="thsw"></p></div>
+<div class="card"><h2>Temperature</h2><p id="temp"></p></div>
+<div class="card"><h2>Wet Bulb</h2><p id="wetbulb"></p></div>
+<div class="card"><h2>Humidity</h2><p id="hum"></p></div>
+<div class="card"><h2>Pressure</h2><p id="pressure"></p></div>
 
-  <div class="card"><h2>Humidity</h2><p id="hum"></p></div>
-  <div class="card"><h2>Pressure</h2><p id="pressure"></p></div>
+<div class="card">
+  <h2>Rain Today</h2>
+  <p id="rain"></p>
+</div>
 
-  <div class="card"><h2>Solar Radiation</h2><p id="solar"></p></div>
-  <div class="card"><h2>UV Index</h2><p id="uv"></p></div>
+<div class="card">
+  <h2>Wind</h2>
+  <p id="wind"></p>
+  <div class="compass" id="compass"></div>
 
-  <div class="card"><h2>Rain Rate</h2><p id="rain_rate"></p></div>
-  <div class="card"><h2>Rain (15 min)</h2><p id="rain15"></p></div>
-  <div class="card"><h2>Rain (1 hour)</h2><p id="rain60"></p></div>
-  <div class="card"><h2>Rain Today</h2><p id="rainday"></p></div>
+  <select id="windPeriod">
+    <option value="2">2 min</option>
+    <option value="10" selected>10 min</option>
+    <option value="60">1 hour</option>
+  </select>
+</div>
 
-  <div class="card"><h2>Evapotranspiration</h2><p id="et"></p></div>
-
-  <div class="card"><h2>Wind</h2><p id="wind"></p></div>
-  <div class="card"><h2>Wind Avg 2 min</h2><p id="wind2"></p></div>
-  <div class="card"><h2>Wind Avg 10 min</h2><p id="wind10"></p></div>
-  <div class="card"><h2>Wind Avg 1 hr</h2><p id="wind60"></p></div>
-  <div class="card"><h2>Max Gust (1 hr)</h2><p id="gust"></p></div>
-
-  <div class="card"><h2>Temp Sensor 1</h2><p id="extra1"></p></div>
-  <div class="card"><h2>Temp Sensor 2</h2><p id="extra2"></p></div>
-  <div class="card"><h2>Temp Sensor 3</h2><p id="extra3"></p></div>
-
-  <div class="card"><h2>Leaf Wetness</h2><p id="leaf"></p></div>
+<div class="card">
+  <h2>Daily High</h2>
+  <p id="high"></p>
+  <h2>Daily Low</h2>
+  <p id="low"></p>
+</div>
 
 </div>
 
 <script>
 
-function toC(f) { return ((f - 32) * 5/9).toFixed(1); }
-function mphToKmh(m) { return (m * 1.60934).toFixed(1); }
-function inToMm(i) { return (i * 25.4).toFixed(1); }
-function inHgToHpa(p) { return (p * 33.8639).toFixed(1); }
+// ✅ conversions
+function toC(f) { return ((f - 32) * 5/9); }
+function mphToKmh(m) { return m * 1.60934; }
+function inHgToHpa(p) { return p * 33.8639; }
+function inToMm(i) { return i * 25.4; }
 
-// 16-point compass
+// ✅ compass conversion
 function degToCompass(deg) {
   const dirs = ["N","NNE","NE","ENE","E","ESE","SE","SSE",
                 "S","SSW","SW","WSW","W","WNW","NW","NNW"];
   return dirs[Math.round(deg / 22.5) % 16];
+}
+
+// ✅ wet bulb approximation
+function wetBulb(T, RH) {
+  return T * Math.atan(0.151977 * Math.sqrt(RH + 8.313659)) +
+         Math.atan(T + RH) -
+         Math.atan(RH - 1.676331) +
+         0.00391838 * Math.pow(RH, 1.5) *
+         Math.atan(0.023101 * RH) - 4.686035;
+}
+
+function updateTime() {
+  const now = new Date();
+  document.getElementById("time").innerText =
+    now.toLocaleString("en-AU", { timeZone: "Australia/Brisbane" });
+}
+
+// ✅ highs/lows using localStorage
+function updateHighLow(tempC) {
+  const today = new Date().toDateString();
+  let stored = JSON.parse(localStorage.getItem("temps") || "{}");
+
+  if (!stored.date || stored.date !== today) {
+    stored = {
+      date: today,
+      high: tempC,
+      low: tempC,
+      highTime: new Date().toLocaleTimeString(),
+      lowTime: new Date().toLocaleTimeString()
+    };
+  }
+
+  if (tempC > stored.high) {
+    stored.high = tempC;
+    stored.highTime = new Date().toLocaleTimeString();
+  }
+
+  if (tempC < stored.low) {
+    stored.low = tempC;
+    stored.lowTime = new Date().toLocaleTimeString();
+  }
+
+  localStorage.setItem("temps", JSON.stringify(stored));
+
+  document.getElementById("high").innerText =
+    stored.high.toFixed(1) + " °C @ " + stored.highTime;
+
+  document.getElementById("low").innerText =
+    stored.low.toFixed(1) + " °C @ " + stored.lowTime;
 }
 
 async function loadWeather() {
@@ -88,80 +142,64 @@ async function loadWeather() {
     const data = await res.json();
 
     let d = null;
-
-    // find first valid sensor block
-    data.sensors.forEach(sensor => {
-      if (sensor.data && sensor.data[0] && !d) {
-        d = sensor.data[0];
-      }
+    data.sensors.forEach(s => {
+      if (s.data && s.data[0] && !d) d = s.data[0];
     });
 
     if (!d) return;
 
-    // ✅ Temperature group
-    document.getElementById("temp").innerText = d.temp ? toC(d.temp) + " °C" : "N/A";
-    document.getElementById("dew").innerText = d.dew_point ? toC(d.dew_point) + " °C" : "N/A";
-    document.getElementById("heat").innerText = d.heat_index ? toC(d.heat_index) + " °C" : "N/A";
-    document.getElementById("chill").innerText = d.wind_chill ? toC(d.wind_chill) + " °C" : "N/A";
-    document.getElementById("thw").innerText = d.thw_index ? toC(d.thw_index) + " °C" : "N/A";
-    document.getElementById("thsw").innerText = d.thsw_index ? toC(d.thsw_index) + " °C" : "N/A";
+    // ✅ temperature
+    const tempC = toC(d.temp);
+    document.getElementById("temp").innerText = tempC.toFixed(1) + " °C";
 
-    // ✅ Humidity + pressure
-    document.getElementById("hum").innerText = d.hum ? d.hum + " %" : "N/A";
-    document.getElementById("pressure").innerText = d.bar_sea_level ? inHgToHpa(d.bar_sea_level) + " hPa" : "N/A";
+    updateHighLow(tempC);
 
-    // ✅ Solar + UV
-    document.getElementById("solar").innerText = d.solar_rad ? d.solar_rad + " W/m²" : "N/A";
-    document.getElementById("uv").innerText = d.uv_index ?? "N/A";
+    // ✅ humidity
+    document.getElementById("hum").innerText = d.hum + " %";
 
-    // ✅ Rain
-    document.getElementById("rain_rate").innerText = d.rain_rate ? inToMm(d.rain_rate) + " mm/hr" : "0";
-    document.getElementById("rain15").innerText = d.rainfall_last_15_min ? inToMm(d.rainfall_last_15_min) + " mm" : "0";
-    document.getElementById("rain60").innerText = d.rainfall_last_60_min ? inToMm(d.rainfall_last_60_min) + " mm" : "0";
-    document.getElementById("rainday").innerText = d.rainfall_daily ? inToMm(d.rainfall_daily) + " mm" : "0";
+    // ✅ pressure (fixed)
+    document.getElementById("pressure").innerText =
+      d.bar_sea_level ? inHgToHpa(d.bar_sea_level).toFixed(1) + " hPa" : "N/A";
 
-    // ✅ ET
-    document.getElementById("et").innerText = d.et_day ? inToMm(d.et_day) + " mm" : "N/A";
+    // ✅ rainfall (extra decimal)
+    document.getElementById("rain").innerText =
+      d.rainfall_daily ? inToMm(d.rainfall_daily).toFixed(2) + " mm" : "0.00 mm";
 
-    // ✅ Wind
-    const dir = d.wind_dir_scalar_avg_last_10_min ?? 0;
-    const compass = degToCompass(dir);
+    // ✅ wet bulb
+    const wb = wetBulb(tempC, d.hum);
+    document.getElementById("wetbulb").innerText = wb.toFixed(1) + " °C";
+
+    // ✅ wind
+    const period = document.getElementById("windPeriod").value;
+
+    let speed = 0;
+    if (period === "2") speed = d.wind_speed_avg_last_2_min;
+    if (period === "10") speed = d.wind_speed_avg_last_10_min;
+    if (period === "60") speed = d.wind_speed_avg_last_60_min;
+
+    const kmh = mphToKmh(speed);
+    const dir = d.wind_dir_scalar_avg_last_10_min || 0;
 
     document.getElementById("wind").innerText =
-      d.wind_speed_last !== undefined
-        ? mphToKmh(d.wind_speed_last) + " km/h (" + dir + "°, " + compass + ")"
-        : "N/A";
+      kmh.toFixed(1) + " km/h (" + dir + "°, " + degToCompass(dir) + ")";
 
-    document.getElementById("wind2").innerText =
-      d.wind_speed_avg_last_2_min ? mphToKmh(d.wind_speed_avg_last_2_min) + " km/h" : "N/A";
-
-    document.getElementById("wind10").innerText =
-      d.wind_speed_avg_last_10_min ? mphToKmh(d.wind_speed_avg_last_10_min) + " km/h" : "N/A";
-
-    document.getElementById("wind60").innerText =
-      d.wind_speed_avg_last_60_min ? mphToKmh(d.wind_speed_avg_last_60_min) + " km/h" : "N/A";
-
-    document.getElementById("gust").innerText =
-      d.wind_speed_hi_last_60_min ? mphToKmh(d.wind_speed_hi_last_60_min) + " km/h" : "N/A";
-
-    // ✅ Extra temps
-    document.getElementById("extra1").innerText = d.temp_in ? toC(d.temp_in) + " °C" : "N/A";
-    document.getElementById("extra2").innerText = d.temp_2 ? toC(d.temp_2) + " °C" : "N/A";
-    document.getElementById("extra3").innerText = d.temp_3 ? toC(d.temp_3) + " °C" : "N/A";
-
-    // ✅ Leaf wetness
-    document.getElementById("leaf").innerText = d.leaf_wetness_1 ?? "N/A";
+    // ✅ simple compass visual
+    document.getElementById("compass").innerText =
+      "🧭 " + degToCompass(dir);
 
   } catch (err) {
-    console.log("Error:", err);
+    console.log(err);
   }
 }
 
+// ✅ refresh loop
+updateTime();
+setInterval(updateTime, 1000);
+
 loadWeather();
-setInterval(loadWeather, 30000);
+setInterval(loadWeather, 15000);
 
 </script>
 
 </body>
 </html>
-``
