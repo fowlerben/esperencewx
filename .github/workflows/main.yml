@@ -1,0 +1,45 @@
+name: Weather Update
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  weather:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch weather data from WeatherLink
+        run: |
+          TIMESTAMP=$(date +%s)
+
+          PARAMS="api-key${{ secrets.WL_API_KEY }}station-id${{ secrets.WL_STATION_ID }}t${TIMESTAMP}"
+
+          SIGNATURE=$(printf "%s" "$PARAMS" | openssl dgst -sha256 -hmac "${{ secrets.WL_API_SECRET }}" | awk '{print $2}')
+
+          URL="https://api.weatherlink.com/v2/current/${{ secrets.WL_STATION_ID }}?api-key=${{ secrets.WL_API_KEY }}&t=${TIMESTAMP}&api-signature=${SIGNATURE}"
+
+          curl -s "$URL" > raw.json
+
+      - name: Extract useful data
+        run: |
+          jq '{
+            temperature: (.sensors[] | select(.data[0].temp != null) | .data[0].temp),
+            humidity: (.sensors[] | select(.data[0].hum != null) | .data[0].hum),
+            wind: (.sensors[] | select(.data[0].wind_speed_avg_last_1_min != null) | .data[0].wind_speed_avg_last_1_min)
+          }' raw.json > weather.json
+
+      - name: Save weather.json to repo
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add weather.json
+          git commit -m "update weather" || echo "no changes"
+          git push
