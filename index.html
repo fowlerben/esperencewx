@@ -184,7 +184,7 @@ setInterval(updateTime,1000);updateTime();
 
 async function loadWeather(){
 
-const res=await fetch("/esperencewx/weather.json?"+Date.now(), { cache: "no-store" });
+const res=await fetch("http://192.168.1.103/v1/current_conditions"+Date.now(), { cache: "no-store" });
 const data=await res.json();
 
 let iss,baro,extra;
