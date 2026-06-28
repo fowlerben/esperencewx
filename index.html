@@ -136,6 +136,19 @@ function mphToKmh(v){return (v!=null)?(v*1.60934).toFixed(1)+" km/h":"N/A";}
 function safeDeg(v){return (v!=null)?v+"°":"N/A";}
 function inHgToHpa(p){return (p*33.8639).toFixed(1);}
 
+function formatTime(ts){
+if(!ts) return "N/A";
+const d=new Date(ts*1000);
+return d.toLocaleString("en-AU",{
+timeZone:"Australia/Brisbane",
+hour:"2-digit",
+minute:"2-digit",
+day:"2-digit",
+month:"2-digit",
+year:"numeric"
+});
+}
+
 function updateTime(){
 document.getElementById("time").innerText=
 new Date().toLocaleString("en-AU",{timeZone:"Australia/Brisbane"});
@@ -198,20 +211,20 @@ gd10.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_10_min);
 solar.innerText=iss.solar_rad??"N/A";
 uv.innerText=iss.uv_index??"N/A";
 
-// ✅ RAIN
+// ✅ RAIN (FIXED DAILY)
 rain_rate.innerText=iss.rain_rate_last_mm;
 rain15.innerText=iss.rainfall_last_15_min_mm;
 rain60.innerText=iss.rainfall_last_60_min_mm;
 rain24.innerText=iss.rainfall_last_24_hr_mm;
-rainday.innerText=iss.rainfall_dailly_mm;
+rainday.innerText=iss.rainfall_dailly_mm ?? iss.rainfall_daily_mm ?? 0;
 rainm.innerText=iss.rainfall_monthly_mm;
 rainy.innerText=iss.rainfall_year_mm;
 
-// ✅ STORM
+// ✅ STORM (FIXED TIME)
 storm.innerText=iss.rain_storm_mm ?? "N/A";
 storm_last.innerText=iss.rain_storm_last_mm ?? "N/A";
-storm_start.innerText=iss.rain_storm_last_start_at ?? "N/A";
-storm_end.innerText=iss.rain_storm_last_end_at ?? "N/A";
+storm_start.innerText=formatTime(iss.rain_storm_last_start_at);
+storm_end.innerText=formatTime(iss.rain_storm_last_end_at);
 
 // ✅ EXTRAS
 leaf.innerText=extra?.wet_leaf_1 ?? "N/A";
