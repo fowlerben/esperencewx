@@ -19,6 +19,19 @@
 
     .card { background:#1f3b4d; border-radius:10px; padding:12px; }
     .value { font-size:18px; }
+
+    /* ✅ NEW */
+    .alert { font-weight:bold; }
+    .warning {
+      background: repeating-linear-gradient(
+        45deg,
+        #000,
+        #000 10px,
+        #ffd600 10px,
+        #ffd600 20px
+      );
+      color:#000;
+    }
   </style>
 </head>
 <body>
@@ -115,6 +128,15 @@
 <div class="card">Last Storm<div class="value" id="storm_last"></div></div>
 <div class="card">Start<div class="value" id="storm_start"></div></div>
 <div class="card">End<div class="value" id="storm_end"></div></div>
+</div>
+</div>
+
+<!-- ✅ NEW ALERTS -->
+<div class="section">
+<h2>Alerts</h2>
+<div class="grid">
+<div class="card alert" id="fogAlert">No Fog</div>
+<div class="card alert" id="dewAlert">No Dew</div>
 </div>
 </div>
 
@@ -245,21 +267,59 @@ t1.innerText = t1C!=null ? t1C.toFixed(1)+" °C":"N/A";
 t2.innerText = t2C!=null ? t2C.toFixed(1)+" °C":"N/A";
 t3.innerText = t3C!=null ? t3C.toFixed(1)+" °C":"N/A";
 
-// ✅ NEW CALCULATIONS
-
-// Dew Point Depression
+// NEW CALCULATIONS
 dpd.innerText = (tempC!=null && dewC!=null) 
   ? (tempC - dewC).toFixed(1) + " °C"
   : "N/A";
 
-// Terrestrial Dew Point Depression
 const temps = [t1C, t2C, t3C].filter(v => v!=null);
 
+let minT = null;
+
 if (temps.length > 0 && dewC!=null){
-  const minT = Math.min(...temps);
+  minT = Math.min(...temps);
   tdpd.innerText = (minT - dewC).toFixed(1) + " °C";
 } else {
   tdpd.innerText = "N/A";
+}
+
+// ✅ ALERTS
+
+// Fog
+fogAlert.classList.remove("warning");
+if (tempC!=null && dewC!=null){
+  const dpdVal = tempC - dewC;
+
+  if (dpdVal < 0.5){
+    fogAlert.innerText = "Fog Likely";
+    fogAlert.classList.add("warning");
+  } else if (dpdVal < 1){
+    fogAlert.innerText = "Fog Possible";
+  } else {
+    fogAlert.innerText = "No Fog";
+  }
+} else {
+  fogAlert.innerText = "No Fog";
+}
+
+// Dew / Frost
+dewAlert.classList.remove("warning");
+
+if (minT!=null && dewC!=null){
+  const tdpdVal = minT - dewC;
+
+  if (tdpdVal < 0){
+    if (minT < 0){
+      dewAlert.innerText = "Frost forming";
+      dewAlert.classList.add("warning");
+    } else {
+      dewAlert.innerText = "Dew forming";
+    }
+  } else {
+    dewAlert.innerText = "No Dew";
+  }
+} else {
+  dewAlert.innerText = "No Dew";
 }
 
 }
