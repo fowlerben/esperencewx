@@ -26,7 +26,7 @@
 <h1>Esperence Weather Station</h1>
 <h2 id="time"></h2>
 
-<!-- ✅ CURRENT -->
+<!-- CURRENT -->
 <div class="section">
 <h2>Current Conditions</h2>
 <div class="grid">
@@ -38,7 +38,7 @@
 </div>
 </div>
 
-<!-- ✅ COMFORT -->
+<!-- COMFORT -->
 <div class="section">
 <h2>Heat & Comfort</h2>
 <div class="grid">
@@ -49,7 +49,7 @@
 </div>
 </div>
 
-<!-- ✅ WIND -->
+<!-- WIND -->
 <div class="section">
 <h2>Wind</h2>
 <div class="grid">
@@ -84,7 +84,7 @@
 </div>
 </div>
 
-<!-- ✅ SOLAR -->
+<!-- SOLAR -->
 <div class="section">
 <h2>Solar</h2>
 <div class="grid">
@@ -93,7 +93,7 @@
 </div>
 </div>
 
-<!-- ✅ RAIN -->
+<!-- RAIN -->
 <div class="section">
 <h2>Rain</h2>
 <div class="grid">
@@ -107,7 +107,7 @@
 </div>
 </div>
 
-<!-- ✅ RAIN STORM -->
+<!-- RAIN STORM -->
 <div class="section">
 <h2>Rain Storm</h2>
 <div class="grid">
@@ -118,7 +118,7 @@
 </div>
 </div>
 
-<!-- ✅ EXTRAS -->
+<!-- EXTRAS -->
 <div class="section">
 <h2>Extras</h2>
 <div class="grid">
@@ -126,12 +126,17 @@
 <div class="card">Temp1<div class="value" id="t1"></div></div>
 <div class="card">Temp2<div class="value" id="t2"></div></div>
 <div class="card">Temp3<div class="value" id="t3"></div></div>
+
+<!-- ✅ NEW -->
+<div class="card">DPD<div class="value" id="dpd"></div></div>
+<div class="card">Terrestrial DPD<div class="value" id="tdpd"></div></div>
+
 </div>
 </div>
 
 <script>
 
-function toC(f){return ((f-32)*5/9).toFixed(1);}
+function toC(f){ if(f==null) return null; return ((f-32)*5/9); }
 function mphToKmh(v){return (v!=null)?(v*1.60934).toFixed(1)+" km/h":"N/A";}
 function safeDeg(v){return (v!=null)?v+"°":"N/A";}
 function inHgToHpa(p){return (p*33.8639).toFixed(1);}
@@ -170,22 +175,25 @@ if(s.lsid===838746) extra=s.data[0];
 
 if(!iss)return;
 
-// ✅ CORE
-temp.innerText=toC(iss.temp)+" °C";
-dew.innerText=toC(iss.dew_point)+" °C";
-wet.innerText=toC(iss.wet_bulb)+" °C";
-hum.innerText=iss.hum+" %";
-pressure.innerText=baro?inHgToHpa(baro.bar_sea_level)+" hPa":"N/A";
+// CORE
+const tempC = toC(iss.temp);
+const dewC  = toC(iss.dew_point);
 
-// ✅ COMFORT
-heat.innerText=toC(iss.heat_index)+" °C";
-chill.innerText=toC(iss.wind_chill)+" °C";
-thw.innerText=toC(iss.thw_index)+" °C";
-thsw.innerText=toC(iss.thsw_index)+" °C";
+temp.innerText = tempC!=null ? tempC.toFixed(1)+" °C":"N/A";
+dew.innerText  = dewC!=null ? dewC.toFixed(1)+" °C":"N/A";
+wet.innerText  = iss.wet_bulb!=null ? toC(iss.wet_bulb).toFixed(1)+" °C":"N/A";
+hum.innerText  = iss.hum+" %";
+pressure.innerText = baro?inHgToHpa(baro.bar_sea_level)+" hPa":"N/A";
 
-// ✅ WIND
-wind.innerText=mphToKmh(iss.wind_speed_last);
-dir.innerText=safeDeg(iss.wind_dir_last);
+// COMFORT
+heat.innerText = iss.heat_index!=null?toC(iss.heat_index).toFixed(1)+" °C":"N/A";
+chill.innerText= iss.wind_chill!=null?toC(iss.wind_chill).toFixed(1)+" °C":"N/A";
+thw.innerText  = iss.thw_index!=null?toC(iss.thw_index).toFixed(1)+" °C":"N/A";
+thsw.innerText = iss.thsw_index!=null?toC(iss.thsw_index).toFixed(1)+" °C":"N/A";
+
+// WIND
+wind.innerText = mphToKmh(iss.wind_speed_last);
+dir.innerText  = safeDeg(iss.wind_dir_last);
 
 w1.innerText=mphToKmh(iss.wind_speed_avg_last_1_min);
 w2.innerText=mphToKmh(iss.wind_speed_avg_last_2_min);
@@ -207,11 +215,11 @@ gd2.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_2_min);
 gd5.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_5_min);
 gd10.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_10_min);
 
-// ✅ SOLAR
+// SOLAR
 solar.innerText=iss.solar_rad??"N/A";
 uv.innerText=iss.uv_index??"N/A";
 
-// ✅ RAIN (FIXED DAILY)
+// RAIN
 rain_rate.innerText=iss.rain_rate_last_mm;
 rain15.innerText=iss.rainfall_last_15_min_mm;
 rain60.innerText=iss.rainfall_last_60_min_mm;
@@ -220,17 +228,39 @@ rainday.innerText=iss.rainfall_dailly_mm ?? iss.rainfall_daily_mm ?? 0;
 rainm.innerText=iss.rainfall_monthly_mm;
 rainy.innerText=iss.rainfall_year_mm;
 
-// ✅ STORM (FIXED TIME)
+// STORM
 storm.innerText=iss.rain_storm_mm ?? "N/A";
 storm_last.innerText=iss.rain_storm_last_mm ?? "N/A";
 storm_start.innerText=formatTime(iss.rain_storm_last_start_at);
 storm_end.innerText=formatTime(iss.rain_storm_last_end_at);
 
-// ✅ EXTRAS
+// EXTRAS
 leaf.innerText=extra?.wet_leaf_1 ?? "N/A";
-t1.innerText=extra?.temp_1 ? toC(extra.temp_1)+" °C":"N/A";
-t2.innerText=extra?.temp_2 ? toC(extra.temp_2)+" °C":"N/A";
-t3.innerText=extra?.temp_3 ? toC(extra.temp_3)+" °C":"N/A";
+
+const t1C = extra?.temp_1!=null ? toC(extra.temp_1) : null;
+const t2C = extra?.temp_2!=null ? toC(extra.temp_2) : null;
+const t3C = extra?.temp_3!=null ? toC(extra.temp_3) : null;
+
+t1.innerText = t1C!=null ? t1C.toFixed(1)+" °C":"N/A";
+t2.innerText = t2C!=null ? t2C.toFixed(1)+" °C":"N/A";
+t3.innerText = t3C!=null ? t3C.toFixed(1)+" °C":"N/A";
+
+// ✅ NEW CALCULATIONS
+
+// Dew Point Depression
+dpd.innerText = (tempC!=null && dewC!=null) 
+  ? (tempC - dewC).toFixed(1) + " °C"
+  : "N/A";
+
+// Terrestrial Dew Point Depression
+const temps = [t1C, t2C, t3C].filter(v => v!=null);
+
+if (temps.length > 0 && dewC!=null){
+  const minT = Math.min(...temps);
+  tdpd.innerText = (minT - dewC).toFixed(1) + " °C";
+} else {
+  tdpd.innerText = "N/A";
+}
 
 }
 
