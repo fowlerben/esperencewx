@@ -20,7 +20,7 @@ jobs:
         run: |
           TIMESTAMP=$(date +%s)
 
-          PARAMS="api-key${{ secrets.WL_API_KEY }}station-id${{ secrets.WL_STATION_ID }}t${TIMESTAMP}"
+          PARAMS="api-key=${{ secrets.WL_API_KEY }}&station-id=${{ secrets.WL_STATION_ID }}&t=${TIMESTAMP}"
 
           SIGNATURE=$(printf "%s" "$PARAMS" | openssl dgst -sha256 -hmac "${{ secrets.WL_API_SECRET }}" | awk '{print $2}')
 
