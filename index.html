@@ -4,6 +4,7 @@
   <title>Esperence Weather</title>
   <style>
     body { font-family: Arial; background:#0b1e2d; color:white; margin:0; text-align:center; }
+
     h1 { margin:10px 0; }
     #time { margin-bottom:20px; opacity:0.8; }
 
@@ -26,6 +27,7 @@
 <h1>Esperence Weather Station</h1>
 <h2 id="time"></h2>
 
+<!-- ✅ CURRENT -->
 <div class="section">
 <h2>Current Conditions</h2>
 <div class="grid">
@@ -37,6 +39,7 @@
 </div>
 </div>
 
+<!-- ✅ COMFORT -->
 <div class="section">
 <h2>Heat & Comfort</h2>
 <div class="grid">
@@ -47,20 +50,42 @@
 </div>
 </div>
 
+<!-- ✅ WIND -->
 <div class="section">
 <h2>Wind</h2>
 <div class="grid">
+
 <div class="card">Speed<div class="value" id="wind"></div></div>
 <div class="card">Direction<div class="value" id="dir"></div></div>
+
 <div class="card">1m Avg<div class="value" id="w1"></div></div>
+<div class="card">1m Dir<div class="value" id="d1"></div></div>
+
 <div class="card">2m Avg<div class="value" id="w2"></div></div>
+<div class="card">2m Dir<div class="value" id="d2"></div></div>
+
 <div class="card">5m Avg<div class="value" id="w5"></div></div>
+<div class="card">5m Dir<div class="value" id="d5"></div></div>
+
 <div class="card">10m Avg<div class="value" id="w10"></div></div>
+<div class="card">10m Dir<div class="value" id="d10"></div></div>
+
 <div class="card">Gust 1m<div class="value" id="g1"></div></div>
+<div class="card">Dir<div class="value" id="gd1"></div></div>
+
+<div class="card">Gust 2m<div class="value" id="g2"></div></div>
+<div class="card">Dir<div class="value" id="gd2"></div></div>
+
+<div class="card">Gust 5m<div class="value" id="g5"></div></div>
+<div class="card">Dir<div class="value" id="gd5"></div></div>
+
 <div class="card">Gust 10m<div class="value" id="g10"></div></div>
+<div class="card">Dir<div class="value" id="gd10"></div></div>
+
 </div>
 </div>
 
+<!-- ✅ SOLAR -->
 <div class="section">
 <h2>Solar</h2>
 <div class="grid">
@@ -69,131 +94,92 @@
 </div>
 </div>
 
+<!-- ✅ RAIN -->
 <div class="section">
 <h2>Rain</h2>
 <div class="grid">
 <div class="card">Rate<div class="value" id="rain_rate"></div></div>
-<div class="card">15 min<div class="value" id="rain15"></div></div>
-<div class="card">1 hour<div class="value" id="rain60"></div></div>
-<div class="card">24 hour<div class="value" id="rain24"></div></div>
+<div class="card">15m<div class="value" id="rain15"></div></div>
+<div class="card">1h<div class="value" id="rain60"></div></div>
+<div class="card">24h<div class="value" id="rain24"></div></div>
 <div class="card">Daily<div class="value" id="rainday"></div></div>
-<div class="card">Monthly<div class="value" id="rainm"></div></div>
-<div class="card">Yearly<div class="value" id="rainy"></div></div>
-</div>
-</div>
-
-<div class="section">
-<h2>Rain Storm</h2>
-<div class="grid">
-<div class="card">Current Storm<div class="value" id="storm"></div></div>
-<div class="card">Last Storm<div class="value" id="storm_last"></div></div>
-<div class="card">Start<div class="value" id="storm_start"></div></div>
-<div class="card">End<div class="value" id="storm_end"></div></div>
-</div>
-</div>
-
-<div class="section">
-<h2>Extras</h2>
-<div class="grid">
-<div class="card">Leaf<div class="value" id="leaf"></div></div>
-<div class="card">Temp1<div class="value" id="t1"></div></div>
-<div class="card">Temp2<div class="value" id="t2"></div></div>
-<div class="card">Temp3<div class="value" id="t3"></div></div>
-</div>
-</div>
-
-<div class="section">
-<h2>Indoor</h2>
-<div class="grid">
-<div class="card">Temp<div class="value" id="intemp"></div></div>
-<div class="card">Dew<div class="value" id="indew"></div></div>
-<div class="card">Heat Index<div class="value" id="inheat"></div></div>
-<div class="card">Humidity<div class="value" id="inhum"></div></div>
 </div>
 </div>
 
 <script>
 
-function toC(f){ return ((f-32)*5/9).toFixed(1); }
-function mphToKmh(m){ return (m*1.60934).toFixed(1); }
-function inHgToHpa(p){ return (p*33.8639).toFixed(1); }
+function toC(f){return ((f-32)*5/9).toFixed(1);}
+function mphToKmh(v){return (v!=null)?(v*1.60934).toFixed(1)+" km/h":"N/A";}
+function safeDeg(v){return (v!=null)?v+"°":"N/A";}
+function inHgToHpa(p){return (p*33.8639).toFixed(1);}
 
 function updateTime(){
-  document.getElementById("time").innerText =
-  new Date().toLocaleString("en-AU",{timeZone:"Australia/Brisbane"});
+document.getElementById("time").innerText=
+new Date().toLocaleString("en-AU",{timeZone:"Australia/Brisbane"});
 }
-setInterval(updateTime,1000); updateTime();
+setInterval(updateTime,1000);updateTime();
 
 async function loadWeather(){
 
-const res = await fetch("/esperencewx/weather.json?"+Date.now());
-const data = await res.json();
+const res=await fetch("/esperencewx/weather.json?"+Date.now());
+const data=await res.json();
 
-let iss, baro, extra, indoor;
+let iss,baro;
 
 data.sensors.forEach(s=>{
-  if(s.lsid===553786) iss=s.data[0];
-  if(s.lsid===551509) baro=s.data[0];
-  if(s.lsid===838746) extra=s.data[0];
-  if(s.lsid===551510) indoor=s.data[0];
+if(s.lsid===553786)iss=s.data[0];
+if(s.lsid===551509)baro=s.data[0];
 });
 
-if(!iss) return;
+if(!iss)return;
 
-// ✅ core
+// ✅ CORE
 temp.innerText=toC(iss.temp)+" °C";
 dew.innerText=toC(iss.dew_point)+" °C";
 wet.innerText=toC(iss.wet_bulb)+" °C";
 hum.innerText=iss.hum+" %";
-
 pressure.innerText=baro?inHgToHpa(baro.bar_sea_level)+" hPa":"N/A";
 
-// ✅ comfort
+// ✅ COMFORT
 heat.innerText=toC(iss.heat_index)+" °C";
 chill.innerText=toC(iss.wind_chill)+" °C";
 thw.innerText=toC(iss.thw_index)+" °C";
 thsw.innerText=toC(iss.thsw_index)+" °C";
 
-// ✅ wind
-wind.innerText=mphToKmh(iss.wind_speed_last)+" km/h";
-dir.innerText=iss.wind_dir_last+"°";
+// ✅ WIND FIXED
+wind.innerText=mphToKmh(iss.wind_speed_last);
+dir.innerText=safeDeg(iss.wind_dir_last);
+
 w1.innerText=mphToKmh(iss.wind_speed_avg_last_1_min);
 w2.innerText=mphToKmh(iss.wind_speed_avg_last_2_min);
 w5.innerText=mphToKmh(iss.wind_speed_avg_last_5_min);
 w10.innerText=mphToKmh(iss.wind_speed_avg_last_10_min);
+
+d1.innerText=safeDeg(iss.wind_dir_scalar_avg_last_1_min);
+d2.innerText=safeDeg(iss.wind_dir_scalar_avg_last_2_min);
+d5.innerText=safeDeg(iss.wind_dir_scalar_avg_last_5_min);
+d10.innerText=safeDeg(iss.wind_dir_scalar_avg_last_10_min);
+
 g1.innerText=mphToKmh(iss.wind_speed_hi_last_1_min);
+g2.innerText=mphToKmh(iss.wind_speed_hi_last_2_min);
+g5.innerText=mphToKmh(iss.wind_speed_hi_last_5_min);
 g10.innerText=mphToKmh(iss.wind_speed_hi_last_10_min);
 
-// ✅ solar
-solar.innerText=iss.solar_rad ?? "N/A";
-uv.innerText=iss.uv_index ?? "N/A";
+gd1.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_1_min);
+gd2.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_2_min);
+gd5.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_5_min);
+gd10.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_10_min);
 
-// ✅ rain
+// ✅ SOLAR
+solar.innerText=iss.solar_rad??"N/A";
+uv.innerText=iss.uv_index??"N/A";
+
+// ✅ RAIN
 rain_rate.innerText=iss.rain_rate_last_mm;
 rain15.innerText=iss.rainfall_last_15_min_mm;
 rain60.innerText=iss.rainfall_last_60_min_mm;
 rain24.innerText=iss.rainfall_last_24_hr_mm;
 rainday.innerText=iss.rainfall_dailly_mm;
-rainm.innerText=iss.rainfall_monthly_mm;
-rainy.innerText=iss.rainfall_year_mm;
-
-// ✅ storm
-storm.innerText=iss.rain_storm_mm ?? "N/A";
-storm_last.innerText=iss.rain_storm_last_mm ?? "N/A";
-storm_start.innerText=iss.rain_storm_last_start_at ?? "N/A";
-storm_end.innerText=iss.rain_storm_last_end_at ?? "N/A";
-
-// ✅ extras
-leaf.innerText=extra?.wet_leaf_1 ?? "N/A";
-t1.innerText=extra?.temp_1 ? toC(extra.temp_1)+" °C":"N/A";
-t2.innerText=extra?.temp_2 ? toC(extra.temp_2)+" °C":"N/A";
-t3.innerText=extra?.temp_3 ? toC(extra.temp_3)+" °C":"N/A";
-
-// ✅ indoor (FULL FIX)
-intemp.innerText=indoor?.temp_in ? toC(indoor.temp_in)+" °C":"N/A";
-indew.innerText=indoor?.dew_point_in ? toC(indoor.dew_point_in)+" °C":"N/A";
-inheat.innerText=indoor?.heat_index_in ? toC(indoor.heat_index_in)+" °C":"N/A";
-inhum.innerText=indoor?.hum_in ?? "N/A";
 
 }
 
