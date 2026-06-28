@@ -21,7 +21,6 @@
     .value { font-size:18px; }
   </style>
 </head>
-
 <body>
 
 <h1>Esperence Weather Station</h1>
@@ -36,16 +35,6 @@
 <div class="card">Wet Bulb<div class="value" id="wet"></div></div>
 <div class="card">Humidity<div class="value" id="hum"></div></div>
 <div class="card">Pressure<div class="value" id="pressure"></div></div>
-<div class="card">Dew Point Dep.<div class="value" id="dpd"></div></div>
-</div>
-</div>
-
-<!-- ✅ ALERTS (ADDED ONLY) -->
-<div class="section">
-<h2>Alerts</h2>
-<div class="grid">
-<div class="card">Fog<div class="value" id="fog"></div></div>
-<div class="card">Surface<div class="value" id="surface"></div></div>
 </div>
 </div>
 
@@ -64,6 +53,7 @@
 <div class="section">
 <h2>Wind</h2>
 <div class="grid">
+
 <div class="card">Speed<div class="value" id="wind"></div></div>
 <div class="card">Dir<div class="value" id="dir"></div></div>
 
@@ -90,6 +80,7 @@
 
 <div class="card">Gust 10m<div class="value" id="g10"></div></div>
 <div class="card">Dir<div class="value" id="gd10"></div></div>
+
 </div>
 </div>
 
@@ -135,14 +126,12 @@
 <div class="card">Temp1<div class="value" id="t1"></div></div>
 <div class="card">Temp2<div class="value" id="t2"></div></div>
 <div class="card">Temp3<div class="value" id="t3"></div></div>
-<div class="card">Terrestrial DPD<div class="value" id="tdpd"></div></div>
 </div>
 </div>
 
 <script>
 
-function toCraw(f){ return (f-32)*5/9; }
-function toC(f){ return toCraw(f).toFixed(1); }
+function toC(f){return ((f-32)*5/9).toFixed(1);}
 function mphToKmh(v){return (v!=null)?(v*1.60934).toFixed(1)+" km/h":"N/A";}
 function safeDeg(v){return (v!=null)?v+"°":"N/A";}
 function inHgToHpa(p){return (p*33.8639).toFixed(1);}
@@ -152,8 +141,11 @@ if(!ts) return "N/A";
 const d=new Date(ts*1000);
 return d.toLocaleString("en-AU",{
 timeZone:"Australia/Brisbane",
-hour:"2-digit",minute:"2-digit",
-day:"2-digit",month:"2-digit",year:"numeric"
+hour:"2-digit",
+minute:"2-digit",
+day:"2-digit",
+month:"2-digit",
+year:"numeric"
 });
 }
 
@@ -161,7 +153,6 @@ function updateTime(){
 document.getElementById("time").innerText=
 new Date().toLocaleString("en-AU",{timeZone:"Australia/Brisbane"});
 }
-
 setInterval(updateTime,1000);updateTime();
 
 async function loadWeather(){
@@ -179,63 +170,67 @@ if(s.lsid===838746) extra=s.data[0];
 
 if(!iss)return;
 
-// CORE
-const tempC=toCraw(iss.temp);
-const dewC=toCraw(iss.dew_point);
-
-temp.innerText=tempC.toFixed(1)+" °C";
-dew.innerText=dewC.toFixed(1)+" °C";
+// ✅ CORE
+temp.innerText=toC(iss.temp)+" °C";
+dew.innerText=toC(iss.dew_point)+" °C";
 wet.innerText=toC(iss.wet_bulb)+" °C";
 hum.innerText=iss.hum+" %";
 pressure.innerText=baro?inHgToHpa(baro.bar_sea_level)+" hPa":"N/A";
 
-// DPD
-const dpdVal = tempC - dewC;
-dpd.innerText=dpdVal.toFixed(1)+" °C";
+// ✅ COMFORT
+heat.innerText=toC(iss.heat_index)+" °C";
+chill.innerText=toC(iss.wind_chill)+" °C";
+thw.innerText=toC(iss.thw_index)+" °C";
+thsw.innerText=toC(iss.thsw_index)+" °C";
 
-// FOG ALERT
-if(dpdVal < 0.5){
-  fog.innerText="Fog Likely";
-}else if(dpdVal < 1){
-  fog.innerText="Fog Possible";
-}else{
-  fog.innerText="No Fog";
-}
+// ✅ WIND
+wind.innerText=mphToKmh(iss.wind_speed_last);
+dir.innerText=safeDeg(iss.wind_dir_last);
 
-// EXTRAS temps
-const t1c=extra?.temp_1!=null?toCraw(extra.temp_1):null;
-const t2c=extra?.temp_2!=null?toCraw(extra.temp_2):null;
-const t3c=extra?.temp_3!=null?toCraw(extra.temp_3):null;
+w1.innerText=mphToKmh(iss.wind_speed_avg_last_1_min);
+w2.innerText=mphToKmh(iss.wind_speed_avg_last_2_min);
+w5.innerText=mphToKmh(iss.wind_speed_avg_last_5_min);
+w10.innerText=mphToKmh(iss.wind_speed_avg_last_10_min);
 
-t1.innerText=t1c!=null?t1c.toFixed(1)+" °C":"N/A";
-t2.innerText=t2c!=null?t2c.toFixed(1)+" °C":"N/A";
-t3.innerText=t3c!=null?t3c.toFixed(1)+" °C":"N/A";
+d1.innerText=safeDeg(iss.wind_dir_scalar_avg_last_1_min);
+d2.innerText=safeDeg(iss.wind_dir_scalar_avg_last_2_min);
+d5.innerText=safeDeg(iss.wind_dir_scalar_avg_last_5_min);
+d10.innerText=safeDeg(iss.wind_dir_scalar_avg_last_10_min);
 
+g1.innerText=mphToKmh(iss.wind_speed_hi_last_1_min);
+g2.innerText=mphToKmh(iss.wind_speed_hi_last_2_min);
+g5.innerText=mphToKmh(iss.wind_speed_hi_last_5_min);
+g10.innerText=mphToKmh(iss.wind_speed_hi_last_10_min);
+
+gd1.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_1_min);
+gd2.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_2_min);
+gd5.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_5_min);
+gd10.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_10_min);
+
+// ✅ SOLAR
+solar.innerText=iss.solar_rad??"N/A";
+uv.innerText=iss.uv_index??"N/A";
+
+// ✅ RAIN (FIXED DAILY)
+rain_rate.innerText=iss.rain_rate_last_mm;
+rain15.innerText=iss.rainfall_last_15_min_mm;
+rain60.innerText=iss.rainfall_last_60_min_mm;
+rain24.innerText=iss.rainfall_last_24_hr_mm;
+rainday.innerText=iss.rainfall_dailly_mm ?? iss.rainfall_daily_mm ?? 0;
+rainm.innerText=iss.rainfall_monthly_mm;
+rainy.innerText=iss.rainfall_year_mm;
+
+// ✅ STORM (FIXED TIME)
+storm.innerText=iss.rain_storm_mm ?? "N/A";
+storm_last.innerText=iss.rain_storm_last_mm ?? "N/A";
+storm_start.innerText=formatTime(iss.rain_storm_last_start_at);
+storm_end.innerText=formatTime(iss.rain_storm_last_end_at);
+
+// ✅ EXTRAS
 leaf.innerText=extra?.wet_leaf_1 ?? "N/A";
-
-// TERRESTRIAL DPD + SURFACE ALERT
-const temps=[t1c,t2c,t3c].filter(v=>v!=null);
-
-if(temps.length>0){
-  const minTemp=Math.min(...temps);
-  const tdpdVal = minTemp - dewC;
-
-  tdpd.innerText=tdpdVal.toFixed(1)+" °C";
-
-  if(tdpdVal < 0){
-    if(minTemp < 0){
-      surface.innerText="Frost forming";
-    } else {
-      surface.innerText="Dew forming";
-    }
-  } else {
-    surface.innerText="No Surface Moisture";
-  }
-
-}else{
-  tdpd.innerText="N/A";
-  surface.innerText="N/A";
-}
+t1.innerText=extra?.temp_1 ? toC(extra.temp_1)+" °C":"N/A";
+t2.innerText=extra?.temp_2 ? toC(extra.temp_2)+" °C":"N/A";
+t3.innerText=extra?.temp_3 ? toC(extra.temp_3)+" °C":"N/A";
 
 }
 
@@ -243,6 +238,5 @@ loadWeather();
 setInterval(loadWeather,15000);
 
 </script>
-
 </body>
 </html>
