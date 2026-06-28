@@ -15,11 +15,7 @@
     #time { margin-bottom: 20px; opacity: 0.8; }
 
     .section { margin-top: 20px; }
-
-    .section h2 {
-      margin-bottom: 10px;
-      color: #a0c4ff;
-    }
+    .section h2 { color: #a0c4ff; }
 
     .grid {
       display: grid;
@@ -34,10 +30,7 @@
       padding: 12px;
     }
 
-    .value {
-      font-size: 20px;
-      margin-top: 5px;
-    }
+    .value { font-size: 18px; }
   </style>
 </head>
 <body>
@@ -46,110 +39,151 @@
 <h2 id="time"></h2>
 
 <div class="section">
-  <h2>Current Conditions</h2>
-  <div class="grid">
-    <div class="card"><div>Temperature</div><div class="value" id="temp"></div></div>
-    <div class="card"><div>Dew Point</div><div class="value" id="dew"></div></div>
-    <div class="card"><div>Wet Bulb</div><div class="value" id="wet"></div></div>
-    <div class="card"><div>Humidity</div><div class="value" id="hum"></div></div>
-    <div class="card"><div>Pressure</div><div class="value" id="pressure"></div></div>
-  </div>
+<h2>Current Conditions</h2>
+<div class="grid">
+<div class="card">Temp<div class="value" id="temp"></div></div>
+<div class="card">Dew Point<div class="value" id="dew"></div></div>
+<div class="card">Wet Bulb<div class="value" id="wet"></div></div>
+<div class="card">Humidity<div class="value" id="hum"></div></div>
+<div class="card">Pressure<div class="value" id="pressure"></div></div>
+</div>
 </div>
 
 <div class="section">
-  <h2>Heat & Comfort</h2>
-  <div class="grid">
-    <div class="card"><div>Heat Index</div><div class="value" id="heat"></div></div>
-    <div class="card"><div>Wind Chill</div><div class="value" id="chill"></div></div>
-    <div class="card"><div>THW</div><div class="value" id="thw"></div></div>
-    <div class="card"><div>THSW</div><div class="value" id="thsw"></div></div>
-  </div>
+<h2>Heat & Comfort</h2>
+<div class="grid">
+<div class="card">Heat Index<div class="value" id="heat"></div></div>
+<div class="card">Wind Chill<div class="value" id="chill"></div></div>
+<div class="card">THW<div class="value" id="thw"></div></div>
+<div class="card">THSW<div class="value" id="thsw"></div></div>
+</div>
 </div>
 
 <div class="section">
-  <h2>Solar</h2>
-  <div class="grid">
-    <div class="card"><div>Radiation</div><div class="value" id="solar"></div></div>
-    <div class="card"><div>UV</div><div class="value" id="uv"></div></div>
-  </div>
+<h2>Wind</h2>
+<div class="grid">
+<div class="card">Speed<div class="value" id="wind"></div></div>
+<div class="card">Direction<div class="value" id="dir"></div></div>
+<div class="card">1 min<div class="value" id="w1"></div></div>
+<div class="card">2 min<div class="value" id="w2"></div></div>
+<div class="card">5 min<div class="value" id="w5"></div></div>
+<div class="card">10 min<div class="value" id="w10"></div></div>
+<div class="card">Gust 1m<div class="value" id="g1"></div></div>
+<div class="card">Gust 10m<div class="value" id="g10"></div></div>
+</div>
 </div>
 
 <div class="section">
-  <h2>Rainfall</h2>
-  <div class="grid">
-    <div class="card"><div>Rate</div><div class="value" id="rain_rate"></div></div>
-    <div class="card"><div>15 min</div><div class="value" id="rain15"></div></div>
-    <div class="card"><div>1 hour</div><div class="value" id="rain60"></div></div>
-    <div class="card"><div>Today</div><div class="value" id="rainday"></div></div>
-  </div>
+<h2>Solar</h2>
+<div class="grid">
+<div class="card">Radiation<div class="value" id="solar"></div></div>
+<div class="card">UV<div class="value" id="uv"></div></div>
+</div>
 </div>
 
 <div class="section">
-  <h2>Extras</h2>
-  <div class="grid">
-    <div class="card"><div>Leaf Wetness</div><div class="value" id="leaf"></div></div>
-    <div class="card"><div>Temp 1</div><div class="value" id="extra1"></div></div>
-    <div class="card"><div>Temp 2</div><div class="value" id="extra2"></div></div>
-    <div class="card"><div>Temp 3</div><div class="value" id="extra3"></div></div>
-  </div>
+<h2>Rain</h2>
+<div class="grid">
+<div class="card">Rate<div class="value" id="rain_rate"></div></div>
+<div class="card">15 min<div class="value" id="rain15"></div></div>
+<div class="card">1 hr<div class="value" id="rain60"></div></div>
+<div class="card">24 hr<div class="value" id="rain24"></div></div>
+<div class="card">Monthly<div class="value" id="rainm"></div></div>
+<div class="card">Yearly<div class="value" id="rainy"></div></div>
+</div>
+</div>
+
+<div class="section">
+<h2>Extras</h2>
+<div class="grid">
+<div class="card">Leaf<div class="value" id="leaf"></div></div>
+<div class="card">Temp1<div class="value" id="t1"></div></div>
+<div class="card">Temp2<div class="value" id="t2"></div></div>
+<div class="card">Temp3<div class="value" id="t3"></div></div>
+</div>
+</div>
+
+<div class="section">
+<h2>Indoor</h2>
+<div class="grid">
+<div class="card">Temp<div class="value" id="intemp"></div></div>
+<div class="card">Humidity<div class="value" id="inhum"></div></div>
+</div>
 </div>
 
 <script>
 
-function toC(f){ return ((f - 32) * 5/9).toFixed(1); }
-function inHgToHpa(p){ return (p * 33.8639).toFixed(1); }
+function toC(f){ return ((f-32)*5/9).toFixed(1); }
+function mphToKmh(m){ return (m*1.60934).toFixed(1); }
+function inHgToHpa(p){ return (p*33.8639).toFixed(1); }
 
 function updateTime(){
   document.getElementById("time").innerText =
-    new Date().toLocaleString("en-AU",{ timeZone:"Australia/Brisbane" });
+  new Date().toLocaleString("en-AU",{timeZone:"Australia/Brisbane"});
 }
-setInterval(updateTime,1000);
-updateTime();
+setInterval(updateTime,1000); updateTime();
 
 async function loadWeather(){
 
-  const res = await fetch("/esperencewx/weather.json?"+Date.now());
-  const data = await res.json();
+const res = await fetch("/esperencewx/weather.json?"+Date.now());
+const data = await res.json();
 
-  let iss=null, baro=null, extra=null, indoor=null;
+let iss, baro, extra, indoor;
 
-  data.sensors.forEach(sensor=>{
-    if(sensor.lsid === 553786) iss = sensor.data[0];
-    if(sensor.lsid === 551509) baro = sensor.data[0];
-    if(sensor.lsid === 838746) extra = sensor.data[0];
-    if(sensor.lsid === 551510) indoor = sensor.data[0];
-  });
+data.sensors.forEach(s=>{
+  if(s.lsid===553786) iss=s.data[0];
+  if(s.lsid===551509) baro=s.data[0];
+  if(s.lsid===838746) extra=s.data[0];
+  if(s.lsid===551510) indoor=s.data[0];
+});
 
-  if(!iss) return;
+if(!iss) return;
 
-  // ✅ ISS
-  document.getElementById("temp").innerText = toC(iss.temp)+" °C";
-  document.getElementById("dew").innerText = toC(iss.dew_point)+" °C";
-  document.getElementById("wet").innerText = iss.wet_bulb ? toC(iss.wet_bulb)+" °C":"N/A";
-  document.getElementById("hum").innerText = iss.hum+" %";
+// ✅ core
+temp.innerText=toC(iss.temp)+" °C";
+dew.innerText=toC(iss.dew_point)+" °C";
+wet.innerText=toC(iss.wet_bulb)+" °C";
+hum.innerText=iss.hum+" %";
 
-  document.getElementById("heat").innerText = iss.heat_index ? toC(iss.heat_index)+" °C":"N/A";
-  document.getElementById("chill").innerText = iss.wind_chill ? toC(iss.wind_chill)+" °C":"N/A";
-  document.getElementById("thw").innerText = iss.thw_index ? toC(iss.thw_index)+" °C":"N/A";
-  document.getElementById("thsw").innerText = iss.thsw_index ? toC(iss.thsw_index)+" °C":"N/A";
+pressure.innerText=baro?inHgToHpa(baro.bar_sea_level)+" hPa":"N/A";
 
-  document.getElementById("solar").innerText = iss.solar_rad ? iss.solar_rad+" W/m²":"N/A";
-  document.getElementById("uv").innerText = iss.uv_index ?? "N/A";
+// ✅ comfort
+heat.innerText=toC(iss.heat_index)+" °C";
+chill.innerText=toC(iss.wind_chill)+" °C";
+thw.innerText=toC(iss.thw_index)+" °C";
+thsw.innerText=toC(iss.thsw_index)+" °C";
 
-  document.getElementById("rain_rate").innerText = iss.rain_rate_last_mm ?? "0";
-  document.getElementById("rain15").innerText = iss.rainfall_last_15_min_mm ?? "0";
-  document.getElementById("rain60").innerText = iss.rainfall_last_60_min_mm ?? "0";
-  document.getElementById("rainday").innerText = iss.rainfall_dailly_mm ?? "0";
+// ✅ wind
+wind.innerText=mphToKmh(iss.wind_speed_last)+" km/h";
+dir.innerText=iss.wind_dir_last+"°";
+w1.innerText=mphToKmh(iss.wind_speed_avg_last_1_min);
+w2.innerText=mphToKmh(iss.wind_speed_avg_last_2_min);
+w5.innerText=mphToKmh(iss.wind_speed_avg_last_5_min);
+w10.innerText=mphToKmh(iss.wind_speed_avg_last_10_min);
+g1.innerText=mphToKmh(iss.wind_speed_hi_last_1_min);
+g10.innerText=mphToKmh(iss.wind_speed_hi_last_10_min);
 
-  // ✅ BARO
-  document.getElementById("pressure").innerText =
-    baro ? inHgToHpa(baro.bar_sea_level)+" hPa":"N/A";
+// ✅ solar
+solar.innerText=iss.solar_rad??"N/A";
+uv.innerText=iss.uv_index??"N/A";
 
-  // ✅ EXTRA
-  document.getElementById("leaf").innerText = extra?.wet_leaf_1 ?? "N/A";
-  document.getElementById("extra1").innerText = extra?.temp_1 ? toC(extra.temp_1)+" °C":"N/A";
-  document.getElementById("extra2").innerText = extra?.temp_2 ? toC(extra.temp_2)+" °C":"N/A";
-  document.getElementById("extra3").innerText = extra?.temp_3 ? toC(extra.temp_3)+" °C":"N/A";
+// ✅ rain (already mm)
+rain_rate.innerText=iss.rain_rate_last_mm;
+rain15.innerText=iss.rainfall_last_15_min_mm;
+rain60.innerText=iss.rainfall_last_60_min_mm;
+rain24.innerText=iss.rainfall_last_24_hr_mm;
+rainm.innerText=iss.rainfall_monthly_mm;
+rainy.innerText=iss.rainfall_year_mm;
+
+// ✅ extras
+leaf.innerText=extra?.wet_leaf_1??"N/A";
+t1.innerText=extra?.temp_1?toC(extra.temp_1):"N/A";
+t2.innerText=extra?.temp_2?toC(extra.temp_2):"N/A";
+t3.innerText=extra?.temp_3?toC(extra.temp_3):"N/A";
+
+// ✅ indoor
+intemp.innerText=indoor?.temp_in?toC(indoor.temp_in):"N/A";
+inhum.innerText=indoor?.hum_in??"N/A";
 
 }
 
@@ -157,7 +191,5 @@ loadWeather();
 setInterval(loadWeather,15000);
 
 </script>
-
 </body>
 </html>
-``
