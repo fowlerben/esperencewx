@@ -230,6 +230,8 @@
 <div class="card alert" id="fogAlert">No Fog</div>
 <div class="card alert" id="dewAlert">No Dew</div>
 <div class="card alert" id="windAlert" style="display:none;"></div>
+<div class="card alert" id="fireAlert" style="display:none;"></div>
+<div class="card alert" id="gustAlert" style="display:none;"></div>
 </div>
 </div>
 
@@ -515,6 +517,74 @@ if (wind10 != null){
     windAlert.style.display = "block";
   }
 
+// Gustiness
+gustAlert.classList.remove("warning");
+gustAlert.style.display = "none";
+
+const avgWind =
+  iss.wind_speed_avg_last_10_min != null
+    ? iss.wind_speed_avg_last_10_min * 1.60934
+    : null;
+
+const gustWind =
+  iss.wind_speed_hi_last_10_min != null
+    ? iss.wind_speed_hi_last_10_min * 1.60934
+    : null;
+
+if (
+  avgWind != null &&
+  gustWind != null &&
+  avgWind > 0
+){
+
+  const gustFactor = gustWind / avgWind;
+
+  if (gustFactor > 2){
+    gustAlert.innerText = "Very Gusty";
+    gustAlert.classList.add("warning");
+    gustAlert.style.display = "block";
+
+  } else if (gustFactor > 1.5){
+    gustAlert.innerText = "Gusty";
+    gustAlert.style.display = "block";
+  }
+
+}
+  
+// Fire Danger
+fireAlert.classList.remove("warning");
+fireAlert.style.display = "none";
+
+const tempNow = tempC;
+const humidityNow = iss.hum;
+const windNow =
+  iss.wind_speed_avg_last_10_min != null
+    ? iss.wind_speed_avg_last_10_min * 1.60934
+    : 0;
+
+if (
+  tempNow != null &&
+  humidityNow != null
+){
+
+  if (
+    tempNow > 35 &&
+    humidityNow < 20 &&
+    windNow > 30
+  ){
+    fireAlert.innerText = "High Fire Danger";
+    fireAlert.classList.add("warning");
+    fireAlert.style.display = "block";
+
+  } else if (
+    tempNow > 30 &&
+    humidityNow < 30 &&
+    windNow > 25
+  ){
+    fireAlert.innerText = "Elevated Fire Danger";
+    fireAlert.style.display = "block";
+  }
+  
 }
 
 loadWeather();
