@@ -2,37 +2,125 @@
 <html>
 <head>
   <title>Esperence Weather</title>
-  <style>
-    body { font-family: Arial; background:#0b1e2d; color:white; margin:0; text-align:center; }
-    h1 { margin:10px 0; }
-    #time { margin-bottom:20px; opacity:0.8; }
+<style>
+  body{
+    font-family:Segoe UI,Arial,sans-serif;
+    background:linear-gradient(135deg,#08131d,#10293d);
+    color:white;
+    margin:0;
+    text-align:center;
+  }
 
-    .section { margin-top:20px; }
-    .section h2 { color:#a0c4ff; }
+  h1{
+    margin:10px 0;
+  }
 
-    .grid {
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-      gap:10px;
-      padding:0 10px;
-    }
+  #time{
+    opacity:0.8;
+    margin-bottom:10px;
+  }
 
-    .card { background:#1f3b4d; border-radius:10px; padding:12px; }
-    .value { font-size:18px; }
+  .hero{
+    margin:20px auto;
+    max-width:900px;
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(10px);
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 8px 30px rgba(0,0,0,0.4);
+  }
 
-    /* ✅ NEW */
-    .alert { font-weight:bold; }
-    .warning {
-      background: repeating-linear-gradient(
-        45deg,
-        #000,
-        #000 10px,
-        #ffd600 10px,
-        #ffd600 20px
-      );
-      color:#000;
-    }
-  </style>
+  .hero-temp{
+    font-size:64px;
+    font-weight:700;
+    line-height:1;
+  }
+
+  .hero-sub{
+    margin-top:10px;
+    font-size:18px;
+    color:#cfd8dc;
+  }
+
+  .summary-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:12px;
+    margin-top:20px;
+  }
+
+  .summary-card{
+    background:rgba(255,255,255,0.08);
+    border-radius:12px;
+    padding:12px;
+  }
+
+  .section{
+    margin-top:24px;
+  }
+
+  .section h2{
+    color:#9dd6ff;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:12px;
+    padding:0 10px;
+    max-width:1400px;
+    margin:auto;
+  }
+
+  .card{
+    background:#17354c;
+    border-radius:14px;
+    padding:14px;
+    box-shadow:0 4px 10px rgba(0,0,0,.25);
+    transition:.2s;
+  }
+
+  .card:hover{
+    transform:translateY(-2px);
+  }
+
+  .value{
+    font-size:20px;
+    font-weight:600;
+    margin-top:6px;
+  }
+
+  .alert{
+    font-weight:bold;
+  }
+
+  .warning{
+    background:repeating-linear-gradient(
+      45deg,
+      #000,
+      #000 10px,
+      #ffd600 10px,
+      #ffd600 20px
+    );
+    color:#000;
+  }
+
+  .wind-card{
+    border-left:5px solid #4fc3f7;
+  }
+
+  .rain-card{
+    border-left:5px solid #66bb6a;
+  }
+
+  .solar-card{
+    border-left:5px solid #ffca28;
+  }
+
+  .temp-card{
+    border-left:5px solid #ff7043;
+  }
+</style>
 </head>
 <body>
 
