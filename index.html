@@ -249,6 +249,20 @@
 function toC(f){ if(f==null) return null; return ((f-32)*5/9); }
 function mphToKmh(v){return (v!=null)?(v*1.60934).toFixed(1)+" km/h":"N/A";}
 function safeDeg(v){return (v!=null)?v+"°":"N/A";}
+
+function windCompass(deg){
+  if(deg==null) return "N/A";
+
+  const dirs = [
+    "N","NNE","NE","ENE",
+    "E","ESE","SE","SSE",
+    "S","SSW","SW","WSW",
+    "W","WNW","NW","NNW"
+  ];
+
+  return dirs[Math.round(deg/22.5)%16];
+}
+``
 function inHgToHpa(p){return (p*33.8639).toFixed(1);}
 
 function formatTime(ts){
@@ -303,27 +317,31 @@ thsw.innerText = iss.thsw_index!=null?toC(iss.thsw_index).toFixed(1)+" °C":"N/A
 
 // WIND
 wind.innerText = mphToKmh(iss.wind_speed_last);
-dir.innerText  = safeDeg(iss.wind_dir_last);
+dir.innerText =
+  windCompass(iss.wind_dir_last) +
+  " (" +
+  safeDeg(iss.wind_dir_last) +
+  ")";
 
 w1.innerText=mphToKmh(iss.wind_speed_avg_last_1_min);
 w2.innerText=mphToKmh(iss.wind_speed_avg_last_2_min);
 w5.innerText=mphToKmh(iss.wind_speed_avg_last_5_min);
 w10.innerText=mphToKmh(iss.wind_speed_avg_last_10_min);
 
-d1.innerText=safeDeg(iss.wind_dir_scalar_avg_last_1_min);
-d2.innerText=safeDeg(iss.wind_dir_scalar_avg_last_2_min);
-d5.innerText=safeDeg(iss.wind_dir_scalar_avg_last_5_min);
-d10.innerText=safeDeg(iss.wind_dir_scalar_avg_last_10_min);
+d1.innerText=windCompass(iss.wind_dir_scalar_avg_last_1_min);
+d2.innerText=windCompass(iss.wind_dir_scalar_avg_last_2_min);
+d5.innerText=windCompass(iss.wind_dir_scalar_avg_last_5_min);
+d10.innerText=windCompass(iss.wind_dir_scalar_avg_last_10_min);
 
 g1.innerText=mphToKmh(iss.wind_speed_hi_last_1_min);
 g2.innerText=mphToKmh(iss.wind_speed_hi_last_2_min);
 g5.innerText=mphToKmh(iss.wind_speed_hi_last_5_min);
 g10.innerText=mphToKmh(iss.wind_speed_hi_last_10_min);
 
-gd1.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_1_min);
-gd2.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_2_min);
-gd5.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_5_min);
-gd10.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_10_min);
+gd1.innerText=windCompass(iss.wind_dir_at_hi_speed_last_1_min);
+gd2.innerText=windCompass(iss.wind_dir_at_hi_speed_last_2_min);
+gd5.innerText=windCompass(iss.wind_dir_at_hi_speed_last_5_min);
+gd10.innerText=windCompass(iss.wind_dir_at_hi_speed_last_10_min);
 
 // SOLAR
 solar.innerText=iss.solar_rad??"N/A";
