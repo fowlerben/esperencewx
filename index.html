@@ -483,7 +483,38 @@ if (minT!=null && dewC!=null){
 } else {
   dewAlert.innerText = "No Dew";
 }
+// Wind
+windAlert.classList.remove("warning");
 
+const wind10 =
+  iss.wind_speed_avg_last_10_min != null
+    ? iss.wind_speed_avg_last_10_min * 1.60934
+    : null;
+
+if (wind10 != null){
+
+  if (wind10 > 50){
+    windAlert.innerText = "Batten down the hatches!";
+    windAlert.classList.add("warning");
+
+  } else if (wind10 > 40){
+    windAlert.innerText = "Blowing a gale";
+    windAlert.classList.add("warning");
+
+  } else if (wind10 > 30){
+    windAlert.innerText = "Very Windy";
+
+  } else if (wind10 > 20){
+    windAlert.innerText = "Windy";
+
+  } else {
+    windAlert.innerText = "Calm";
+  }
+
+} else {
+  windAlert.innerText = "Unknown";
+}
+  
 }
 
 loadWeather();
