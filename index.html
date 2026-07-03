@@ -368,17 +368,49 @@ gd5.innerText=windCompass(iss.wind_dir_at_hi_speed_last_5_min);
 gd10.innerText=windCompass(iss.wind_dir_at_hi_speed_last_10_min);
 
 // SOLAR
-solar.innerText=iss.solar_rad??"N/A";
-uv.innerText=iss.uv_index??"N/A";
+solar.innerText =
+  iss.solar_rad != null
+    ? Number(iss.solar_rad).toFixed(1)
+    : "N/A";
+
+uv.innerText =
+  iss.uv_index != null
+    ? Number(iss.uv_index).toFixed(1)
+    : "N/A";
 
 // RAIN
-rain_rate.innerText=iss.rain_rate_last_mm;
-rain15.innerText=iss.rainfall_last_15_min_mm;
-rain60.innerText=iss.rainfall_last_60_min_mm;
-rain24.innerText=iss.rainfall_last_24_hr_mm;
-rainday.innerText=iss.rainfall_dailly_mm ?? iss.rainfall_daily_mm ?? 0;
-rainm.innerText=iss.rainfall_monthly_mm;
-rainy.innerText=iss.rainfall_year_mm;
+rain_rate.innerText =
+  iss.rain_rate_last_mm != null
+    ? Number(iss.rain_rate_last_mm).toFixed(1)
+    : "N/A";
+
+rain15.innerText =
+  iss.rainfall_last_15_min_mm != null
+    ? Number(iss.rainfall_last_15_min_mm).toFixed(1)
+    : "N/A";
+
+rain60.innerText =
+  iss.rainfall_last_60_min_mm != null
+    ? Number(iss.rainfall_last_60_min_mm).toFixed(1)
+    : "N/A";
+
+rain24.innerText =
+  iss.rainfall_last_24_hr_mm != null
+    ? Number(iss.rainfall_last_24_hr_mm).toFixed(1)
+    : "N/A";
+
+rainday.innerText =
+  Number(iss.rainfall_dailly_mm ?? iss.rainfall_daily_mm ?? 0).toFixed(1);
+
+rainm.innerText =
+  iss.rainfall_monthly_mm != null
+    ? Number(iss.rainfall_monthly_mm).toFixed(1)
+    : "N/A";
+
+rainy.innerText =
+  iss.rainfall_year_mm != null
+    ? Number(iss.rainfall_year_mm).toFixed(1)
+    : "N/A";
 
 // STORM
 storm.innerText=iss.rain_storm_mm ?? "N/A";
