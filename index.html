@@ -45,7 +45,7 @@
 <div class="section">
 <h2>Current Conditions</h2>
 <div class="grid">
-<div class="card">Temp<div class="value" id="temp"></div></div>
+<div class="card">Temp<div class="value" id="temp"></div><div id="tempStats" style="font-size:12px;opacity:0.8;"></div></div>
 <div class="card">Dew<div class="value" id="dew"></div></div>
 <div class="card">Wet Bulb<div class="value" id="wet"></div></div>
 <div class="card">Humidity<div class="value" id="hum"></div></div>
@@ -73,7 +73,7 @@
 <h2>Wind</h2>
 <div class="grid">
 
-<div class="card">Speed<div class="value" id="wind"></div></div>
+<div class="card">Speed<div class="value" id="wind"></div><div id="windStats" style="font-size:12px;opacity:0.8;"></div></div>
 <div class="card">Dir<div class="value" id="dir"></div></div>
 
 <div class="card">1m Avg<div class="value" id="w1"></div></div>
@@ -218,16 +218,19 @@ const gustsToday = history
   .filter(v => v != null);
 
 if (tempsToday.length > 0) {
-  maxTemp.innerText =
-    Math.max(...tempsToday).toFixed(1) + " °C";
-
-  minTemp.innerText =
-    Math.min(...tempsToday).toFixed(1) + " °C";
+  tempStats.innerText =
+    "Max " +
+    Math.max(...tempsToday).toFixed(1) +
+    "°C | Min " +
+    Math.min(...tempsToday).toFixed(1) +
+    "°C";
 }
 
 if (gustsToday.length > 0) {
-  maxGust.innerText =
-    Math.max(...gustsToday).toFixed(1) + " km/h";
+  windStats.innerText =
+    "Max Gust " +
+    Math.max(...gustsToday).toFixed(1) +
+    " km/h";
 }
 
 data.sensors.forEach(s=>{
