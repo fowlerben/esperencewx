@@ -152,6 +152,18 @@
 function toC(f){ if(f==null) return null; return ((f-32)*5/9); }
 function mphToKmh(v){return (v!=null)?(v*1.60934).toFixed(1)+" km/h":"N/A";}
 function safeDeg(v){return (v!=null)?v+"°":"N/A";}
+  function windCompass(deg){
+  if(deg==null) return "N/A";
+
+  const dirs = [
+    "N","NNE","NE","ENE",
+    "E","ESE","SE","SSE",
+    "S","SSW","SW","WSW",
+    "W","WNW","NW","NNW"
+  ];
+
+  return dirs[Math.round(deg/22.5)%16];
+}
 function inHgToHpa(p){return (p*33.8639).toFixed(1);}
 
 function formatTime(ts){
