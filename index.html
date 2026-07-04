@@ -291,19 +291,26 @@ function formatHour(hour) {
 
 function refreshSynopticImage(){
 
-  const img =
+  const synoptic =
     document.getElementById("synopticImage");
 
-  if(img){
+  const radar =
+    document.getElementById("radarImage");
 
-    img.src =
-      "https://reg.bom.gov.au/fwo/IDY65200.png?t=" +
-      Date.now();
+  const now = Date.now();
 
+  if (synoptic) {
+    synoptic.src =
+      "https://reg.bom.gov.au/fwo/IDY65200.png?t=" + now;
+  }
+
+  if (radar) {
+    radar.src =
+      "https://reg.bom.gov.au/radar/IDR023.gif?t=" + now;
   }
 
 }
-
+  
 function formatTime(ts){
 if(!ts) return "N/A";
 const d=new Date(ts*1000);
@@ -652,7 +659,7 @@ loadWeather();
 setInterval(loadWeather,3000);
 
 refreshSynopticImage();
-setInterval(refreshSynopticImage, 3600000);
+setInterval(refreshSynopticImage, 300000);
 
 </script>
 </body>
