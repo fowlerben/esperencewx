@@ -59,41 +59,25 @@
 
 <div id="chartContainer"
      style="margin:0 10px 15px 10px;">
+  
+<div class="card" style="text-align:center;">
 
-  <div class="grid">
+  <a href="https://reg.bom.gov.au/fwo/IDY65200.png"
+     target="_blank">
 
-    <div class="card" style="text-align:center;">
-      00.png"
-         target="_blank">
+    <img
+      id="synopticImage"
+    src="https://reg.bom.gov.au/fwo/IDY65200.png"
+    alt="BOM MSLP and Satellite Analysis"
+    style="
+      width:100%;
+      max-width:400px;
+      border-radius:8px;
+    ">
 
-        <img
-          id="synopticImage"
-          src="https://reg.bom.gov.au/fwo/IDY65200.png"
-          alt="BOM MSLP and Satellite Analysis"
-          style="
-            width:100%;
-            max-width:400px;
-            border-radius:8px;
-          ">
-
-      </a>
-    </div>
-
-    <div class="card" style="text-align:center;">
-      https://reg.bom.gov.au/radar/IDR023.gif
-
-        ://reg.bom.gov.au/radar/IDR023.gif"
-          alt="BOM Radar"
-          style="
-            width:100%;
-            max-width:400px;
-            border-radius:8px;
-          ">
-
-      </a>
-    </div>
-
-  </div>
+  </a>
+  
+</div>
 
 </div>
   
@@ -292,31 +276,17 @@ function formatHour(hour) {
 
 function refreshSynopticImage(){
 
-  const synoptic =
+  const img =
     document.getElementById("synopticImage");
 
-  const radar =
-    document.getElementById("radarImage");
+  if(img){
 
-  const now = Date.now();
-
-  if(synoptic){
-
-    synoptic.src =
+    img.src =
       "https://reg.bom.gov.au/fwo/IDY65200.png?t=" +
-      now;
+      Date.now();
 
   }
 
-  if(radar){
-
-    radar.src =
-      "https://reg.bom.gov.au/radar/IDR023.gif?t=" +
-      now;
-
-  }
-
-}
 }
 
 function formatTime(ts){
