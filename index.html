@@ -206,11 +206,25 @@ document.getElementById("dataTime").innerText =
 }
 
 let iss,baro,extra;
-const tempsToday = history
+const todayMelbourne = new Date().toLocaleDateString(
+  "en-AU",
+  { timeZone: "Australia/Melbourne" }
+);
+
+const todayHistory = history.filter(r => {
+  const recordDate = new Date(r.time * 1000).toLocaleDateString(
+    "en-AU",
+    { timeZone: "Australia/Melbourne" }
+  );
+
+  return recordDate === todayMelbourne;
+});
+
+const tempsToday = todayHistory
   .map(r => r.temp_c)
   .filter(v => v != null);
 
-const gustsToday = history
+const gustsToday = todayHistory
   .map(r => r.gust10_kmh)
   .filter(v => v != null);
 
