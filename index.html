@@ -139,8 +139,6 @@
 <div class="grid">
 <div class="card alert" id="fogAlert">No Fog</div>
 <div class="card alert" id="dewAlert">No Dew</div>
-<div class="card alert" id="fireAlert" style="display:none;"></div>
-
 </div>
 </div>
 
@@ -333,38 +331,6 @@ if (minT!=null && dewC!=null){
 } else {
   dewAlert.innerText = "No Dew";
 }
-
-// Fire Danger
-fireAlert.classList.remove("warning");
-fireAlert.style.display = "none";
-
-const windKmh =
-  iss.wind_speed_avg_last_10_min != null
-    ? iss.wind_speed_avg_last_10_min * 1.60934
-    : 0;
-
-if (
-  tempC != null &&
-  iss.hum != null
-){
-
-  if (
-    tempC > 35 &&
-    iss.hum < 20 &&
-    windKmh > 30
-  ){
-    fireAlert.innerText = "High Fire Danger";
-    fireAlert.classList.add("warning");
-    fireAlert.style.display = "block";
-
-  } else if (
-    tempC > 30 &&
-    iss.hum < 30 &&
-    windKmh > 25
-  ){
-    fireAlert.innerText = "Elevated Fire Danger";
-    fireAlert.style.display = "block";
-  }
 
 }
 
