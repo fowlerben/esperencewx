@@ -50,6 +50,10 @@
 <div class="card">Wet Bulb<div class="value" id="wet"></div></div>
 <div class="card">Humidity<div class="value" id="hum"></div></div>
 <div class="card">Pressure<div class="value" id="pressure"></div></div>
+
+<div class="card">Today's Max<div class="value" id="maxTemp"></div></div>
+<div class="card">Today's Min<div class="value" id="minTemp"></div></div>
+<div class="card">Today's Max Gust<div class="value" id="maxGust"></div></div>
 </div>
 </div>
 
@@ -191,6 +195,10 @@ async function loadWeather(){
 
 const res=await fetch("/esperencewx/weather.json?"+Date.now(), { cache: "no-store" });
 const data=await res.json();
+
+const historyRes = await fetch("/esperencewx/history.json?"+Date.now());
+const history = await historyRes.json();
+
 if(data.generated_at){
 document.getElementById("dataTime").innerText =
   "Data timestamp: " +
@@ -201,6 +209,26 @@ document.getElementById("dataTime").innerText =
 }
 
 let iss,baro,extra;
+const tempsToday = history
+  .map(r => r.temp_c)
+  .filter(v => v != null);
+
+const gustsToday = history
+  .map(r => r.gust10_kmh)
+  .filter(v => v != null);
+
+if (tempsToday.length > 0) {
+  maxTemp.innerText =
+    Math.max(...tempsToday).toFixed(1) + " °C";
+
+  minTemp.innerText =
+    Math.min(...tempsToday).toFixed(1) + " °C";
+}
+
+if (gustsToday.length > 0) {
+  maxGust.innerText =
+    Math.max(...gustsToday).toFixed(1) + " km/h";
+}
 
 data.sensors.forEach(s=>{
 if(s.lsid===553786) iss=s.data[0];
