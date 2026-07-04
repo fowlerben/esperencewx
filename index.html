@@ -59,8 +59,8 @@
 
 <div id="chartContainer"
      style="margin:0 10px 15px 10px;">
-
-<div class="grid">
+  
+<div class="card" style="text-align:center;">
 
   <a href="https://reg.bom.gov.au/fwo/IDY65200.png"
      target="_blank">
@@ -77,32 +77,11 @@
 
   </a>
   
-<div class="card" style="text-align:center;">
-
-    /IDR023.gif"
-       target="_blank">
-
-      <img
-        id="ov.au/radar/IDR023.gif
-
-    </a>
-
-  </div>
-
-
 </div>
 
-<div class="card" style="text-align:center;">
-
-  R023.gif"
-     target="_blank">
-
-    <img
-      id="radarImage"
-      src="https://reg.bom.gov.au/v>
-
+</div>
+  
 <!-- CURRENT -->
-
 <div class="section">
 <h2>Current Conditions</h2>
 <div class="grid">
@@ -297,24 +276,15 @@ function formatHour(hour) {
 
 function refreshSynopticImage(){
 
-  const synoptic =
+  const img =
     document.getElementById("synopticImage");
 
-  const radar =
-    document.getElementById("radarImage");
+  if(img){
 
-  const now = Date.now();
-
-  if(synoptic){
-    synoptic.src =
+    img.src =
       "https://reg.bom.gov.au/fwo/IDY65200.png?t=" +
-      now;
-  }
+      Date.now();
 
-  if(radar){
-    radar.src =
-      "https://reg.bom.gov.au/radar/IDR023.gif?t=" +
-      now;
   }
 
 }
