@@ -260,23 +260,30 @@ thw.innerText  = iss.thw_index!=null?toC(iss.thw_index).toFixed(1)+" °C":"N/A";
 thsw.innerText = iss.thsw_index!=null?toC(iss.thsw_index).toFixed(1)+" °C":"N/A";
 
 // WIND
-wind.innerText = mphToKmh(iss.wind_speed_last);
-dir.innerText  = safeDeg(iss.wind_dir_last);
+const dirNow  = safeDeg(iss.wind_dir_last);
+const dir1    = safeDeg(iss.wind_dir_scalar_avg_last_1_min);
+const dir2    = safeDeg(iss.wind_dir_scalar_avg_last_2_min);
+const dir10   = safeDeg(iss.wind_dir_scalar_avg_last_10_min);
+const gust2   = safeDeg(iss.wind_dir_at_hi_speed_last_2_min);
+const gust10  = safeDeg(iss.wind_dir_at_hi_speed_last_10_min);
 
-w1.innerText=mphToKmh(iss.wind_speed_avg_last_1_min);
-w2.innerText=mphToKmh(iss.wind_speed_avg_last_2_min);
-w10.innerText=mphToKmh(iss.wind_speed_avg_last_10_min);
+wind.innerText = mphToKmh(iss.wind_speed_last) + " " + dirNow;
+dir.innerText = dirNow;
 
-d1.innerText=safeDeg(iss.wind_dir_scalar_avg_last_1_min);
-d2.innerText=safeDeg(iss.wind_dir_scalar_avg_last_2_min);
-d10.innerText=safeDeg(iss.wind_dir_scalar_avg_last_10_min);
+w1.innerText = mphToKmh(iss.wind_speed_avg_last_1_min) + " " + dir1;
+d1.innerText = dir1;
 
-g2.innerText=mphToKmh(iss.wind_speed_hi_last_2_min);
-g10.innerText=mphToKmh(iss.wind_speed_hi_last_10_min);
+w2.innerText = mphToKmh(iss.wind_speed_avg_last_2_min) + " " + dir2;
+d2.innerText = dir2;
 
-gd2.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_2_min);
-gd10.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_10_min);
+w10.innerText = mphToKmh(iss.wind_speed_avg_last_10_min) + " " + dir10;
+d10.innerText = dir10;
 
+g2.innerText = mphToKmh(iss.wind_speed_hi_last_2_min) + " " + gust2;
+gd2.innerText = gust2;
+
+g10.innerText = mphToKmh(iss.wind_speed_hi_last_10_min) + " " + gust10;
+gd10.innerText = gust10;
 // SOLAR
 solar.innerText=iss.solar_rad??"N/A";
 uv.innerText=iss.uv_index??"N/A";
