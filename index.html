@@ -141,6 +141,7 @@
 <div class="card alert" id="dewAlert">No Dew</div>
 <div class="card alert" id="fireAlert" style="display:none;"></div>
 <div class="card alert" id="windAlert" style="display:none;"></div>
+<div class="card alert" id="gustAlert" style="display:none;"></div>
 </div>
 </div>
 
@@ -367,6 +368,7 @@ if (
   }
 
 }
+
 // Wind Alert
 windAlert.classList.remove("warning");
 windAlert.style.display = "none";
@@ -397,6 +399,43 @@ if (wind10Kmh >= 50){
 
   windAlert.innerText = "Windy";
   windAlert.style.display = "block";
+
+}
+
+// Gustiness Alert
+gustAlert.classList.remove("warning");
+gustAlert.style.display = "none";
+
+const gustAvgKmh =
+  iss.wind_speed_avg_last_10_min != null
+    ? iss.wind_speed_avg_last_10_min * 1.60934
+    : null;
+
+const gustPeakKmh =
+  iss.wind_speed_hi_last_10_min != null
+    ? iss.wind_speed_hi_last_10_min * 1.60934
+    : null;
+
+if (
+  gustAvgKmh != null &&
+  gustPeakKmh != null &&
+  gustAvgKmh > 0
+){
+
+  const gustFactor = gustPeakKmh / gustAvgKmh;
+
+  if (gustFactor >= 2.0){
+
+    gustAlert.innerText = "Very Gusty";
+    gustAlert.classList.add("warning");
+    gustAlert.style.display = "block";
+
+  } else if (gustFactor >= 1.5){
+
+    gustAlert.innerText = "Gusty";
+    gustAlert.style.display = "block";
+
+  }
 
 }
 
