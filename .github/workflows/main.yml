@@ -65,6 +65,11 @@ jobs:
                 $obs.sensors[] | select(.lsid==553786).data[0].hum
               ),
 
+              pressure(hpa: (
+                ($obs.sensors[] | select(.lsid==551509).data[0].bar_sea_level)
+                * 33.8639
+              ),
+
               wind10_kmh: (
                 ($obs.sensors[] | select(.lsid==553786).data[0].wind_speed_avg_last_10_min)
                 * 1.60934
