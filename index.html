@@ -157,7 +157,60 @@
 <!-- WIND -->
 <div class="section">
 <h2>Wind</h2>
+
 <div class="grid">
+
+<div class="card">
+  Speed
+  <div class="value" id="wind"></div>
+</div>
+
+<div class="card">
+  Direction
+  <div class="value" id="dir"></div>
+</div>
+
+<div class="card">
+  Wind Compass
+  <div id="compass">
+    <div class="north">N</div>
+    <div class="east">E</div>
+    <div class="south">S</div>
+    <div class="west">W</div>
+    <div id="needle"></div>
+  </div>
+</div>
+
+</div>
+
+<details style="max-width:1400px;margin:20px auto;">
+  <summary style="cursor:pointer;font-size:18px;">
+    Wind Statistics
+  </summary>
+
+  <div class="grid">
+
+    <div class="card">1m Avg<div class="value" id="w1"></div></div>
+    <div class="card">1m Dir<div class="value" id="d1"></div></div>
+
+    <div class="card">2m Avg<div class="value" id="w2"></div></div>
+    <div class="card">2m Dir<div class="value" id="d2"></div></div>
+
+    <div class="card">10m Avg<div class="value" id="w10"></div></div>
+    <div class="card">10m Dir<div class="value" id="d10"></div></div>
+
+    <div class="card">Gust 1m<div class="value" id="g1"></div></div>
+    <div class="card">Dir<div class="value" id="gd1"></div></div>
+
+    <div class="card">Gust 2m<div class="value" id="g2"></div></div>
+    <div class="card">Dir<div class="value" id="gd2"></div></div>
+
+    <div class="card">Gust 10m<div class="value" id="g10"></div></div>
+    <div class="card">Dir<div class="value" id="gd10"></div></div>
+
+  </div>
+
+</details>
 
 <div class="card">Speed<div class="value" id="wind"></div></div>
 <div class="card">Dir<div class="value" id="dir"></div></div>
@@ -168,9 +221,6 @@
 <div class="card">2m Avg<div class="value" id="w2"></div></div>
 <div class="card">2m Dir<div class="value" id="d2"></div></div>
 
-<div class="card">5m Avg<div class="value" id="w5"></div></div>
-<div class="card">5m Dir<div class="value" id="d5"></div></div>
-
 <div class="card">10m Avg<div class="value" id="w10"></div></div>
 <div class="card">10m Dir<div class="value" id="d10"></div></div>
 
@@ -179,9 +229,6 @@
 
 <div class="card">Gust 2m<div class="value" id="g2"></div></div>
 <div class="card">Dir<div class="value" id="gd2"></div></div>
-
-<div class="card">Gust 5m<div class="value" id="g5"></div></div>
-<div class="card">Dir<div class="value" id="gd5"></div></div>
 
 <div class="card">Gust 10m<div class="value" id="g10"></div></div>
 <div class="card">Dir<div class="value" id="gd10"></div></div>
