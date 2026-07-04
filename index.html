@@ -188,6 +188,14 @@ async function loadWeather(){
 
 const res=await fetch("/esperencewx/weather.json?"+Date.now(), { cache: "no-store" });
 const data=await res.json();
+if(data.generated_at){
+document.getElementById("dataTime").innerText =
+  "Data timestamp: " +
+  new Date(data.generated_at * 1000).toLocaleString(
+    "en-AU",
+    { timeZone:"Australia/Brisbane" }
+  );
+}
 
 let iss,baro,extra;
 
