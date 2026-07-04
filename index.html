@@ -6,7 +6,6 @@
     body { font-family: Arial; background:#0b1e2d; color:white; margin:0; text-align:center; }
     h1 { margin:10px 0; }
     #time { margin-bottom:20px; opacity:0.8; }
-    
 
     .section { margin-top:20px; }
     .section h2 { color:#a0c4ff; }
@@ -40,13 +39,6 @@
 <h1>Esperence Weather Station</h1>
 <h2 id="time"></h2>
 <div id="dataTime" style="opacity:0.8;margin-bottom:10px;">
-</div>
-  <div class="card" id="sunBar" style="margin:0 10px 20px 10px;background:#163147;">
-  <div style="display:flex;justify-content:center;gap:40px;flex-wrap:wrap;">
-    <div>☀ <span id="sunrise"></span></div>
-    <div>🌇 <span id="sunset"></span></div>
-    <div>🕒 <span id="daylength"></span></div>
-  </div>
 </div>
 
 <!-- CURRENT -->
@@ -162,54 +154,6 @@ function mphToKmh(v){return (v!=null)?(v*1.60934).toFixed(1)+" km/h":"N/A";}
 function safeDeg(v){return (v!=null)?v+"°":"N/A";}
 function inHgToHpa(p){return (p*33.8639).toFixed(1);}
 
-
-function getSunInfo(){
-
-  const lat = -33.83;
-
-  const now = new Date();
-
-  const dayOfYear = Math.floor(
-    (Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) -
-    Date.UTC(now.getFullYear(), 0, 0)) / 86400000
-  );
-
-  const decl =
-    23.45 * Math.sin(
-      (2 * Math.PI * (284 + dayOfYear)) / 365
-    );
-
-  const latRad = lat * Math.PI / 180;
-  const decRad = decl * Math.PI / 180;
-
-  const ha =
-    Math.acos(
-      -Math.tan(latRad) * Math.tan(decRad)
-    ) * 180 / Math.PI;
-
-  const dayLength = (2 * ha) / 15;
-
-  const sunriseHour = 12 - dayLength / 2;
-  const sunsetHour = 12 + dayLength / 2;
-
-  return {
-    sunriseHour,
-    sunsetHour,
-    dayLength
-  };
-}
-
-function formatHour(hour){
-
-  const h = Math.floor(hour);
-  const m = Math.round((hour - h) * 60);
-
-  return String(h).padStart(2,"0") +
-    ":" +
-    String(m).padStart(2,"0");
-}
-
-  
 function formatTime(ts){
 if(!ts) return "N/A";
 const d=new Date(ts*1000);
@@ -292,16 +236,6 @@ if(s.lsid===838746) extra=s.data[0];
 });
 
 if(!iss)return;
-
-const sun = getSunInfo();
-
-sunrise.innerText = formatHour(sun.sunriseHour);
-sunset.innerText = formatHour(sun.sunsetHour);
-
-const hrs = Math.floor(sun.dayLength);
-const mins = Math.round((sun.dayLength - hrs) * 60);
-
-daylength.innerText = hrs + "h " + mins + "m";
 
 // CORE
 const tempC = toC(iss.temp);
@@ -543,7 +477,9 @@ if (
 
   }
 
-} // closes loadWeather()
+}
+
+}
 
 loadWeather();
 setInterval(loadWeather,3000);
