@@ -396,6 +396,40 @@ if (wind10 > 50){
   windAlert.style.display = "block";
 }
 
+// Gustiness Alert
+gustAlert.classList.remove("warning");
+gustAlert.style.display = "none";
+
+const avgWind =
+  iss.wind_speed_avg_last_10_min != null
+    ? iss.wind_speed_avg_last_10_min * 1.60934
+    : null;
+
+const gustWind =
+  iss.wind_speed_hi_last_10_min != null
+    ? iss.wind_speed_hi_last_10_min * 1.60934
+    : null;
+
+if (
+  avgWind != null &&
+  gustWind != null &&
+  avgWind > 0
+){
+
+  const gustFactor = gustWind / avgWind;
+
+  if (gustFactor > 2){
+    gustAlert.innerText = "Very Gusty";
+    gustAlert.classList.add("warning");
+    gustAlert.style.display = "block";
+
+  } else if (gustFactor > 1.5){
+    gustAlert.innerText = "Gusty";
+    gustAlert.style.display = "block";
+  }
+
+}
+
 loadWeather();
 setInterval(loadWeather,3000);
 
