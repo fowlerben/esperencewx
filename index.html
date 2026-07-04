@@ -170,6 +170,58 @@ function mphToKmh(v){return (v!=null)?(v*1.60934).toFixed(1)+" km/h":"N/A";}
 function safeDeg(v){return (v!=null)?v+"°":"N/A";}
 function inHgToHpa(p){return (p*33.8639).toFixed(1);}
 
+function getSunInfo() {
+
+  const lat = -38.16330;
+  const lon = 144.30763;
+
+  const now = new Date();
+
+  const dayOfYear = Math.floor(
+    (Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) -
+    Date.UTC(now.getFullYear(), 0, 0)) / 86400000
+  );
+
+  const decl =
+    23.45 * Math.sin(
+      ((360 / 365) * (284 + dayOfYear)) * Math.PI / 180
+    );
+
+  const latRad = lat * Math.PI / 180;
+  const decRad = decl * Math.PI / 180;
+
+  const hourAngle =
+    Math.acos(
+      -Math.tan(latRad) * Math.tan(decRad)
+    );
+
+  const daylightHours =
+    (2 * hourAngle * 180 / Math.PI) / 15;
+
+  return {
+    sunrise: 12 - daylightHours / 2,
+    sunset: 12 + daylightHours / 2,
+    daylight: daylightHours
+  };
+}
+
+function formatHour(hour) {
+
+  let h = Math.floor(hour);
+  let m = Math.round((hour - h) * 60);
+
+  if (m === 60) {
+    h++;
+    m = 0;
+  }
+
+  return (
+    String(h).padStart(2, "0") +
+    ":" +
+    String(m).padStart(2, "0")
+  );
+}
+
 function formatTime(ts){
 if(!ts) return "N/A";
 const d=new Date(ts*1000);
@@ -252,6 +304,22 @@ if(s.lsid===838746) extra=s.data[0];
 });
 
 if(!iss)return;
+
+const sun = getSunInfo();
+
+document.getElementById("sunrise").innerText =
+  formatHour(sun.sunrise);
+
+document.getElementById("sunset").innerText =
+  formatHour(sun.sunset);
+
+const dayHrs = Math.floor(sun.daylight);
+const dayMin = Math.round(
+  (sun.daylight - dayHrs) * 60
+);
+
+document.getElementById("daylength").innerText =
+  dayHrs + "h " + dayMin + "m";
 
 // CORE
 const tempC = toC(iss.temp);
