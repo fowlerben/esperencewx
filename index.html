@@ -610,7 +610,8 @@ const gustPeakKmh =
 if (
   gustAvgKmh != null &&
   gustPeakKmh != null &&
-  gustAvgKmh > 0
+  gustAvgKmh > 15
+  gustPeakKmh >= 30
 ){
 
   const gustFactor = gustPeakKmh / gustAvgKmh;
