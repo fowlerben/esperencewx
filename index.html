@@ -177,31 +177,58 @@ function getSunInfo() {
 
   const now = new Date();
 
-  const dayOfYear = Math.floor(
-    (Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) -
-    Date.UTC(now.getFullYear(), 0, 0)) / 86400000
-  );
+  const start = new Date(now.getFullYear(), 0, 0);
+  const diff = now - start;
+  const day = Math.floor(diff / 86400000);
+
+  const gamma =
+    (2 * Math.PI / 365) * (day - 1);
+
+  const eqTime =
+    229.18 * (
+      0.000075 +
+      0.001868 * Math.cos(gamma) -
+      0.032077 * Math.sin(gamma) -
+      0.014615 * Math.cos(2 * gamma) -
+      0.040849 * Math.sin(2 * gamma)
+    );
 
   const decl =
-    23.45 * Math.sin(
-      ((360 / 365) * (284 + dayOfYear)) * Math.PI / 180
-    );
+    0.006918 -
+    0.399912 * Math.cos(gamma) +
+    0.070257 * Math.sin(gamma) -
+    0.006758 * Math.cos(2 * gamma) +
+    0.000907 * Math.sin(2 * gamma) -
+    0.002697 * Math.cos(3 * gamma) +
+    0.00148 * Math.sin(3 * gamma);
 
   const latRad = lat * Math.PI / 180;
-  const decRad = decl * Math.PI / 180;
 
-  const hourAngle =
+  const ha =
     Math.acos(
-      -Math.tan(latRad) * Math.tan(decRad)
+      (
+        Math.cos(90.833 * Math.PI / 180) /
+        (Math.cos(latRad) * Math.cos(decl))
+      ) -
+      Math.tan(latRad) * Math.tan(decl)
     );
 
-  const daylightHours =
-    (2 * hourAngle * 180 / Math.PI) / 15;
+  const haDeg = ha * 180 / Math.PI;
+
+  const timezone = 10;
+
+  const sunrise =
+    (720 - 4 * (lon + haDeg) - eqTime +
+    timezone * 60) / 60;
+
+  const sunset =
+    (720 - 4 * (lon - haDeg) - eqTime +
+    timezone * 60) / 60;
 
   return {
-    sunrise: 12 - daylightHours / 2,
-    sunset: 12 + daylightHours / 2,
-    daylight: daylightHours
+    sunrise,
+    sunset,
+    daylight: sunset - sunrise
   };
 }
 
@@ -226,7 +253,7 @@ function formatTime(ts){
 if(!ts) return "N/A";
 const d=new Date(ts*1000);
 return d.toLocaleString("en-AU",{
-timeZone:"Australia/Brisbane",
+timeZone:"Australia/Melbourne",
 hour:"2-digit",
 minute:"2-digit",
 day:"2-digit",
@@ -237,7 +264,7 @@ year:"numeric"
 
 function updateTime(){
 document.getElementById("time").innerText=
-new Date().toLocaleString("en-AU",{timeZone:"Australia/Brisbane"});
+new Date().toLocaleString("en-AU",{timeZone:"Australia/Melbourne"});
 }
 setInterval(updateTime,1000);updateTime();
 
@@ -254,7 +281,7 @@ document.getElementById("dataTime").innerText =
   "Data timestamp: " +
   new Date(data.generated_at * 1000).toLocaleString(
     "en-AU",
-    { timeZone:"Australia/Brisbane" }
+    { timeZone:"Australia/Melbourne" }
   );
 }
 
