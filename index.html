@@ -57,32 +57,17 @@
   </div>
 </div>
 
-<div style="margin:0 10px 10px 10px;">
-  <button id="toggleChart"
-          onclick="toggleChart()"
-          style="
-            background:#1f3b4d;
-            color:white;
-            border:none;
-            border-radius:8px;
-            padding:10px 16px;
-            cursor:pointer;
-          ">
-    Show Synoptic Chart
-  </button>
-</div>
-
 <div id="chartContainer"
-     style="display:none;margin:0 10px 20px 10px;">
-
-<div class="card">
+     style="margin:0 10px 15px 10px;">
+  
+<div class="card" style="text-align:center;">
   <img
     id="synopticImage"
     src="https://reg.bom.gov.au/fwo/IDY65200.png"
     alt="BOM MSLP and Satellite Analysis"
     style="
       width:100%;
-      max-width:1200px;
+      max-width:400px;
       border-radius:8px;
     ">
 </div>
@@ -291,28 +276,6 @@ function refreshSynopticImage(){
     img.src =
       "https://reg.bom.gov.au/fwo/IDY65200.png?t=" +
       Date.now();
-
-  }
-
-}
-
-function toggleChart(){
-
-  const chart =
-    document.getElementById("chartContainer");
-
-  const button =
-    document.getElementById("toggleChart");
-
-  if(chart.style.display === "none"){
-
-    chart.style.display = "block";
-    button.innerText = "Hide Synoptic Chart";
-
-  } else {
-
-    chart.style.display = "none";
-    button.innerText = "Show Synoptic Chart";
 
   }
 
