@@ -253,9 +253,12 @@ if(s.lsid===838746) extra=s.data[0];
 
 if(!iss)return;
 
+document.getElementById("sunrise").innerText = "07:14";
+document.getElementById("sunset").innerText = "17:24";
+document.getElementById("daylength").innerText = "10h 10m";
+
 // CORE
 const tempC = toC(iss.temp);
-const dewC  = toC(iss.dew_point);
 
 temp.innerText = tempC!=null ? tempC.toFixed(1)+" °C":"N/A";
 dew.innerText  = dewC!=null ? dewC.toFixed(1)+" °C":"N/A";
