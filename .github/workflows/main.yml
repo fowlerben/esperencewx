@@ -65,7 +65,7 @@ jobs:
                 $obs.sensors[] | select(.lsid==553786).data[0].hum
               ),
 
-              pressure(hpa: (
+              pressure_hpa: (
                 ($obs.sensors[] | select(.lsid==551509).data[0].bar_sea_level)
                 * 33.8639
               ),
