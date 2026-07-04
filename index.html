@@ -49,7 +49,7 @@
 <div class="card">Dew<div class="value" id="dew"></div></div>
 <div class="card">Wet Bulb<div class="value" id="wet"></div></div>
 <div class="card">Humidity<div class="value" id="hum"></div></div>
-<div class="card">Pressure<div class="value" id="pressure"></div><div id="pressureStats" style="font-size:12px;opacity:0.8;"></div></div>
+<div class="card">Pressure<div class="value" id="pressure"></div></div>
 
 </div>
 </div>
@@ -71,16 +71,22 @@
 <div class="grid">
 
 <div class="card">Speed<div class="value" id="wind"></div><div id="windStats" style="font-size:12px;opacity:0.8;"></div></div>
+<div class="card">Dir<div class="value" id="dir"></div></div>
 
 <div class="card">1m Avg<div class="value" id="w1"></div></div>
+<div class="card">1m Dir<div class="value" id="d1"></div></div>
 
 <div class="card">2m Avg<div class="value" id="w2"></div></div>
+<div class="card">2m Dir<div class="value" id="d2"></div></div>
 
 <div class="card">10m Avg<div class="value" id="w10"></div></div>
+<div class="card">10m Dir<div class="value" id="d10"></div></div>
 
 <div class="card">Gust 2m<div class="value" id="g2"></div></div>
+<div class="card">Dir<div class="value" id="gd2"></div></div>
 
 <div class="card">Gust 10m<div class="value" id="g10"></div></div>
+<div class="card">Dir<div class="value" id="gd10"></div></div>
 
 </div>
 </div>
@@ -152,18 +158,6 @@
 function toC(f){ if(f==null) return null; return ((f-32)*5/9); }
 function mphToKmh(v){return (v!=null)?(v*1.60934).toFixed(1)+" km/h":"N/A";}
 function safeDeg(v){return (v!=null)?v+"°":"N/A";}
-  function windCompass(deg){
-  if(deg==null) return "N/A";
-
-  const dirs = [
-    "N","NNE","NE","ENE",
-    "E","ESE","SE","SSE",
-    "S","SSW","SW","WSW",
-    "W","WNW","NW","NNW"
-  ];
-
-  return dirs[Math.round(deg/22.5)%16];
-}
 function inHgToHpa(p){return (p*33.8639).toFixed(1);}
 
 function formatTime(ts){
@@ -226,35 +220,12 @@ const gustsToday = todayHistory
   .filter(v => v != null);
 
 if (tempsToday.length > 0) {
-
-  let trendText = "";
-
-  if (todayHistory.length >= 12) {
-
-    const currentTemp =
-      todayHistory[todayHistory.length - 1].temp_c;
-
-    const hourAgoTemp =
-      todayHistory[todayHistory.length - 12].temp_c;
-
-    const diff = currentTemp - hourAgoTemp;
-
-    if (diff > 0.5) {
-      trendText = " | ↗ Rising";
-    } else if (diff < -0.5) {
-      trendText = " | ↘ Falling";
-    } else {
-      trendText = " | → Steady";
-    }
-  }
-
   tempStats.innerText =
     "Max " +
     Math.max(...tempsToday).toFixed(1) +
     "°C | Min " +
     Math.min(...tempsToday).toFixed(1) +
-    "°C" +
-    trendText;
+    "°C";
 }
 
 if (gustsToday.length > 0) {
@@ -262,41 +233,6 @@ if (gustsToday.length > 0) {
     "Max Gust " +
     Math.max(...gustsToday).toFixed(1) +
     " km/h";
-}
-const pressuresToday = todayHistory
-  .map(r => r.pressure_hpa)
-  .filter(v => v != null);
-
-if (pressuresToday.length >= 36) {
-
-  const currentPressure =
-    pressuresToday[pressuresToday.length - 1];
-
-  const pressure3hAgo =
-    pressuresToday[pressuresToday.length - 36];
-
-  const pressureDiff =
-    currentPressure - pressure3hAgo;
-
-  if (pressureDiff > 1.0) {
-
-    pressureStats.innerText =
-      "↗ Rising (" +
-      pressureDiff.toFixed(1) +
-      " hPa)";
-
-  } else if (pressureDiff < -1.0) {
-
-    pressureStats.innerText =
-      "↘ Falling (" +
-      Math.abs(pressureDiff).toFixed(1) +
-      " hPa)";
-
-  } else {
-
-    pressureStats.innerText =
-      "→ Steady";
-  }
 }
 
 data.sensors.forEach(s=>{
@@ -324,53 +260,22 @@ thw.innerText  = iss.thw_index!=null?toC(iss.thw_index).toFixed(1)+" °C":"N/A";
 thsw.innerText = iss.thsw_index!=null?toC(iss.thsw_index).toFixed(1)+" °C":"N/A";
 
 // WIND
-wind.innerText =
-  mphToKmh(iss.wind_speed_last) +
-  " " +
-  windCompass(iss.wind_dir_last) +
-  " (" +
-  safeDeg(iss.wind_dir_last) +
-  ")";
+wind.innerText = mphToKmh(iss.wind_speed_last);
+dir.innerText  = safeDeg(iss.wind_dir_last);
 
-w1.innerText =
-  mphToKmh(iss.wind_speed_avg_last_1_min) +
-  " " +
-  windCompass(iss.wind_dir_scalar_avg_last_1_min) +
-  " (" +
-  safeDeg(iss.wind_dir_scalar_avg_last_1_min) +
-  ")";
+w1.innerText=mphToKmh(iss.wind_speed_avg_last_1_min);
+w2.innerText=mphToKmh(iss.wind_speed_avg_last_2_min);
+w10.innerText=mphToKmh(iss.wind_speed_avg_last_10_min);
 
-w2.innerText =
-  mphToKmh(iss.wind_speed_avg_last_2_min) +
-  " " +
-  windCompass(iss.wind_dir_scalar_avg_last_2_min) +
-  " (" +
-  safeDeg(iss.wind_dir_scalar_avg_last_2_min) +
-  ")";
+d1.innerText=safeDeg(iss.wind_dir_scalar_avg_last_1_min);
+d2.innerText=safeDeg(iss.wind_dir_scalar_avg_last_2_min);
+d10.innerText=safeDeg(iss.wind_dir_scalar_avg_last_10_min);
 
-w10.innerText =
-  mphToKmh(iss.wind_speed_avg_last_10_min) +
-  " " +
-  windCompass(iss.wind_dir_scalar_avg_last_10_min) +
-  " (" +
-  safeDeg(iss.wind_dir_scalar_avg_last_10_min) +
-  ")";
+g2.innerText=mphToKmh(iss.wind_speed_hi_last_2_min);
+g10.innerText=mphToKmh(iss.wind_speed_hi_last_10_min);
 
-g2.innerText =
-  mphToKmh(iss.wind_speed_hi_last_2_min) +
-  " " +
-  windCompass(iss.wind_dir_at_hi_speed_last_2_min) +
-  " (" +
-  safeDeg(iss.wind_dir_at_hi_speed_last_2_min) +
-  ")";
-
-g10.innerText =
-  mphToKmh(iss.wind_speed_hi_last_10_min) +
-  " " +
-  windCompass(iss.wind_dir_at_hi_speed_last_10_min) +
-  " (" +
-  safeDeg(iss.wind_dir_at_hi_speed_last_10_min) +
-  ")";
+gd2.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_2_min);
+gd10.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_10_min);
 
 // SOLAR
 solar.innerText=iss.solar_rad??"N/A";
