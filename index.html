@@ -2,134 +2,42 @@
 <html>
 <head>
   <title>Esperence Weather</title>
-<style>
-  body{
-    font-family:Segoe UI,Arial,sans-serif;
-    background:linear-gradient(135deg,#08131d,#10293d);
-    color:white;
-    margin:0;
-    text-align:center;
-  }
+  <style>
+    body { font-family: Arial; background:#0b1e2d; color:white; margin:0; text-align:center; }
+    h1 { margin:10px 0; }
+    #time { margin-bottom:20px; opacity:0.8; }
 
-  h1{
-    margin:10px 0;
-  }
+    .section { margin-top:20px; }
+    .section h2 { color:#a0c4ff; }
 
-  #time{
-    opacity:0.8;
-    margin-bottom:10px;
-  }
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:10px;
+      padding:0 10px;
+    }
 
-  .hero{
-    margin:20px auto;
-    max-width:900px;
-    background:rgba(255,255,255,0.08);
-    backdrop-filter:blur(10px);
-    border-radius:20px;
-    padding:25px;
-    box-shadow:0 8px 30px rgba(0,0,0,0.4);
-  }
+    .card { background:#1f3b4d; border-radius:10px; padding:12px; }
+    .value { font-size:18px; }
 
-  .hero-temp{
-    font-size:64px;
-    font-weight:700;
-    line-height:1;
-  }
-
-  .hero-sub{
-    margin-top:10px;
-    font-size:18px;
-    color:#cfd8dc;
-  }
-
-  .summary-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-    gap:12px;
-    margin-top:20px;
-  }
-
-  .summary-card{
-    background:rgba(255,255,255,0.08);
-    border-radius:12px;
-    padding:12px;
-  }
-
-  .section{
-    margin-top:24px;
-  }
-
-  .section h2{
-    color:#9dd6ff;
-  }
-
-  .grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-    gap:12px;
-    padding:0 10px;
-    max-width:1400px;
-    margin:auto;
-  }
-
-  .card{
-    background:#17354c;
-    border-radius:14px;
-    padding:14px;
-    box-shadow:0 4px 10px rgba(0,0,0,.25);
-    transition:.2s;
-  }
-
-  .card:hover{
-    transform:translateY(-2px);
-  }
-
-  .value{
-    font-size:20px;
-    font-weight:600;
-    margin-top:6px;
-  }
-
-  .alert{
-    font-weight:bold;
-  }
-
-  .warning{
-    background:repeating-linear-gradient(
-      45deg,
-      #000,
-      #000 10px,
-      #ffd600 10px,
-      #ffd600 20px
-    );
-    color:#000;
-  }
-
-  .wind-card{
-    border-left:5px solid #4fc3f7;
-  }
-
-  .rain-card{
-    border-left:5px solid #66bb6a;
-  }
-
-  .solar-card{
-    border-left:5px solid #ffca28;
-  }
-
-  .temp-card{
-    border-left:5px solid #ff7043;
-  }
-</style>
+    /* ✅ NEW */
+    .alert { font-weight:bold; }
+    .warning {
+      background: repeating-linear-gradient(
+        45deg,
+        #000,
+        #000 10px,
+        #ffd600 10px,
+        #ffd600 20px
+      );
+      color:#000;
+    }
+  </style>
 </head>
 <body>
 
 <h1>Esperence Weather Station</h1>
 <h2 id="time"></h2>
-
-<div id="dataTime" style="opacity:0.7;margin-bottom:15px;">
-  Data timestamp: --
-</div>
 
 <!-- CURRENT -->
 <div class="section">
@@ -157,92 +65,38 @@
 <!-- WIND -->
 <div class="section">
 <h2>Wind</h2>
-
 <div class="grid">
 
-  <div class="card">
-    Speed
-    <div class="value" id="wind"></div>
-  </div>
+<div class="card">Speed<div class="value" id="wind"></div></div>
+<div class="card">Dir<div class="value" id="dir"></div></div>
 
-  <div class="card">
-    Direction
-    <div class="value" id="dir"></div>
-  </div>
+<div class="card">1m Avg<div class="value" id="w1"></div></div>
+<div class="card">1m Dir<div class="value" id="d1"></div></div>
 
-  <div class="card">
-    Wind Compass
-    <div id="compass">
-      <div class="north">N</div>
-      <div class="east">E</div>
-      <div class="south">S</div>
-      <div class="west">W</div>
-      <div id="needle"></div>
-    </div>
-  </div>
+<div class="card">2m Avg<div class="value" id="w2"></div></div>
+<div class="card">2m Dir<div class="value" id="d2"></div></div>
 
-  <div class="card">
-    1m Avg
-    <div class="value" id="w1"></div>
-  </div>
+<div class="card">5m Avg<div class="value" id="w5"></div></div>
+<div class="card">5m Dir<div class="value" id="d5"></div></div>
 
-  <div class="card">
-    1m Dir
-    <div class="value" id="d1"></div>
-  </div>
+<div class="card">10m Avg<div class="value" id="w10"></div></div>
+<div class="card">10m Dir<div class="value" id="d10"></div></div>
 
-  <div class="card">
-    2m Avg
-    <div class="value" id="w2"></div>
-  </div>
+<div class="card">Gust 1m<div class="value" id="g1"></div></div>
+<div class="card">Dir<div class="value" id="gd1"></div></div>
 
-  <div class="card">
-    2m Dir
-    <div class="value" id="d2"></div>
-  </div>
+<div class="card">Gust 2m<div class="value" id="g2"></div></div>
+<div class="card">Dir<div class="value" id="gd2"></div></div>
 
-  <div class="card">
-    10m Avg
-    <div class="value" id="w10"></div>
-  </div>
+<div class="card">Gust 5m<div class="value" id="g5"></div></div>
+<div class="card">Dir<div class="value" id="gd5"></div></div>
 
-  <div class="card">
-    10m Dir
-    <div class="value" id="d10"></div>
-  </div>
-
-  <div class="card">
-    Gust 1m
-    <div class="value" id="g1"></div>
-  </div>
-
-  <div class="card">
-    Dir
-    <div class="value" id="gd1"></div>
-  </div>
-
-  <div class="card">
-    Gust 2m
-    <div class="value" id="g2"></div>
-  </div>
-
-  <div class="card">
-    Dir
-    <div class="value" id="gd2"></div>
-  </div>
-
-  <div class="card">
-    Gust 10m
-    <div class="value" id="g10"></div>
-  </div>
-
-  <div class="card">
-    Dir
-    <div class="value" id="gd10"></div>
-  </div>
+<div class="card">Gust 10m<div class="value" id="g10"></div></div>
+<div class="card">Dir<div class="value" id="gd10"></div></div>
 
 </div>
 </div>
+
 <!-- SOLAR -->
 <div class="section">
 <h2>Solar</h2>
@@ -283,9 +137,6 @@
 <div class="grid">
 <div class="card alert" id="fogAlert">No Fog</div>
 <div class="card alert" id="dewAlert">No Dew</div>
-<div class="card alert" id="windAlert" style="display:none;"></div>
-<div class="card alert" id="fireAlert" style="display:none;"></div>
-<div class="card alert" id="gustAlert" style="display:none;"></div>
 </div>
 </div>
 
@@ -310,38 +161,8 @@
 function toC(f){ if(f==null) return null; return ((f-32)*5/9); }
 function mphToKmh(v){return (v!=null)?(v*1.60934).toFixed(1)+" km/h":"N/A";}
 function safeDeg(v){return (v!=null)?v+"°":"N/A";}
-
-function windCompass(deg){
-  if(deg==null) return "N/A";
-
-  const dirs = [
-    "N","NNE","NE","ENE",
-    "E","ESE","SE","SSE",
-    "S","SSW","SW","WSW",
-    "W","WNW","NW","NNW"
-  ];
-
-  return dirs[Math.round(deg/22.5)%16];
-}
-``
 function inHgToHpa(p){return (p*33.8639).toFixed(1);}
 
-function formatDataTime(ts){
-  if(!ts) return "Unknown";
-
-  return new Date(ts * 1000).toLocaleString(
-    "en-AU",
-    {
-      timeZone:"Australia/Brisbane",
-      day:"2-digit",
-      month:"2-digit",
-      year:"numeric",
-      hour:"2-digit",
-      minute:"2-digit",
-      second:"2-digit"
-    }
-  );
-}
 function formatTime(ts){
 if(!ts) return "N/A";
 const d=new Date(ts*1000);
@@ -365,10 +186,6 @@ async function loadWeather(){
 
 const res=await fetch("/esperencewx/weather.json?"+Date.now(), { cache: "no-store" });
 const data=await res.json();
-
-dataTime.innerText =
-  "Data timestamp: " +
-  formatDataTime(data.generated_at);
 
 let iss,baro,extra;
 
@@ -398,72 +215,40 @@ thsw.innerText = iss.thsw_index!=null?toC(iss.thsw_index).toFixed(1)+" °C":"N/A
 
 // WIND
 wind.innerText = mphToKmh(iss.wind_speed_last);
-dir.innerText =
-  windCompass(iss.wind_dir_last) +
-  " (" +
-  safeDeg(iss.wind_dir_last) +
-  ")";
+dir.innerText  = safeDeg(iss.wind_dir_last);
 
 w1.innerText=mphToKmh(iss.wind_speed_avg_last_1_min);
 w2.innerText=mphToKmh(iss.wind_speed_avg_last_2_min);
+w5.innerText=mphToKmh(iss.wind_speed_avg_last_5_min);
 w10.innerText=mphToKmh(iss.wind_speed_avg_last_10_min);
 
-d1.innerText=windCompass(iss.wind_dir_scalar_avg_last_1_min);
-d2.innerText=windCompass(iss.wind_dir_scalar_avg_last_2_min);
-d10.innerText=windCompass(iss.wind_dir_scalar_avg_last_10_min);
+d1.innerText=safeDeg(iss.wind_dir_scalar_avg_last_1_min);
+d2.innerText=safeDeg(iss.wind_dir_scalar_avg_last_2_min);
+d5.innerText=safeDeg(iss.wind_dir_scalar_avg_last_5_min);
+d10.innerText=safeDeg(iss.wind_dir_scalar_avg_last_10_min);
 
 g1.innerText=mphToKmh(iss.wind_speed_hi_last_1_min);
 g2.innerText=mphToKmh(iss.wind_speed_hi_last_2_min);
+g5.innerText=mphToKmh(iss.wind_speed_hi_last_5_min);
 g10.innerText=mphToKmh(iss.wind_speed_hi_last_10_min);
 
-gd1.innerText=windCompass(iss.wind_dir_at_hi_speed_last_1_min);
-gd2.innerText=windCompass(iss.wind_dir_at_hi_speed_last_2_min);
-gd10.innerText=windCompass(iss.wind_dir_at_hi_speed_last_10_min);
+gd1.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_1_min);
+gd2.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_2_min);
+gd5.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_5_min);
+gd10.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_10_min);
 
 // SOLAR
-solar.innerText =
-  iss.solar_rad != null
-    ? Number(iss.solar_rad).toFixed(1)
-    : "N/A";
-
-uv.innerText =
-  iss.uv_index != null
-    ? Number(iss.uv_index).toFixed(1)
-    : "N/A";
+solar.innerText=iss.solar_rad??"N/A";
+uv.innerText=iss.uv_index??"N/A";
 
 // RAIN
-rain_rate.innerText =
-  iss.rain_rate_last_mm != null
-    ? Number(iss.rain_rate_last_mm).toFixed(1)
-    : "N/A";
-
-rain15.innerText =
-  iss.rainfall_last_15_min_mm != null
-    ? Number(iss.rainfall_last_15_min_mm).toFixed(1)
-    : "N/A";
-
-rain60.innerText =
-  iss.rainfall_last_60_min_mm != null
-    ? Number(iss.rainfall_last_60_min_mm).toFixed(1)
-    : "N/A";
-
-rain24.innerText =
-  iss.rainfall_last_24_hr_mm != null
-    ? Number(iss.rainfall_last_24_hr_mm).toFixed(1)
-    : "N/A";
-
-rainday.innerText =
-  Number(iss.rainfall_dailly_mm ?? iss.rainfall_daily_mm ?? 0).toFixed(1);
-
-rainm.innerText =
-  iss.rainfall_monthly_mm != null
-    ? Number(iss.rainfall_monthly_mm).toFixed(1)
-    : "N/A";
-
-rainy.innerText =
-  iss.rainfall_year_mm != null
-    ? Number(iss.rainfall_year_mm).toFixed(1)
-    : "N/A";
+rain_rate.innerText=iss.rain_rate_last_mm;
+rain15.innerText=iss.rainfall_last_15_min_mm;
+rain60.innerText=iss.rainfall_last_60_min_mm;
+rain24.innerText=iss.rainfall_last_24_hr_mm;
+rainday.innerText=iss.rainfall_dailly_mm ?? iss.rainfall_daily_mm ?? 0;
+rainm.innerText=iss.rainfall_monthly_mm;
+rainy.innerText=iss.rainfall_year_mm;
 
 // STORM
 storm.innerText=iss.rain_storm_mm ?? "N/A";
@@ -502,43 +287,19 @@ if (temps.length > 0 && dewC!=null){
 
 // Fog
 fogAlert.classList.remove("warning");
-
-const wind10 =
-  iss.wind_speed_avg_last_10_min != null
-    ? iss.wind_speed_avg_last_10_min * 1.60934
-    : 0;
-
-const raining =
-  (iss.rain_rate_last_mm ?? 0) > 0;
-
-if (tempC != null && dewC != null){
-
+if (tempC!=null && dewC!=null){
   const dpdVal = tempC - dewC;
 
-  // Don't issue fog alerts when raining or windy
-  if (raining || wind10 > 10){
-
-    fogAlert.innerText = "No Fog";
-
-  } else if (dpdVal < 0.5){
-
+  if (dpdVal < 0.5){
     fogAlert.innerText = "Fog Likely";
     fogAlert.classList.add("warning");
-
   } else if (dpdVal < 1){
-
     fogAlert.innerText = "Fog Possible";
-
   } else {
-
     fogAlert.innerText = "No Fog";
-
   }
-
 } else {
-
   fogAlert.innerText = "No Fog";
-
 }
 
 // Dew / Frost
@@ -560,105 +321,7 @@ if (minT!=null && dewC!=null){
 } else {
   dewAlert.innerText = "No Dew";
 }
-  
-// Wind
-windAlert.classList.remove("warning");
-windAlert.style.display = "none";
 
-const wind10 =
-  iss.wind_speed_avg_last_10_min != null
-    ? iss.wind_speed_avg_last_10_min * 1.60934
-    : null;
-
-if (wind10 != null){
-
-  if (wind10 > 50){
-    windAlert.innerText = "Batten down the hatches!";
-    windAlert.classList.add("warning");
-    windAlert.style.display = "block";
-
-  } else if (wind10 > 40){
-    windAlert.innerText = "Blowing a gale";
-    windAlert.classList.add("warning");
-    windAlert.style.display = "block";
-
-  } else if (wind10 > 30){
-    windAlert.innerText = "Very Windy";
-    windAlert.style.display = "block";
-
-  } else if (wind10 > 20){
-    windAlert.innerText = "Windy";
-    windAlert.style.display = "block";
-  }
-
-// Gustiness
-gustAlert.classList.remove("warning");
-gustAlert.style.display = "none";
-
-const avgWind =
-  iss.wind_speed_avg_last_10_min != null
-    ? iss.wind_speed_avg_last_10_min * 1.60934
-    : null;
-
-const gustWind =
-  iss.wind_speed_hi_last_10_min != null
-    ? iss.wind_speed_hi_last_10_min * 1.60934
-    : null;
-
-if (
-  avgWind != null &&
-  gustWind != null &&
-  avgWind > 0
-){
-
-  const gustFactor = gustWind / avgWind;
-
-  if (gustFactor > 2){
-    gustAlert.innerText = "Very Gusty";
-    gustAlert.classList.add("warning");
-    gustAlert.style.display = "block";
-
-  } else if (gustFactor > 1.5){
-    gustAlert.innerText = "Gusty";
-    gustAlert.style.display = "block";
-  }
-
-}
-  
-// Fire Danger
-fireAlert.classList.remove("warning");
-fireAlert.style.display = "none";
-
-const tempNow = tempC;
-const humidityNow = iss.hum;
-const windNow =
-  iss.wind_speed_avg_last_10_min != null
-    ? iss.wind_speed_avg_last_10_min * 1.60934
-    : 0;
-
-if (
-  tempNow != null &&
-  humidityNow != null
-){
-
-  if (
-    tempNow > 35 &&
-    humidityNow < 20 &&
-    windNow > 30
-  ){
-    fireAlert.innerText = "High Fire Danger";
-    fireAlert.classList.add("warning");
-    fireAlert.style.display = "block";
-
-  } else if (
-    tempNow > 30 &&
-    humidityNow < 30 &&
-    windNow > 25
-  ){
-    fireAlert.innerText = "Elevated Fire Danger";
-    fireAlert.style.display = "block";
-  }
-  
 }
 
 loadWeather();
