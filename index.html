@@ -79,20 +79,11 @@
 <div class="card">2m Avg<div class="value" id="w2"></div></div>
 <div class="card">2m Dir<div class="value" id="d2"></div></div>
 
-<div class="card">5m Avg<div class="value" id="w5"></div></div>
-<div class="card">5m Dir<div class="value" id="d5"></div></div>
-
 <div class="card">10m Avg<div class="value" id="w10"></div></div>
 <div class="card">10m Dir<div class="value" id="d10"></div></div>
 
-<div class="card">Gust 1m<div class="value" id="g1"></div></div>
-<div class="card">Dir<div class="value" id="gd1"></div></div>
-
 <div class="card">Gust 2m<div class="value" id="g2"></div></div>
 <div class="card">Dir<div class="value" id="gd2"></div></div>
-
-<div class="card">Gust 5m<div class="value" id="g5"></div></div>
-<div class="card">Dir<div class="value" id="gd5"></div></div>
 
 <div class="card">Gust 10m<div class="value" id="g10"></div></div>
 <div class="card">Dir<div class="value" id="gd10"></div></div>
@@ -274,22 +265,16 @@ dir.innerText  = safeDeg(iss.wind_dir_last);
 
 w1.innerText=mphToKmh(iss.wind_speed_avg_last_1_min);
 w2.innerText=mphToKmh(iss.wind_speed_avg_last_2_min);
-w5.innerText=mphToKmh(iss.wind_speed_avg_last_5_min);
 w10.innerText=mphToKmh(iss.wind_speed_avg_last_10_min);
 
 d1.innerText=safeDeg(iss.wind_dir_scalar_avg_last_1_min);
 d2.innerText=safeDeg(iss.wind_dir_scalar_avg_last_2_min);
-d5.innerText=safeDeg(iss.wind_dir_scalar_avg_last_5_min);
 d10.innerText=safeDeg(iss.wind_dir_scalar_avg_last_10_min);
 
-g1.innerText=mphToKmh(iss.wind_speed_hi_last_1_min);
 g2.innerText=mphToKmh(iss.wind_speed_hi_last_2_min);
-g5.innerText=mphToKmh(iss.wind_speed_hi_last_5_min);
 g10.innerText=mphToKmh(iss.wind_speed_hi_last_10_min);
 
-gd1.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_1_min);
 gd2.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_2_min);
-gd5.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_5_min);
 gd10.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_10_min);
 
 // SOLAR
