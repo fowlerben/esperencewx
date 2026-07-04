@@ -61,8 +61,12 @@
      style="margin:0 10px 15px 10px;">
   
 <div class="card" style="text-align:center;">
-  <img
-    id="synopticImage"
+
+  <a href="https://reg.bom.gov.au/fwo/IDY65200.png"
+     target="_blank">
+
+    <img
+      id="synopticImage"
     src="https://reg.bom.gov.au/fwo/IDY65200.png"
     alt="BOM MSLP and Satellite Analysis"
     style="
@@ -70,6 +74,9 @@
       max-width:400px;
       border-radius:8px;
     ">
+
+  </a>
+  
 </div>
 
 </div>
@@ -232,15 +239,16 @@ function getSunInfo() {
 
   const haDeg = ha * 180 / Math.PI;
 
-  const timezone = 10;
+  const timezoneOffset =
+    -new Date().getTimezoneOffset() / 60;
 
   const sunrise =
     (720 - 4 * (lon + haDeg) - eqTime +
-    timezone * 60) / 60;
+    timezoneOffset * 60) / 60;
 
   const sunset =
     (720 - 4 * (lon - haDeg) - eqTime +
-    timezone * 60) / 60;
+    timezoneOffset * 60) / 60;
 
   return {
     sunrise,
