@@ -139,7 +139,8 @@
 <div class="grid">
 <div class="card alert" id="fogAlert">No Fog</div>
 <div class="card alert" id="dewAlert">No Dew</div>
-  div class="card alert" id="fireAlert" style="display:none;"></div>
+<div class="card alert" id="fireAlert" style="display:none;"></div>
+<div class="card alert" id="windAlert" style="display:none;"></div>
 </div>
 </div>
 
@@ -364,6 +365,38 @@ if (
     fireAlert.innerText = "Elevated Fire Danger";
     fireAlert.style.display = "block";
   }
+
+}
+// Wind Alert
+windAlert.classList.remove("warning");
+windAlert.style.display = "none";
+
+const wind10Kmh =
+  iss.wind_speed_avg_last_10_min != null
+    ? iss.wind_speed_avg_last_10_min * 1.60934
+    : 0;
+
+if (wind10Kmh >= 50){
+
+  windAlert.innerText = "Batten down the hatches!";
+  windAlert.classList.add("warning");
+  windAlert.style.display = "block";
+
+} else if (wind10Kmh >= 40){
+
+  windAlert.innerText = "Blowing a gale";
+  windAlert.classList.add("warning");
+  windAlert.style.display = "block";
+
+} else if (wind10Kmh >= 30){
+
+  windAlert.innerText = "Very Windy";
+  windAlert.style.display = "block";
+
+} else if (wind10Kmh >= 20){
+
+  windAlert.innerText = "Windy";
+  windAlert.style.display = "block";
 
 }
 
