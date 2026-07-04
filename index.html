@@ -71,22 +71,16 @@
 <div class="grid">
 
 <div class="card">Speed<div class="value" id="wind"></div><div id="windStats" style="font-size:12px;opacity:0.8;"></div></div>
-<div class="card">Dir<div class="value" id="dir"></div></div>
 
 <div class="card">1m Avg<div class="value" id="w1"></div></div>
-<div class="card">1m Dir<div class="value" id="d1"></div></div>
 
 <div class="card">2m Avg<div class="value" id="w2"></div></div>
-<div class="card">2m Dir<div class="value" id="d2"></div></div>
 
 <div class="card">10m Avg<div class="value" id="w10"></div></div>
-<div class="card">10m Dir<div class="value" id="d10"></div></div>
 
 <div class="card">Gust 2m<div class="value" id="g2"></div></div>
-<div class="card">Dir<div class="value" id="gd2"></div></div>
 
 <div class="card">Gust 10m<div class="value" id="g10"></div></div>
-<div class="card">Dir<div class="value" id="gd10"></div></div>
 
 </div>
 </div>
@@ -318,22 +312,53 @@ thw.innerText  = iss.thw_index!=null?toC(iss.thw_index).toFixed(1)+" °C":"N/A";
 thsw.innerText = iss.thsw_index!=null?toC(iss.thsw_index).toFixed(1)+" °C":"N/A";
 
 // WIND
-wind.innerText = mphToKmh(iss.wind_speed_last);
-dir.innerText  = safeDeg(iss.wind_dir_last);
+wind.innerText =
+  mphToKmh(iss.wind_speed_last) +
+  " " +
+  windCompass(iss.wind_dir_last) +
+  " (" +
+  safeDeg(iss.wind_dir_last) +
+  ")";
 
-w1.innerText=mphToKmh(iss.wind_speed_avg_last_1_min);
-w2.innerText=mphToKmh(iss.wind_speed_avg_last_2_min);
-w10.innerText=mphToKmh(iss.wind_speed_avg_last_10_min);
+w1.innerText =
+  mphToKmh(iss.wind_speed_avg_last_1_min) +
+  " " +
+  windCompass(iss.wind_dir_scalar_avg_last_1_min) +
+  " (" +
+  safeDeg(iss.wind_dir_scalar_avg_last_1_min) +
+  ")";
 
-d1.innerText=safeDeg(iss.wind_dir_scalar_avg_last_1_min);
-d2.innerText=safeDeg(iss.wind_dir_scalar_avg_last_2_min);
-d10.innerText=safeDeg(iss.wind_dir_scalar_avg_last_10_min);
+w2.innerText =
+  mphToKmh(iss.wind_speed_avg_last_2_min) +
+  " " +
+  windCompass(iss.wind_dir_scalar_avg_last_2_min) +
+  " (" +
+  safeDeg(iss.wind_dir_scalar_avg_last_2_min) +
+  ")";
 
-g2.innerText=mphToKmh(iss.wind_speed_hi_last_2_min);
-g10.innerText=mphToKmh(iss.wind_speed_hi_last_10_min);
+w10.innerText =
+  mphToKmh(iss.wind_speed_avg_last_10_min) +
+  " " +
+  windCompass(iss.wind_dir_scalar_avg_last_10_min) +
+  " (" +
+  safeDeg(iss.wind_dir_scalar_avg_last_10_min) +
+  ")";
 
-gd2.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_2_min);
-gd10.innerText=safeDeg(iss.wind_dir_at_hi_speed_last_10_min);
+g2.innerText =
+  mphToKmh(iss.wind_speed_hi_last_2_min) +
+  " " +
+  windCompass(iss.wind_dir_at_hi_speed_last_2_min) +
+  " (" +
+  safeDeg(iss.wind_dir_at_hi_speed_last_2_min) +
+  ")";
+
+g10.innerText =
+  mphToKmh(iss.wind_speed_hi_last_10_min) +
+  " " +
+  windCompass(iss.wind_dir_at_hi_speed_last_10_min) +
+  " (" +
+  safeDeg(iss.wind_dir_at_hi_speed_last_10_min) +
+  ")";
 
 // SOLAR
 solar.innerText=iss.solar_rad??"N/A";
