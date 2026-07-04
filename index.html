@@ -220,12 +220,35 @@ const gustsToday = todayHistory
   .filter(v => v != null);
 
 if (tempsToday.length > 0) {
+
+  let trendText = "";
+
+  if (todayHistory.length >= 12) {
+
+    const currentTemp =
+      todayHistory[todayHistory.length - 1].temp_c;
+
+    const hourAgoTemp =
+      todayHistory[todayHistory.length - 12].temp_c;
+
+    const diff = currentTemp - hourAgoTemp;
+
+    if (diff > 0.5) {
+      trendText = " | ↗ Rising";
+    } else if (diff < -0.5) {
+      trendText = " | ↘ Falling";
+    } else {
+      trendText = " | → Steady";
+    }
+  }
+
   tempStats.innerText =
     "Max " +
     Math.max(...tempsToday).toFixed(1) +
     "°C | Min " +
     Math.min(...tempsToday).toFixed(1) +
-    "°C";
+    "°C" +
+    trendText;
 }
 
 if (gustsToday.length > 0) {
