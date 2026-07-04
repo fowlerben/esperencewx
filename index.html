@@ -452,19 +452,43 @@ if (temps.length > 0 && dewC!=null){
 
 // Fog
 fogAlert.classList.remove("warning");
-if (tempC!=null && dewC!=null){
+
+const wind10 =
+  iss.wind_speed_avg_last_10_min != null
+    ? iss.wind_speed_avg_last_10_min * 1.60934
+    : 0;
+
+const raining =
+  (iss.rain_rate_last_mm ?? 0) > 0;
+
+if (tempC != null && dewC != null){
+
   const dpdVal = tempC - dewC;
 
-  if (dpdVal < 0.5){
+  // Don't issue fog alerts when raining or windy
+  if (raining || wind10 > 10){
+
+    fogAlert.innerText = "No Fog";
+
+  } else if (dpdVal < 0.5){
+
     fogAlert.innerText = "Fog Likely";
     fogAlert.classList.add("warning");
+
   } else if (dpdVal < 1){
+
     fogAlert.innerText = "Fog Possible";
+
   } else {
+
     fogAlert.innerText = "No Fog";
+
   }
+
 } else {
+
   fogAlert.innerText = "No Fog";
+
 }
 
 // Dew / Frost
