@@ -206,9 +206,6 @@ async function loadWeather(){
 
 const res=await fetch("/esperencewx/weather.json?"+Date.now(), { cache: "no-store" });
 const data=await res.json();
-document.getElementById("dataTime").innerText =
-"Data timestamp: " +
- formatDataTime(data.generated_at);
 
 let iss,baro,extra;
 
