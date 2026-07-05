@@ -3789,5 +3789,15 @@
     "wind10_kmh": 7.24203,
     "gust10_kmh": 14.48406,
     "rain_daily_mm": 0.4
+  },
+  {
+    "time": 1783255836,
+    "temp_c": 7.5,
+    "dew_c": 5.38888888888889,
+    "humidity": 86.6,
+    "pressure_hpa": 1037.4544404,
+    "wind10_kmh": 6.6304808,
+    "gust10_kmh": 16.0934,
+    "rain_daily_mm": 0.4
   }
 ]
