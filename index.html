@@ -294,9 +294,7 @@
 
 </div>
 </div>
-  
-<script src.jsdelivr.net/npm/chart.js
-  
+
 <script>
 
 function toC(f){ if(f==null) return null; return ((f-32)*5/9); }
@@ -432,93 +430,7 @@ document.getElementById("time").innerText=
 new Date().toLocaleString("en-AU",{timeZone:"Australia/Melbourne"});
 }
 setInterval(updateTime,1000);updateTime();
-let tempChart = null;
 
-function drawTempChart(history) {
-
-  const today = history.filter(r => r.temp_c != null);
-
-  const labels = today.map(r =>
-    new Date(r.time * 1000).toLocaleTimeString(
-      "en-AU",
-      {
-        timeZone: "Australia/Melbourne",
-        hour: "2-digit",
-        minute: "2-digit"
-      }
-    )
-  );
-
-  const temps = today.map(r => r.temp_c);
-  const dews  = today.map(r => r.dew_c);
-
-  const ctx =
-    document.getElementById("tempDewChart");
-
-  if (!ctx) return;
-
-  if (tempChart) {
-    tempChart.destroy();
-  }
-
-  tempChart = new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: labels,
-      datasets: [
-        {
-          label: "Temperature",
-          data: temps,
-          borderColor: "#ff5555",
-          backgroundColor: "transparent",
-          borderWidth: 3,
-          tension: 0.2
-        },
-        {
-          label: "Dew Point",
-          data: dews,
-          borderColor: "#55ff55",
-          backgroundColor: "transparent",
-          borderWidth: 3,
-          tension: 0.2
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: false,
-
-      plugins: {
-        legend: {
-          labels: {
-            color: "white"
-          }
-        }
-      },
-
-      scales: {
-        x: {
-          ticks: {
-            color: "white"
-          },
-          grid: {
-            color: "#2f4a5f"
-          }
-        },
-
-        y: {
-          ticks: {
-            color: "white"
-          },
-          grid: {
-            color: "#2f4a5f"
-          }
-        }
-      }
-    }
-  });
-}
 async function loadWeather(){
 
 const res=await fetch("/esperencewx/weather.json?"+Date.now(), { cache: "no-store" });
@@ -526,7 +438,6 @@ const data=await res.json();
 
 const historyRes = await fetch("/esperencewx/history.json?"+Date.now());
 const history = await historyRes.json();
-drawTempChart(history);
 
 if(data.generated_at){
 document.getElementById("dataTime").innerText =
