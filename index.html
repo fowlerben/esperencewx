@@ -430,7 +430,34 @@ const tempsToday = todayHistory
 const gustsToday = todayHistory
   .map(r => r.gust10_kmh)
   .filter(v => v != null);
+  
+let pressureTrendText = "";
 
+if (todayHistory.length > 1) {
+
+  const latest = todayHistory[todayHistory.length - 1];
+  const threeHoursAgoTarget = latest.time - 10800;
+
+  const oldRecord = todayHistory.find(
+    r => r.time >= threeHoursAgoTarget
+  );
+
+  if (
+    oldRecord &&
+    oldRecord.pressure_hpa != null &&
+    latest.pressure_hpa != null
+  ) {
+
+    const change =
+      latest.pressure_hpa - oldRecord.pressure_hpa;
+
+    pressureTrendText =
+      (change >= 0 ? "+" : "") +
+      change.toFixed(1) +
+      " hPa / 3h";
+  }
+}
+  
 if (tempsToday.length > 0) {
   tempStats.innerText =
     "Max " +
@@ -480,6 +507,7 @@ dew.innerText  = dewC!=null ? dewC.toFixed(1)+" °C":"N/A";
 wet.innerText  = iss.wet_bulb!=null ? toC(iss.wet_bulb).toFixed(1)+" °C":"N/A";
 hum.innerText  = iss.hum+" %";
 pressure.innerText = baro?inHgToHpa(baro.bar_sea_level)+" hPa":"N/A";
+  pressureTrend.innerText = pressureTrendText;
 
 // COMFORT
 heat.innerText = iss.heat_index!=null?toC(iss.heat_index).toFixed(1)+" °C":"N/A";
