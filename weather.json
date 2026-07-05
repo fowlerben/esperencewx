@@ -87,12 +87,12 @@
           "wet_leaf_1": 14.7,
           "tx_id": 5,
           "temp_1": 36.8,
-          "temp_2": 37,
+          "temp_2": 37.1,
           "trans_battery_flag": 0,
           "tz_offset": 36000,
           "temp_3": 36.6,
           "temp_4": null,
-          "ts": 1783288552
+          "ts": 1783288852
         }
       ],
       "sensor_type": 56,
@@ -210,12 +210,12 @@
       "lsid": 551509,
       "data": [
         {
-          "bar_absolute": 30.275,
+          "bar_absolute": 30.277,
           "tz_offset": 36000,
-          "bar_sea_level": 30.674,
+          "bar_sea_level": 30.676,
           "bar_offset": 0.012,
-          "bar_trend": 0.041,
-          "ts": 1783288552
+          "bar_trend": 0.039,
+          "ts": 1783288852
         }
       ],
       "sensor_type": 242,
@@ -225,11 +225,11 @@
       "lsid": 551510,
       "data": [
         {
-          "temp_in": 61,
+          "temp_in": 61.1,
           "tz_offset": 36000,
-          "heat_index_in": 58.8,
-          "dew_point_in": 41.4,
-          "ts": 1783288552,
+          "heat_index_in": 58.9,
+          "dew_point_in": 41.5,
+          "ts": 1783288852,
           "hum_in": 48.4
         }
       ],
@@ -315,6 +315,6 @@
       "data_structure_type": 18
     }
   ],
-  "generated_at": 1783288855,
+  "generated_at": 1783289123,
   "station_id": 144429
 }
