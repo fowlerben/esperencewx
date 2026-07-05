@@ -99,7 +99,19 @@
     ">
 
 </a>
-  
+<div class="card" style="text-align:center; margin-top:10px;">
+
+  /IDR02I.gif"
+     target="_blank">
+
+    <img
+      id="dopplerImage"
+      src="https://reg.bom.gov.au/radar/IDR023.gif">
+
+  </a>
+
+</div>  
+
 </div>
 
 <div class="card" style="text-align:center; margin-top:10px;">
@@ -328,6 +340,9 @@ function refreshSynopticImage(){
   const radar =
     document.getElementById("radarImage");
 
+  const doppler =
+    document.getElementById("dopplerImage");
+
   const now = Date.now();
 
   if (synoptic) {
@@ -338,6 +353,11 @@ function refreshSynopticImage(){
   if (radar) {
     radar.src =
       "https://reg.bom.gov.au/radar/IDR023.gif?t=" + now;
+  }
+
+  if (doppler) {
+    doppler.src =
+      "https://reg.bom.gov.au/radar/IDR02I.gif?t=" + now;
   }
 
 }
