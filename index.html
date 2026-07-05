@@ -435,7 +435,11 @@ document.getElementById("time").innerText=
 new Date().toLocaleString("en-AU",{timeZone:"Australia/Melbourne"});
 }
 setInterval(updateTime,1000);updateTime();
+let tempChart = null;
 
+function drawTempChart(history){
+
+}
 async function loadWeather(){
 
 const res=await fetch("/esperencewx/weather.json?"+Date.now(), { cache: "no-store" });
