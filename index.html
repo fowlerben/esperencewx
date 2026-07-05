@@ -478,6 +478,7 @@ const chartLabels = todayHistory.map(r =>
 );
 
 const chartTemps = todayHistory.map(r => r.temp_c);
+const chartDews = todayHistory.map(r => r.dew_c);
 const tempsToday = todayHistory
   .map(r => r.temp_c)
   .filter(v => v != null);
@@ -835,15 +836,26 @@ if (!tempChart) {
     data: {
       labels: chartLabels,
 
-      datasets: [{
-        label: "Temperature °C",
-        data: chartTemps,
-        borderColor: "#4fc3f7",
-        backgroundColor: "rgba(79,195,247,0.2)",
-        fill: true,
-        tension: 0.3,
-        pointRadius: 0
-      }]
+      datasets: [
+        {
+          label: "Temperature °C",
+          data: chartTemps,
+          borderColor: "#4fc3f7",
+          backgroundColor: "rgba(79,195,247,0.2)",
+          fill: true,
+          tension: 0.3,
+          pointRadius: 0
+        },
+        {
+          label: "Dew Point °C",
+          data: chartDews,
+          borderColor: "#7bd389",
+          backgroundColor: "rgba(123,211,137,0)",
+          fill: false,
+          tension: 0.3,
+          pointRadius: 0
+        }
+      ]
     },
 
     options: {
@@ -880,6 +892,7 @@ if (!tempChart) {
 
   tempChart.data.labels = chartLabels;
   tempChart.data.datasets[0].data = chartTemps;
+  tempChart.data.datasets[1].data = chartDews;
   tempChart.update();
 
 }
