@@ -60,8 +60,14 @@ jobs:
                 (($obs.sensors[] | select(.lsid==553786).data[0].temp) - 32)
                 * 5 / 9
               ),
-
+              
+              dew_c: (
+                (($obs.sensors[] | select(.lsid==553786).data[0].dew_point) - 32)
+                * 5 / 9
+              ),
+              
               humidity: (
+              
                 $obs.sensors[] | select(.lsid==553786).data[0].hum
               ),
 
