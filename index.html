@@ -825,11 +825,9 @@ if (
 
 }
 
-if (tempChart) {
-  tempChart.destroy();
-}
+if (!tempChart) {
 
-tempChart = new Chart(...)
+  tempChart = new Chart(
   document.getElementById("tempDewChart"),
   {
     type: "line",
@@ -851,6 +849,7 @@ tempChart = new Chart(...)
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      animation: false,
 
       plugins: {
         legend: {
@@ -874,8 +873,16 @@ tempChart = new Chart(...)
         }
       }
     }
-  }
+}
 );
+
+} else {
+
+  tempChart.data.labels = chartLabels;
+  tempChart.data.datasets[0].data = chartTemps;
+  tempChart.update("none");
+
+}
 
 }
 
