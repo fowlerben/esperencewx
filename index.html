@@ -825,11 +825,17 @@ if (
 
 }
 
-if (tempChart) {
-  tempChart.destroy();
-}
+if (!tempChart) {
 
-tempChart = new Chart(
+  tempChart = new Chart(...);
+
+} else {
+
+  tempChart.data.labels = chartLabels;
+  tempChart.data.datasets[0].data = chartTemps;
+  tempChart.update("none");
+
+}
   document.getElementById("tempDewChart"),
   {
     type: "line",
