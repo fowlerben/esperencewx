@@ -65,7 +65,7 @@ jobs:
           curl -s "$URL" > historic.json
           
           echo "===== HISTORIC FIRST 200 LINES ====="
-          head -200 historic.json
+          jq -r '.sensors[].data[0] | keys[]' historic.json | sort -u
 
       - name: Update history
         run: |
