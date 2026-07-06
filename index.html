@@ -479,6 +479,7 @@ const chartLabels = todayHistory.map(r =>
 
 const chartTemps = todayHistory.map(r => r.temp_c);
 const chartDews = todayHistory.map(r => r.dew_c);
+const chartHumidity = todayHistory.map(r => r.humidity);
 const tempsToday = todayHistory
   .map(r => r.temp_c)
   .filter(v => v != null);
@@ -855,6 +856,15 @@ if (!tempChart) {
           tension: 0.3,
           pointRadius: 0
         }
+        {
+          label: "Humidity %",
+          data: chartHumidity,
+          borderColor: "#ffd166",
+          fill: false,
+          tension: 0.3,
+          pointRadius: 0,
+          yAxisID: "y1"
+        }
       ]
     },
 
@@ -879,8 +889,25 @@ if (!tempChart) {
         },
 
         y: {
+          position: "left",
+        
           ticks: {
             color: "white"
+          }
+        },
+        
+        y1: {
+          position: "right",
+        
+          min: 0,
+          max: 100,
+        
+          grid: {
+            drawOnChartArea: false
+          },
+        
+          ticks: {
+            color: "#ffd166"
           }
         }
       }
@@ -893,6 +920,7 @@ if (!tempChart) {
   tempChart.data.labels = chartLabels;
   tempChart.data.datasets[0].data = chartTemps;
   tempChart.data.datasets[1].data = chartDews;
+  tempChart.data.datasets[2].data = chartHumidity;
   tempChart.update();
 
 }
