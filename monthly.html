@@ -147,14 +147,37 @@
         d.toLocaleDateString("en-AU", {
           weekday: "short"
         });
-  
+      const minStart =
+        new Date(year, month, day - 1, 9, 0, 0).getTime() / 1000;
+      
+      const minEnd =
+        new Date(year, month, day, 9, 0, 0).getTime() / 1000;
+      
+      const minRecords =
+        archive.filter(r =>
+          r.time > minStart &&
+          r.time <= minEnd
+        );
+      
+      const minValues =
+        minRecords
+          .map(r => r.temp_lo)
+          .filter(v => v != null);
+      
+      const minTemp =
+        minValues.length > 0
+          ? Math.min(...minValues)
+          : null;
       const tr = document.createElement("tr");
   
       tr.innerHTML = `
         <td>${day}</td>
         <td>${dayName}</td>
   
-        <td></td>
+        <td>
+          ${minTemp != null ? minTemp.toFixed(1) : ""}
+        </td>
+        
         <td></td>
         <td></td>
         <td></td>
