@@ -16,10 +16,26 @@
     }
 
     table {
-      border-collapse: collapse;
       width: 100%;
+      border-collapse: collapse;
       background: white;
       color: black;
+      font-size: 13px;
+    }
+    
+    th, td {
+      border: 1px solid #999;
+      padding: 4px;
+      text-align: center;
+    }
+    
+    th {
+      background: #ece9d8;
+      font-weight: bold;
+    }
+    
+    tbody tr:nth-child(even) {
+      background: #f8f8f8;
     }
 
     th, td {
@@ -49,23 +65,49 @@
   </h2>
 
   <table>
+  
     <thead>
+  
       <tr>
-        <th>Date</th>
-        <th>Day</th>
-        <th>Min</th>
-        <th>Max</th>
-        <th>Rain</th>
-        <th>Evap</th>
-        <th>Sun</th>
-        <th>Max Wind Gust</th>
-        <th>9am Obs</th>
-        <th>3pm Obs</th>
+        <th rowspan="2">Date</th>
+        <th rowspan="2">Day</th>
+  
+        <th rowspan="2">Min<br>Temp<br>°C</th>
+  
+        <th rowspan="2">Max<br>Temp<br>°C</th>
+  
+        <th rowspan="2">Rain<br>mm</th>
+  
+        <th rowspan="2">Evap<br>mm</th>
+  
+        <th rowspan="2">Sun<br>h</th>
+  
+        <th colspan="3">Max Wind Gust</th>
+  
+        <th colspan="3">9am Obs</th>
+  
+        <th colspan="3">3pm Obs</th>
       </tr>
+  
+      <tr>
+        <th>Dir</th>
+        <th>km/h</th>
+        <th>Time</th>
+  
+        <th>Temp</th>
+        <th>RH</th>
+        <th>MSLP</th>
+  
+        <th>Temp</th>
+        <th>RH</th>
+        <th>MSLP</th>
+      </tr>
+  
     </thead>
-
+  
     <tbody id="monthlyTable">
     </tbody>
+  
   </table>
 
   <script>
