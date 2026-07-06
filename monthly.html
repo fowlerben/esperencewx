@@ -114,6 +114,12 @@
   
   async function loadMonthly() {
   
+    const archiveRes =
+      await fetch("archive_history.json?" + Date.now());
+    
+    const archive =
+      await archiveRes.json();
+    
     const now = new Date();
   
     document.getElementById("title").innerText =
