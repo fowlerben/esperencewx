@@ -644,11 +644,11 @@ const dewC  = toC(iss.dew_point);
 const utc = new Date(data.generated_at * 1000);
 
 const metarText =
-  "AUTO ESWX " +
+  "METAR ESWX " +
   String(utc.getUTCDate()).padStart(2, "0") +
   String(utc.getUTCHours()).padStart(2, "0") +
   String(utc.getUTCMinutes()).padStart(2, "0") +
-  "Z " +
+  "Z AUTO" +
   String(
     Math.round(iss.wind_dir_scalar_avg_last_10_min / 10) * 10
   ).padStart(3, "0") +
