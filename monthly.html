@@ -219,7 +219,7 @@
 }
             
       const minComplete =
-        minEnd <= Date.now() / 1000;
+        minEnd < Date.now() / 1000;
       
       const minTemp =
         minComplete && minValues.length > 0
