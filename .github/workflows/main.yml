@@ -45,7 +45,103 @@ jobs:
           jq '.sensors[] | {lsid: .lsid, ts: .data[0].ts}' response.json || true
 
           jq '.' response.json > weather.json
+          
+      - name: Update archive history
+        run: |
+          if [ ! -f archive_history.json ]; then
+            echo "[]" > archive_history.json
+          fi
 
+          TIMESTAMP=$(date +%s)
+
+          END_TS=$(date +%s)
+          START_TS=$((END_TS - 86400))
+
+          PARAMS="api-key${{ secrets.WL_API_KEY }}end-timestamp${END_TS}start-timestamp${START_TS}station-id${{ secrets.WL_STATION_ID }}t${TIMESTAMP}"
+
+          SIGNATURE=$(printf "%s" "$PARAMS" | openssl dgst -sha256 -hmac "${{ secrets.WL_API_SECRET }}" | awk '{print $2}')
+
+          URL="https://api.weatherlink.com/v2/historic/${{ secrets.WL_STATION_ID }}?api-key=${{ secrets.WL_API_KEY }}&start-timestamp=${START_TS}&end-timestamp=${END_TS}&t=${TIMESTAMP}&api-signature=${SIGNATURE}"
+
+          curl -s "$URL" > historic.json
+
+          jq '
+          [
+            .sensors[]
+            | select(.lsid==553786)
+            | .data[]
+            | {
+                time: .ts,
+
+                temp_hi,
+                temp_lo,
+                temp_hi_at,
+                temp_lo_at,
+
+                hum_hi,
+                hum_lo,
+                hum_hi_at,
+                hum_lo_at,
+
+                dew_point_hi,
+                dew_point_lo,
+                dew_point_hi_at,
+                dew_point_lo_at,
+
+                wet_bulb_hi,
+                wet_bulb_lo,
+                wet_bulb_hi_at,
+                wet_bulb_lo_at,
+
+                heat_index_hi,
+                heat_index_hi_at,
+
+                thw_index_hi,
+                thw_index_lo,
+                thw_index_hi_at,
+                thw_index_lo_at,
+
+                thsw_index_hi,
+                thsw_index_lo,
+                thsw_index_hi_at,
+                thsw_index_lo_at,
+
+                wind_speed_hi,
+                wind_speed_hi_at,
+
+                rain_rate_hi_mm,
+                rain_rate_hi_in,
+                rain_rate_hi_clicks,
+                rain_rate_hi_at,
+
+                rainfall_mm,
+                rainfall_in,
+                rainfall_clicks,
+
+                solar_rad_hi,
+                solar_rad_hi_at,
+
+                solar_energy,
+
+                uv_index_hi,
+                uv_index_hi_at,
+
+                uv_dose,
+
+                wind_run,
+
+                et
+              }
+          ]
+          ' historic.json > archive_records.json
+
+          jq -s '
+            add
+            | unique_by(.time)
+            | sort_by(.time)
+          ' archive_history.json archive_records.json > archive_tmp.json
+
+          mv archive_tmp.json archive_history.json
       - name: Update history
         run: |
           if [ ! -f history.json ]; then
@@ -186,6 +282,6 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add weather.json history.json
+          git add weather.json history.json archive_history.json
           git commit -m "update weather" || echo "no changes"
           git push
