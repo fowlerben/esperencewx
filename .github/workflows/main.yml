@@ -55,7 +55,7 @@ jobs:
           TIMESTAMP=$(date +%s)
 
           END_TS=$(date +%s)
-          START_TS=$((END_TS - 86400))
+          START_TS=1761865200
 
           PARAMS="api-key${{ secrets.WL_API_KEY }}end-timestamp${END_TS}start-timestamp${START_TS}station-id${{ secrets.WL_STATION_ID }}t${TIMESTAMP}"
 
