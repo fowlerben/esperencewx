@@ -164,8 +164,11 @@
           .map(r => r.temp_lo)
           .filter(v => v != null);
       
+      const minComplete =
+        minEnd <= Date.now() / 1000;
+      
       const minTemp =
-        minValues.length > 0
+        minComplete && minValues.length > 0
           ? (
               (Math.min(...minValues) - 32)
               * 5 / 9
