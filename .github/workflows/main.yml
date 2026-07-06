@@ -100,6 +100,11 @@ jobs:
                 * 33.8639
               ),
 
+              station_pressure_hpa: (
+                ($obs.sensors[] | select(.lsid==551509).data[0].bar_absolute)
+                * 33.8639
+              ),
+
               wind10_kmh: (
                 ($obs.sensors[] | select(.lsid==553786).data[0].wind_speed_avg_last_10_min)
                 * 1.60934
