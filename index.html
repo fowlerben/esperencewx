@@ -160,20 +160,6 @@
   </div>
 </div>
 
-<div class="section">
-  <div class="card">
-    <div
-      id="metarText"
-      style="
-        font-family: monospace;
-        font-size: 18px;
-        font-weight: bold;
-        text-align: center;
-      "
-    ></div>
-  </div>
-</div>
-
 <!-- CURRENT -->
 
 <div class="section">
@@ -511,7 +497,29 @@ const todayHistory = history.filter(r => {
 
   return recordDate === todayMelbourne;
 });
-  
+const latestHistory =
+  todayHistory[todayHistory.length - 1];
+
+const tenMinRecord =
+  todayHistory.find(
+    r => r.time >= latestHistory.time - 600
+  );
+
+let rain10Min = 0;
+
+if (
+  latestHistory &&
+  tenMinRecord &&
+  latestHistory.rain_daily_mm != null &&
+  tenMinRecord.rain_daily_mm != null
+) {
+  rain10Min =
+    latestHistory.rain_daily_mm -
+    tenMinRecord.rain_daily_mm;
+}
+
+const rainToday =
+  latestHistory?.rain_daily_mm ?? 0;  
 const chartLabels = todayHistory.map(r =>
   new Date(r.time * 1000).toLocaleTimeString(
     "en-AU",
@@ -659,7 +667,14 @@ const metarText =
   Math.floor(
     parseFloat(inHgToHpa(baro.bar_absolute))
   );
-
+" Q" +
+Math.floor(
+  parseFloat(inHgToHpa(baro.bar_absolute))
+) +
+"\nRF" +
+rain10Min.toFixed(1).padStart(5, "0") +
+"/" +
+rainToday.toFixed(1).padStart(5, "0");
 document.getElementById("metarText").innerText =
   metarText;
 
