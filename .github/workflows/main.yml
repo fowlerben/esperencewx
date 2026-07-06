@@ -66,6 +66,30 @@ jobs:
                 * 5 / 9
               ),
               
+              wetbulb_c: (
+                (($obs.sensors[] | select(.lsid==553786).data[0].wet_bulb) - 32)
+                * 5 / 9
+              ),
+
+              heatindex_c: (
+                (($obs.sensors[] | select(.lsid==553786).data[0].heat_index) - 32)
+                * 5 / 9
+              ),
+
+              windchill_c: (
+                (($obs.sensors[] | select(.lsid==553786).data[0].wind_chill) - 32)
+                * 5 / 9
+              ),
+
+              thw_c: (
+                (($obs.sensors[] | select(.lsid==553786).data[0].thw_index) - 32)
+                * 5 / 9
+              ),
+
+              thsw_c: (
+                (($obs.sensors[] | select(.lsid==553786).data[0].thsw_index) - 32)
+                * 5 / 9
+              ),
               humidity: (
               
                 $obs.sensors[] | select(.lsid==553786).data[0].hum
@@ -86,9 +110,68 @@ jobs:
                 * 1.60934
               ),
 
+              wind1_kmh: (
+                ($obs.sensors[] | select(.lsid==553786).data[0].wind_speed_avg_last_1_min)
+                * 1.60934
+              ),
+
+              wind2_kmh: (
+                ($obs.sensors[] | select(.lsid==553786).data[0].wind_speed_avg_last_2_min)
+                * 1.60934
+              ),
+
+              gust2_kmh: (
+                ($obs.sensors[] | select(.lsid==553786).data[0].wind_speed_hi_last_2_min)
+                * 1.60934
+              ),
+
+              solar_wm2: (
+                $obs.sensors[] | select(.lsid==553786).data[0].solar_rad
+              ),
+
+              uv: (
+                $obs.sensors[] | select(.lsid==553786).data[0].uv_index
+              ),
+
+              rainrate_mmhr: (
+                $obs.sensors[] | select(.lsid==553786).data[0].rain_rate_last_mm
+              ),
+              
               rain_daily_mm: (
                 $obs.sensors[] | select(.lsid==553786).data[0].rainfall_daily_mm
+              ),
+
+              leaf: (
+                $obs.sensors[] | select(.lsid==838746).data[0].wet_leaf_1
+              ),
+
+              temp1_c: (
+                (($obs.sensors[] | select(.lsid==838746).data[0].temp_1) - 32)
+                * 5 / 9
+              ),
+
+              temp2_c: (
+                (($obs.sensors[] | select(.lsid==838746).data[0].temp_2) - 32)
+                * 5 / 9
+              ),
+              
+              temp3_c: (
+                (($obs.sensors[] | select(.lsid==838746).data[0].temp_3) - 32)
+                * 5 / 9
+              ),
+              
+              dpd_c: (
+                (
+                  (($obs.sensors[] | select(.lsid==553786).data[0].temp) - 32)
+                  * 5 / 9
+                )
+                -
+                (
+                  (($obs.sensors[] | select(.lsid==553786).data[0].dew_point) - 32)
+                  * 5 / 9
+                )
               )
+              
             }]
           ' history.json > history_tmp.json
 
