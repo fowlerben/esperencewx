@@ -119,6 +119,17 @@
     
     const archive =
       await archiveRes.json();
+    console.log("Archive records:", archive.length);
+
+    console.log(
+      "First timestamp:",
+      new Date(archive[0].time * 1000)
+    );
+    
+    console.log(
+      "Last timestamp:",
+      new Date(archive[archive.length - 1].time * 1000)
+    );
     
     const now = new Date();
   
@@ -155,9 +166,35 @@
       
       const minRecords =
         archive.filter(r =>
-          r.time > minStart &&
-          r.time <= minEnd
+          r.time >= minStart &&
+          r.time < minEnd
         );
+      
+      if (day === 1) {
+        console.log(
+          "Day 1 period:",
+          new Date(minStart * 1000),
+          "to",
+          new Date(minEnd * 1000)
+        );
+      
+        console.log(
+          "Day 1 records found:",
+          minRecords.length
+        );
+      
+        if (minRecords.length > 0) {
+          console.log(
+            "First matching record:",
+            minRecords[0]
+          );
+      
+          console.log(
+            "Last matching record:",
+            minRecords[minRecords.length - 1]
+          );
+        }
+      }
       
       if (day === 1) {
         document.getElementById("title").innerText =
@@ -168,6 +205,18 @@
         minRecords
           .map(r => r.temp_lo)
           .filter(v => v != null);
+
+      if (day === 1) {
+  console.log(
+    "temp_lo count:",
+    minValues.length
+  );
+
+  console.log(
+    "sample temp_lo values:",
+    minValues.slice(0, 10)
+  );
+}
             
       const minComplete =
         minEnd <= Date.now() / 1000;
