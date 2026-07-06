@@ -111,13 +111,68 @@
   </table>
 
   <script>
+  
+  async function loadMonthly() {
+  
     const now = new Date();
-
+  
     document.getElementById("title").innerText =
       now.toLocaleString("en-AU", {
         month: "long",
         year: "numeric"
       }) + " Daily Weather Observations";
+  
+    const year = now.getFullYear();
+    const month = now.getMonth();
+  
+    const daysInMonth =
+      new Date(year, month + 1, 0).getDate();
+  
+    const tbody =
+      document.getElementById("monthlyTable");
+  
+    tbody.innerHTML = "";
+  
+    for (let day = 1; day <= daysInMonth; day++) {
+  
+      const d = new Date(year, month, day);
+  
+      const dayName =
+        d.toLocaleDateString("en-AU", {
+          weekday: "short"
+        });
+  
+      const tr = document.createElement("tr");
+  
+      tr.innerHTML = `
+        <td>${day}</td>
+        <td>${dayName}</td>
+  
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+  
+        <td></td>
+        <td></td>
+        <td></td>
+  
+        <td></td>
+        <td></td>
+        <td></td>
+  
+        <td></td>
+        <td></td>
+        <td></td>
+      `;
+  
+      tbody.appendChild(tr);
+    }
+  }
+  
+  loadMonthly();
+  
   </script>
 
 </body>
