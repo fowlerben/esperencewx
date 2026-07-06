@@ -448,6 +448,7 @@ new Date().toLocaleString("en-AU",{timeZone:"Australia/Melbourne"});
 setInterval(updateTime,1000);updateTime();
 
 let tempChart = null;
+let pressureChart = null;
 
 async function loadWeather(){
 
@@ -495,6 +496,7 @@ const chartLabels = todayHistory.map(r =>
 const chartTemps = todayHistory.map(r => r.temp_c);
 const chartDews = todayHistory.map(r => r.dew_c);
 const chartHumidity = todayHistory.map(r => r.humidity);
+const chartPressure = todayHistory.map(r => r.pressure_hpa);
 const tempsToday = todayHistory
   .map(r => r.temp_c)
   .filter(v => v != null);
@@ -941,7 +943,63 @@ if (!tempChart) {
 }
 
 }
+if (!pressureChart) {
 
+  pressureChart = new Chart(
+    document.getElementById("pressureChart"),
+    {
+      type: "line",
+
+      data: {
+        labels: chartLabels,
+
+        datasets: [{
+          label: "Pressure hPa",
+          data: chartPressure,
+          borderColor: "#ff8c42",
+          fill: false,
+          tension: 0.3,
+          pointRadius: 0
+        }]
+      },
+
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false,
+
+        plugins: {
+          legend: {
+            labels: {
+              color: "white"
+            }
+          }
+        },
+
+        scales: {
+          x: {
+            ticks: {
+              color: "white"
+            }
+          },
+
+          y: {
+            ticks: {
+              color: "white"
+            }
+          }
+        }
+      }
+    }
+  );
+
+} else {
+
+  pressureChart.data.labels = chartLabels;
+  pressureChart.data.datasets[0].data = chartPressure;
+  pressureChart.update();
+
+}
 loadWeather();
 setInterval(loadWeather,3000);
 
