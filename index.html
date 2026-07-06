@@ -983,7 +983,10 @@ if (!pressureChart) {
 
           y: {
             ticks: {
-              color: "white"
+              color: "white",
+              callback: function(value) {
+                  return value.toFixed(1);
+              }
             }
           }
         }
