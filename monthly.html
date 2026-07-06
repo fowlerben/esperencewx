@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Monthly Summary</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0b1e2d;
+      color: white;
+      margin: 20px;
+    }
+
+    h1, h2 {
+      color: #a0c4ff;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      background: white;
+      color: black;
+    }
+
+    th, td {
+      border: 1px solid #999;
+      padding: 4px;
+      text-align: center;
+    }
+
+    th {
+      background: #e6e6cc;
+    }
+
+    a {
+      color: #a0c4ff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <a href="index.html">← Back to Dashboard</a>
+
+  <h1>Esperence Weather Station</h1>
+
+  <h2 id="title">
+    Monthly Weather Summary
+  </h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Day</th>
+        <th>Min</th>
+        <th>Max</th>
+        <th>Rain</th>
+        <th>Evap</th>
+        <th>Sun</th>
+        <th>Max Wind Gust</th>
+        <th>9am Obs</th>
+        <th>3pm Obs</th>
+      </tr>
+    </thead>
+
+    <tbody id="monthlyTable">
+    </tbody>
+  </table>
+
+  <script>
+    const now = new Date();
+
+    document.getElementById("title").innerText =
+      now.toLocaleString("en-AU", {
+        month: "long",
+        year: "numeric"
+      }) + " Daily Weather Observations";
+  </script>
+
+</body>
+</html>
