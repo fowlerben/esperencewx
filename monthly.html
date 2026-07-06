@@ -166,7 +166,10 @@
       
       const minTemp =
         minValues.length > 0
-          ? Math.min(...minValues)
+          ? (
+              (Math.min(...minValues) - 32)
+              * 5 / 9
+            )
           : null;
       const tr = document.createElement("tr");
   
