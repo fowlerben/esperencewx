@@ -64,9 +64,19 @@ jobs:
           URL="https://api.weatherlink.com/v2/historic/${{ secrets.WL_STATION_ID }}?api-key=${{ secrets.WL_API_KEY }}&start-timestamp=${START_TS}&end-timestamp=${END_TS}&t=${TIMESTAMP}&api-signature=${SIGNATURE}"
 
           curl -s "$URL" > historic.json
+          
           echo "Historic record count:"
           jq '.sensors | length' historic.json || true
-
+          
+          echo "FIRST TS:"
+          jq '.sensors[0].data[0].ts' historic.json || true
+          
+          echo "LAST TS:"
+          jq '.sensors[0].data[-1].ts' historic.json || true
+          
+          echo "RECORD COUNT:"
+          jq '.sensors[0].data | length' historic.json || true
+        
           jq '
           [
             .sensors[]
