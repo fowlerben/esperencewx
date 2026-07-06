@@ -44,9 +44,6 @@ jobs:
           echo "===== SENSOR TIMESTAMPS ====="
           jq '.sensors[] | {lsid: .lsid, ts: .data[0].ts}' response.json || true
 
-          echo "===== ALL SENSOR DATA ====="
-          jq '.sensors[].data[0]' response.json
-
           jq '.' response.json > weather.json
 
       - name: Update history
