@@ -1,0 +1,131 @@
+name: Archive Backfill
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Backfill archive
+        run: |
+
+          if [ ! -f archive_history.json ]; then
+            echo "[]" > archive_history.json
+          fi
+
+          CURRENT=1761865200
+          NOW=$(date +%s)
+
+          while [ "$CURRENT" -lt "$NOW" ]; do
+
+            NEXT=$((CURRENT + 86400))
+
+            TIMESTAMP=$(date +%s)
+
+            PARAMS="api-key${{ secrets.WL_API_KEY }}end-timestamp${NEXT}start-timestamp${CURRENT}station-id${{ secrets.WL_STATION_ID }}t${TIMESTAMP}"
+
+            SIGNATURE=$(printf "%s" "$PARAMS" | openssl dgst -sha256 -hmac "${{ secrets.WL_API_SECRET }}" | awk '{print $2}')
+
+            URL="https://api.weatherlink.com/v2/historic/${{ secrets.WL_STATION_ID }}?api-key=${{ secrets.WL_API_KEY }}&start-timestamp=${CURRENT}&end-timestamp=${NEXT}&t=${TIMESTAMP}&api-signature=${SIGNATURE}"
+
+            echo "Fetching $CURRENT -> $NEXT"
+
+            curl -s "$URL" > historic.json
+
+            jq '
+            [
+              .sensors[]
+              | select(.lsid==553786)
+              | .data[]
+              | {
+                  time: .ts,
+
+                  temp_hi,
+                  temp_lo,
+                  temp_hi_at,
+                  temp_lo_at,
+
+                  hum_hi,
+                  hum_lo,
+                  hum_hi_at,
+                  hum_lo_at,
+
+                  dew_point_hi,
+                  dew_point_lo,
+                  dew_point_hi_at,
+                  dew_point_lo_at,
+
+                  wet_bulb_hi,
+                  wet_bulb_lo,
+                  wet_bulb_hi_at,
+                  wet_bulb_lo_at,
+
+                  heat_index_hi,
+                  heat_index_hi_at,
+
+                  thw_index_hi,
+                  thw_index_lo,
+                  thw_index_hi_at,
+                  thw_index_lo_at,
+
+                  thsw_index_hi,
+                  thsw_index_lo,
+                  thsw_index_hi_at,
+                  thsw_index_lo_at,
+
+                  wind_speed_hi,
+                  wind_speed_hi_at,
+
+                  rain_rate_hi_mm,
+                  rain_rate_hi_in,
+                  rain_rate_hi_clicks,
+                  rain_rate_hi_at,
+
+                  rainfall_mm,
+                  rainfall_in,
+                  rainfall_clicks,
+
+                  solar_rad_hi,
+                  solar_rad_hi_at,
+
+                  solar_energy,
+
+                  uv_index_hi,
+                  uv_index_hi_at,
+
+                  uv_dose,
+
+                  wind_run,
+
+                  et
+                }
+            ]
+            ' historic.json > archive_records.json
+
+            jq -s '
+              add
+              | unique_by(.time)
+              | sort_by(.time)
+            ' archive_history.json archive_records.json > archive_tmp.json
+
+            mv archive_tmp.json archive_history.json
+
+            CURRENT=$NEXT
+
+          done
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add archive_history.json
+          git commit -m "archive backfill" || echo "no changes"
+          git push
