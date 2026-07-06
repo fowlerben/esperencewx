@@ -64,6 +64,8 @@ jobs:
           URL="https://api.weatherlink.com/v2/historic/${{ secrets.WL_STATION_ID }}?api-key=${{ secrets.WL_API_KEY }}&start-timestamp=${START_TS}&end-timestamp=${END_TS}&t=${TIMESTAMP}&api-signature=${SIGNATURE}"
 
           curl -s "$URL" > historic.json
+          echo "FULL RESPONSE:"
+          cat historic.json
           
           echo "Historic record count:"
           jq '.sensors | length' historic.json || true
