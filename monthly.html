@@ -257,10 +257,7 @@
       const archiveStart =
         archive[0].time;
       
-      const maxTemp =
-        maxComplete &&
-        maxStart >= archiveStart + 86400 &&
-        maxValues.length > 0
+      const maxTemp = null;
           ? (
               (Math.max(...maxValues) - 32)
               * 5 / 9
