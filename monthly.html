@@ -141,6 +141,11 @@ function degToCompass(deg) {
     
     const archive =
       await archiveRes.json();
+    const historyRes =
+      await fetch("history.json?" + Date.now());
+
+    const history =
+      await historyRes.json();
     console.log("Archive records:", archive.length);
 
     console.log(
@@ -331,7 +336,27 @@ function degToCompass(deg) {
               0
             ) * 25.4
           : null;
+      const obs9 =
+        history.find(r => {
+          const t = new Date(r.time * 1000);
       
+          return t.getFullYear() === year
+            && t.getMonth() === month
+            && t.getDate() === day
+            && t.getHours() === 9
+            && t.getMinutes() === 0;
+        });
+      
+      const obs15 =
+        history.find(r => {
+          const t = new Date(r.time * 1000);
+      
+          return t.getFullYear() === year
+            && t.getMonth() === month
+            && t.getDate() === day
+            && t.getHours() === 15
+            && t.getMinutes() === 0;
+        });
       const tr = document.createElement("tr");
   
       tr.innerHTML = `
@@ -362,7 +387,7 @@ function degToCompass(deg) {
         <td></td>
         <td></td>
         <td></td>
-        <td></td>
+        <td>${obs9 ? degToCompass(obs9.wind10_dir) : ""}</td>
         <td></td>
         <td></td>
         
