@@ -240,12 +240,8 @@
       const maxEnd =
         new Date(year, month, day + 1, 9, 0, 0).getTime() / 1000;
       
-      const maxTempStart =
-        new Date(year, month, 6, 9, 5, 0).getTime() / 1000;
-      
       const maxRecords =
         archive.filter(r =>
-          r.time >= maxTempStart &&
           r.time > maxStart &&
           r.time <= maxEnd
         );
@@ -258,9 +254,6 @@
       const maxComplete =
         maxEnd <= Date.now() / 1000;
       
-      const maxTempStart =
-        new Date(year, month, 6, 9, 5, 0).getTime() / 1000;
-      
       const maxTemp =
         maxComplete &&
         maxValues.length > 0
@@ -269,6 +262,7 @@
               * 5 / 9
             )
           : null;
+      
       const tr = document.createElement("tr");
   
       tr.innerHTML = `
