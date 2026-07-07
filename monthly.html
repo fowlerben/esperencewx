@@ -228,13 +228,28 @@
               * 5 / 9
             )
           : null;
+      const maxStart =
+        new Date(year, month, day, 9, 0, 0).getTime() / 1000;
+      
+      const maxEnd =
+        new Date(year, month, day + 1, 9, 0, 0).getTime() / 1000;
+      
+      const maxRecords =
+        archive.filter(r =>
+          r.time > maxStart &&
+          r.time <= maxEnd
+        );
+      
       const maxValues =
-        minRecords
+        maxRecords
           .map(r => r.temp_hi)
           .filter(v => v != null);
       
+      const maxComplete =
+        maxEnd <= Date.now() / 1000;
+      
       const maxTemp =
-        minComplete && maxValues.length > 0
+        maxComplete && maxValues.length > 0
           ? (
               (Math.max(...maxValues) - 32)
               * 5 / 9
