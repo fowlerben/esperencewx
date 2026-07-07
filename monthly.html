@@ -240,8 +240,12 @@
       const maxEnd =
         new Date(year, month, day + 1, 9, 0, 0).getTime() / 1000;
       
+      const maxTempStart =
+        new Date(year, month, 6, 9, 5, 0).getTime() / 1000;
+      
       const maxRecords =
         archive.filter(r =>
+          r.time >= maxTempStart &&
           r.time > maxStart &&
           r.time <= maxEnd
         );
@@ -259,7 +263,6 @@
       
       const maxTemp =
         maxComplete &&
-        maxStart >= maxTempStart &&
         maxValues.length > 0
           ? (
               (Math.max(...maxValues) - 32)
