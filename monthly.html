@@ -212,12 +212,6 @@
           .map(r => r.temp_lo)
           .filter(v => v != null);
 
-      const rainTotal =
-        minRecords.reduce(
-          (sum, r) => sum + (r.rainfall_mm || 0),
-          0
-        );
-
       if (day === 1) {
   console.log(
     "temp_lo count:",
