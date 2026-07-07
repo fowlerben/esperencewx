@@ -146,6 +146,11 @@ function degToCompass(deg) {
 
     const history =
       await historyRes.json();
+    const manualRes =
+      await fetch("manual_obs.json?" + Date.now());
+    
+    const manualObs =
+      await manualRes.json();
     console.log("Archive records:", archive.length);
 
     console.log(
