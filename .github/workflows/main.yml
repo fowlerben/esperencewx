@@ -220,6 +220,10 @@ jobs:
                 * 1.60934
               ),
 
+              wind10_dir: (
+                $obs.sensors[] | select(.lsid==553786).data[0].wind_dir_scalar_avg_last_10_min
+              ),
+
               gust10_kmh: (
                 ($obs.sensors[] | select(.lsid==553786).data[0].wind_speed_hi_last_10_min)
                 * 1.60934
