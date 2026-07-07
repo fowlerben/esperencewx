@@ -254,10 +254,13 @@
       const maxComplete =
         maxEnd <= Date.now() / 1000;
       
-      const archiveStart =
-        archive[0].time;
+      const maxTempStart =
+        new Date(year, month, 6, 9, 5, 0).getTime() / 1000;
       
-      const maxTemp = null;
+      const maxTemp =
+        maxComplete &&
+        maxStart >= maxTempStart &&
+        maxValues.length > 0
           ? (
               (Math.max(...maxValues) - 32)
               * 5 / 9
