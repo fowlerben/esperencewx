@@ -175,12 +175,6 @@
           r.time >= minStart &&
           r.time < minEnd
         );
-
-      const rainTotal =
-        minRecords.reduce(
-          (sum, r) => sum + r.rainfall_mm,
-          0
-        );
       
       if (day === 1) {
         console.log(
@@ -273,7 +267,7 @@
             )
           : null;
       
-      const rainTotal =
+      c
         minRecords.reduce(
           (sum, r) => sum + Number(r.rainfall_mm || 0),
           0
