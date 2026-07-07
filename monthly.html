@@ -306,13 +306,14 @@
       const evapComplete =
         evapEnd <= Date.now() / 1000;
       
+      const evapValues =
+        evapRecords
+          .map(r => Number(r.et))
+          .filter(v => !isNaN(v));
+      
       const evapTotal =
-        evapComplete && evapRecords.length > 0
-          ? evapRecords.reduce(
-              (sum, r) =>
-                sum + Number(r.et || 0),
-              0
-            )
+        evapComplete && evapValues.length > 0
+          ? Math.max(...evapValues)
           : null;
       
       const tr = document.createElement("tr");
