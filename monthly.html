@@ -213,16 +213,16 @@
           .filter(v => v != null);
 
       if (day === 1) {
-  console.log(
-    "temp_lo count:",
-    minValues.length
-  );
-
-  console.log(
-    "sample temp_lo values:",
-    minValues.slice(0, 10)
-  );
-}
+        console.log(
+          "temp_lo count:",
+          minValues.length
+        );
+      
+        console.log(
+          "sample temp_lo values:",
+          minValues.slice(0, 10)
+        );
+      }
             
       const minComplete =
         minEnd < Date.now() / 1000;
@@ -312,8 +312,12 @@
           .filter(v => !isNaN(v));
       
       const evapTotal =
-        evapComplete && evapValues.length > 0
-          ? Math.max(...evapValues)
+        evapComplete && evapRecords.length > 0
+          ? evapRecords.reduce(
+              (sum, r) =>
+                sum + Number(r.et || 0),
+              0
+            ) * 25.4
           : null;
       
       const tr = document.createElement("tr");
