@@ -366,7 +366,7 @@ function degToCompass(deg) {
       
       const maxGustSpeed =
         maxGustRecord
-          ? Number(maxGustRecord.wind_speed_hi)
+          ? Number(maxGustRecord.wind_speed_hi) * 1.60934
           : null;
       
       const maxGustTimestamp =
