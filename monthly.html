@@ -290,6 +290,30 @@
               0
             )
           : null;
+
+      const evapStart =
+        new Date(year, month, day - 1, 9, 0, 0).getTime() / 1000;
+      
+      const evapEnd =
+        new Date(year, month, day, 9, 0, 0).getTime() / 1000;
+      
+      const evapRecords =
+        archive.filter(r =>
+          r.time > evapStart &&
+          r.time <= evapEnd
+        );
+      
+      const evapComplete =
+        evapEnd <= Date.now() / 1000;
+      
+      const evapTotal =
+        evapComplete && evapRecords.length > 0
+          ? evapRecords.reduce(
+              (sum, r) =>
+                sum + Number(r.et || 0),
+              0
+            )
+          : null;
       
       const tr = document.createElement("tr");
   
@@ -309,7 +333,13 @@
               ? rainTotal.toFixed(1)
               : ""}
         </td>
-        <td></td>
+        
+        <td>
+          ${evapTotal != null
+              ? evapTotal.toFixed(1)
+              : ""}
+        </td>
+        
         <td></td>
         
         <td></td>
