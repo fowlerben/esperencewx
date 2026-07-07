@@ -1,11 +1,11 @@
 [
   {
    "date": "2026-07-06",
-   "temp_c": "13.8",
-   "humidity": "66",
-   "wind10_dir": "SE",
-   "wind10_kmh": "7",
-   "pressure_hpa": "1038",
+   "temp15": "13.8",
+   "humidity15": "66",
+   "wind15_dir": "SE",
+   "wind15_kmh": "7",
+   "pressure15_hpa": "1038",
    "cloud15": "1"
   },
   {
