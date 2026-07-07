@@ -228,6 +228,18 @@
               * 5 / 9
             )
           : null;
+      const maxValues =
+        minRecords
+          .map(r => r.temp_hi)
+          .filter(v => v != null);
+      
+      const maxTemp =
+        minComplete && maxValues.length > 0
+          ? (
+              (Math.max(...maxValues) - 32)
+              * 5 / 9
+            )
+          : null;
       const tr = document.createElement("tr");
   
       tr.innerHTML = `
@@ -238,7 +250,9 @@
           ${minTemp != null ? minTemp.toFixed(1) : ""}
         </td>
         
-        <td></td>
+        <td>
+          ${maxTemp != null ? maxTemp.toFixed(1) : ""}
+        </td>
         <td></td>
         <td></td>
         <td></td>
