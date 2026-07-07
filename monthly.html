@@ -387,19 +387,18 @@ function degToCompass(deg) {
         <td></td>
         <td></td>
         <td></td>
+        <td>${obs9 ? obs9.temp_c.toFixed(1) : ""}</td>
+        <td>${obs9 ? obs9.humidity.toFixed(0) : ""}</td>
         <td></td>
-        <td></td>
-        <td></td>
-        
         <td>${obs9 ? degToCompass(obs9.wind10_dir) : ""}</td>
+        <td>${obs9 ? obs9.wind10_kmh.toFixed(0) : ""}</td>
+        <td>${obs9 ? obs9.pressure_hpa.toFixed(1) : ""}</td>
+        <td>${obs15 ? obs15.temp_c.toFixed(1) : ""}</td>
+        <td>${obs15 ? obs15.humidity.toFixed(0) : ""}</td>
         <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-
-        <td></td>
-        <td></td>
+        <td>${obs15 ? degToCompass(obs15.wind10_dir) : ""}</td>
+        <td>${obs15 ? obs15.wind10_kmh.toFixed(0) : ""}</td>
+        <td>${obs15 ? obs15.pressure_hpa.toFixed(1) : ""}</td>
         <td></td>
 
       `;
