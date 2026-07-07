@@ -5,7 +5,7 @@
    "humidity15": "66",
    "wind15_dir": "SE",
    "wind15_kmh": "7",
-   "pressure15_hpa": "1038",
+   "pressure15_hpa": "1038.0",
    "cloud15": "1"
   },
   {
