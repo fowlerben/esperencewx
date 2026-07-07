@@ -259,7 +259,7 @@
       
       const maxTemp =
         maxComplete &&
-        maxStart >= archiveStart &&
+        maxStart >= archiveStart + 86400 &&
         maxValues.length > 0
           ? (
               (Math.max(...maxValues) - 32)
@@ -296,6 +296,11 @@
         <td></td>
         <td></td>
         <td></td>
+
+        <td></td>
+        <td></td>
+        <td></td>
+
       `;
   
       tbody.appendChild(tr);
