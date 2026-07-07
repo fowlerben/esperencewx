@@ -248,13 +248,19 @@
       const maxComplete =
         maxEnd <= Date.now() / 1000;
       
+      const archiveStart =
+        archive[0].time;
+      
       const maxTemp =
-        maxComplete && maxValues.length > 0
+        maxComplete &&
+        maxStart >= archiveStart &&
+        maxValues.length > 0
           ? (
               (Math.max(...maxValues) - 32)
               * 5 / 9
             )
           : null;
+`
       const tr = document.createElement("tr");
   
       tr.innerHTML = `
