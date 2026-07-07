@@ -212,6 +212,12 @@
           .map(r => r.temp_lo)
           .filter(v => v != null);
 
+      const rainTotal =
+        minRecords.reduce(
+          (sum, r) => sum + (r.rainfall_mm || 0),
+          0
+        );
+
       if (day === 1) {
   console.log(
     "temp_lo count:",
@@ -267,6 +273,12 @@
             )
           : null;
       
+      const rainTotal =
+        minRecords.reduce(
+          (sum, r) => sum + Number(r.rainfall_mm || 0),
+          0
+        );
+      
       const tr = document.createElement("tr");
   
       tr.innerHTML = `
@@ -280,7 +292,9 @@
         <td>
           ${maxTemp != null ? maxTemp.toFixed(1) : ""}
         </td>
-        <td></td>
+        <td>
+          ${rainTotal > 0 ? rainTotal.toFixed(1) : ""}
+        </td>
         <td></td>
         <td></td>
         
