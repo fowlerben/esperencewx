@@ -267,11 +267,29 @@
             )
           : null;
       
-      const rainTotal =
-        minRecords.reduce(
-          (sum, r) => sum + Number(r.rainfall_mm || 0),
-          0
+      const rainStart =
+        new Date(year, month, day - 1, 9, 0, 0).getTime() / 1000;
+      
+      const rainEnd =
+        new Date(year, month, day, 9, 0, 0).getTime() / 1000;
+      
+      const rainRecords =
+        archive.filter(r =>
+          r.time > rainStart &&
+          r.time <= rainEnd
         );
+      
+      const rainComplete =
+        rainEnd <= Date.now() / 1000;
+      
+      const rainTotal =
+        rainComplete && rainRecords.length > 0
+          ? rainRecords.reduce(
+              (sum, r) =>
+                sum + Number(r.rainfall_mm || 0),
+              0
+            )
+          : null;
       
       const tr = document.createElement("tr");
   
@@ -287,8 +305,9 @@
           ${maxTemp != null ? maxTemp.toFixed(1) : ""}
         </td>
         <td>
-          ${rainTotal.toFixed(1)}
-
+          ${rainTotal != null
+              ? rainTotal.toFixed(1)
+              : ""}
         </td>
         <td></td>
         <td></td>
