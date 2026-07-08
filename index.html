@@ -934,21 +934,41 @@ if (tempC!=null && dewC!=null){
 // Dew / Frost
 dewAlert.classList.remove("warning");
 
-if (minT!=null && dewC!=null){
+if (minT != null && dewC != null) {
+
   const tdpdVal = minT - dewC;
 
-  if (tdpdVal < 0){
-    if (minT < 0){
-      dewAlert.innerText = "Frost forming";
+  if (
+    dewHours >= 1 &&
+    leafValue >= 5 &&
+    tdpdVal > 1.0
+  ) {
+
+    dewAlert.innerText = "Dew Evaporating";
+
+  } else if (tdpdVal < 0) {
+
+    if (minT < 0) {
+
+      dewAlert.innerText = "Frost Forming";
       dewAlert.classList.add("warning");
+
     } else {
-      dewAlert.innerText = "Dew forming";
+
+      dewAlert.innerText = "Dew Forming";
+
     }
+
   } else {
+
     dewAlert.innerText = "No Dew";
+
   }
+
 } else {
+
   dewAlert.innerText = "No Dew";
+
 }
 
 // Fire Danger
