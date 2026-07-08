@@ -352,6 +352,11 @@
   <div class="value" id="dewStatus"></div>
 </div>
 
+<div class="card">
+  Frost
+  <div class="value" id="frostStatus"></div>
+</div>
+
 <div class="card">Temp1<div class="value" id="t1"></div></div>
 <div class="card">Temp2<div class="value" id="t2"></div></div>
 <div class="card">Temp3<div class="value" id="t3"></div></div>
@@ -883,6 +888,27 @@ if (
 } else {
 
   dewStatus.innerText = "No Dew";
+
+}
+
+if (
+  leafValue >= 2 &&
+  minT != null &&
+  minT < 0
+) {
+
+  frostStatus.innerText = "Depositing";
+
+} else if (
+  minT != null &&
+  minT < 0
+) {
+
+  frostStatus.innerText = "Possible";
+
+} else {
+
+  frostStatus.innerText = "No Frost";
 
 }
 
