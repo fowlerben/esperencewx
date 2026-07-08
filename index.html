@@ -840,6 +840,36 @@ lastWet.innerText =
           hour12: false
         })
     : "None";
+let frostOccurredThisEvent = false;
+
+if (lastWetTime != null) {
+
+  const eventRecords =
+    todayHistory.filter(
+      r => r.time >= lastWetTime
+    );
+
+  for (const r of eventRecords) {
+
+    const eventTemps = [
+      r.temp1_c,
+      r.temp2_c,
+      r.temp3_c
+    ].filter(v => v != null);
+
+    if (
+      eventTemps.length > 0 &&
+      Math.min(...eventTemps) < 0
+    ) {
+
+      frostOccurredThisEvent = true;
+      break;
+
+    }
+
+  }
+
+}
 if (lastWetTime != null) {
 
   const eventMinutes =
@@ -952,20 +982,19 @@ if (
   dewAlert.classList.add("warning");
 
 } else if (
+  frostOccurredThisEvent &&
+  minT != null &&
+  minT > 0
+) {
+
+  frostText = "Frost Melting";
+
+} else if (
   minT != null &&
   minT < 0
 ) {
 
   frostText = "Frost Possible";
-
-} else if (
-  dewHours >= 1 &&
-  leafValue >= 5 &&
-  minT != null &&
-  minT > 0.5
-) {
-
-  frostText = "Frost Melting";
 
 }
 
