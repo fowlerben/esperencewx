@@ -348,6 +348,11 @@
 </div>
 
 <div class="card">
+  Event Length
+  <div class="value" id="dewEvent"></div>
+</div>
+  
+<div class="card">
   Dew Status
   <div class="value" id="dewStatus"></div>
 </div>
@@ -843,7 +848,28 @@ lastWet.innerText =
           hour12: false
         })
     : "None";
+if (lastWetTime != null) {
 
+  const eventMinutes =
+    Math.floor(
+      (latestHistory.time - lastWetTime) / 60
+    );
+
+  const hours =
+    Math.floor(eventMinutes / 60);
+
+  const minutes =
+    eventMinutes % 60;
+
+  dewEvent.innerText =
+    hours + "h " + minutes + "m";
+
+} else {
+
+  dewEvent.innerText = "Dry";
+
+}
+`
 const t1C = extra?.temp_1!=null ? toC(extra.temp_1) : null;
 const t2C = extra?.temp_2!=null ? toC(extra.temp_2) : null;
 const t3C = extra?.temp_3!=null ? toC(extra.temp_3) : null;
