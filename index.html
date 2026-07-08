@@ -861,7 +861,7 @@ if (lastWetTime != null) {
   dewEvent.innerText = "Dry";
 
 }
-`
+
 const t1C = extra?.temp_1!=null ? toC(extra.temp_1) : null;
 const t2C = extra?.temp_2!=null ? toC(extra.temp_2) : null;
 const t3C = extra?.temp_3!=null ? toC(extra.temp_3) : null;
@@ -884,59 +884,6 @@ if (temps.length > 0 && dewC!=null){
   tdpd.innerText = (minT - dewC).toFixed(1) + " °C";
 } else {
   tdpd.innerText = "N/A";
-}
-
-if (
-  leafValue >= 2 &&
-  minT != null &&
-  dewC != null &&
-  minT <= dewC
-) {
-
-  dewStatus.innerText = "Confirmed";
-
-} else if (
-  minT != null &&
-  dewC != null &&
-  minT <= dewC
-) {
-
-  dewStatus.innerText = "Likely";
-
-} else {
-
-  dewStatus.innerText = "No Dew";
-
-}
-
-if (
-  dewHours >= 1 &&
-  leafValue >= 5 &&
-  minT != null &&
-  minT > 0.5
-) {
-
-  frostStatus.innerText = "Melting";
-
-} else if (
-  leafValue >= 2 &&
-  minT != null &&
-  minT < 0
-) {
-
-  frostStatus.innerText = "Depositing";
-
-} else if (
-  minT != null &&
-  minT < 0
-) {
-
-  frostStatus.innerText = "Possible";
-
-} else {
-
-  frostStatus.innerText = "No Frost";
-
 }
 
 // ✅ ALERTS
@@ -1024,12 +971,6 @@ if (
 
 dewAlert.innerHTML =
   dewText + "<br>" + frostText;
-
-} else {
-
-  dewAlert.innerText = "No Dew";
-
-}
 
 // Fire Danger
 fireAlert.classList.remove("warning");
