@@ -892,6 +892,15 @@ if (
 }
 
 if (
+  dewHours >= 1 &&
+  leafValue >= 5 &&
+  minT != null &&
+  minT > 0.5
+) {
+
+  frostStatus.innerText = "Melting";
+
+} else if (
   leafValue >= 2 &&
   minT != null &&
   minT < 0
