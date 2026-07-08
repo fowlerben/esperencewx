@@ -141,6 +141,19 @@
         border-radius:8px;
       ">
 
+<div class="card" style="text-align:center; margin-top:10px;">
+
+<a href="https://reg.bom.gov.au/fwo/IDS65024/IDS65024.94865.png
+
+  <img
+    id="skewtImage"
+    src="https://reg.bom.gov.au/fwo/aviation/IDS65024/IDS65024.94865.png"
+    alt="Laverton Upper Air Sounding"
+    style="
+      width:100%;
+      max-width:400px;
+      border-radius:8px;
+
   </a>
   
 </div>
@@ -431,6 +444,9 @@ function refreshSynopticImage(){
   const doppler =
     document.getElementById("dopplerImage");
 
+  const skewt =
+  document.getElementById("skewtImage");
+
   const now = Date.now();
 
   if (synoptic) {
@@ -447,6 +463,11 @@ function refreshSynopticImage(){
     doppler.src =
       "https://reg.bom.gov.au/radar/IDR02I.gif?t=" + now;
   }
+
+  if (skewt) {
+  skewt.src =
+    "https://reg.bom.gov.au/fwo/aviation/IDS65024/IDS65024.94865.png?t=" + now;
+}
 
 }
   
