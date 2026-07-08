@@ -479,7 +479,9 @@ const maxGustTime =
               : ""}
         </td>
         
-        <td></td>
+        <td>${maxGustDir}</td>
+        <td>${maxGustSpeed != null ? maxGustSpeed.toFixed(0) : ""}</td>
+        <td>${maxGustTime}</td>
         
         <td>${obs9Valid ? obs9.temp_c.toFixed(1) : (manual?.temp9 || "")}</td>
         <td>${obs9Valid ? obs9.humidity.toFixed(0) : (manual?.humidity9 || "")}</td>
@@ -494,7 +496,6 @@ const maxGustTime =
         <td>${obs15Valid ? degToCompass(obs15.wind10_dir) : (manual?.wind15_dir || "")}</td>
         <td>${obs15Valid ? obs15.wind10_kmh.toFixed(0) : (manual?.wind15_kmh || "")}</td>
         <td>${obs15Valid ? obs15.pressure_hpa.toFixed(1) : (manual?.pressure15_hpa || "")}</td>
-        <td></td>
 
       `;
   
