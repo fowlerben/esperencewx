@@ -790,7 +790,7 @@ leaf.innerText =
 
 const wetRecords =
   todayHistory.filter(
-    r => (r.wet_leaf_1 ?? 0) > 0
+    r => (r.leaf ?? 0) > 0
   );
 
 const dewHours =
