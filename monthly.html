@@ -399,27 +399,56 @@ const maxGustTime =
         })
     : "";
             
-      const obs9 =
-        history.find(r => {
+      const target9 =
+        new Date(year, month, day, 9, 0, 0).getTime() / 1000;
+      
+      const dayRecords9 =
+        history.filter(r => {
           const t = new Date(r.time * 1000);
       
           return t.getFullYear() === year
             && t.getMonth() === month
-            && t.getDate() === day
-            && t.getHours() === 9
-            && t.getMinutes() === 0;
+            && t.getDate() === day;
+        });
+      
+      const obs9 =
+        dayRecords9.length > 0
+          ? dayRecords9.reduce((closest, r) =>
+              Math.abs(r.time - target9) <
+              Math.abs(closest.time - target9)
+                ? r
+                : closest
+            )
+          : null;
+
+      const obs9Valid =
+        obs9 &&
+        Math.abs(obs9.time - target9) <= 180;
+      
+      const target15 =
+        new Date(year, month, day, 15, 0, 0).getTime() / 1000;
+      
+      const dayRecords15 =
+        history.filter(r => {
+          const t = new Date(r.time * 1000);
+      
+          return t.getFullYear() === year
+            && t.getMonth() === month
+            && t.getDate() === day;
         });
       
       const obs15 =
-        history.find(r => {
-          const t = new Date(r.time * 1000);
-      
-          return t.getFullYear() === year
-            && t.getMonth() === month
-            && t.getDate() === day
-            && t.getHours() === 15
-            && t.getMinutes() === 0;
-        });
+        dayRecords15.length > 0
+          ? dayRecords15.reduce((closest, r) =>
+              Math.abs(r.time - target15) <
+              Math.abs(closest.time - target15)
+                ? r
+                : closest
+            )
+          : null;
+      const obs15Valid =
+        obs15 &&
+        Math.abs(obs15.time - target15) <= 180;
       const dateString =
         `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
       
@@ -452,21 +481,19 @@ const maxGustTime =
         
         <td></td>
         
-        <td>${maxGustDir}</td>
-        <td>${maxGustSpeed != null ? maxGustSpeed.toFixed(0) : ""}</td>
-        <td>${maxGustTime}</td>
-        <td>${obs9 ? obs9.temp_c.toFixed(1) : (manual?.temp9 || "")}</td>
-        <td>${obs9 ? obs9.humidity.toFixed(0) : (manual?.humidity9 || "")}</td>
+        <td>${obs9Valid ? obs9.temp_c.toFixed(1) : (manual?.temp9 || "")}</td>
+        <td>${obs9Valid ? obs9.humidity.toFixed(0) : (manual?.humidity9 || "")}</td>
         <td>${manual?.cloud9 || ""}</td>
-        <td>${obs9 ? degToCompass(obs9.wind10_dir) : (manual?.wind9_dir || "")}</td>
-        <td>${obs9 ? obs9.wind10_kmh.toFixed(0) : (manual?.wind9_kmh || "")}</td>
-        <td>${obs9 ? obs9.pressure_hpa.toFixed(1) : (manual?.pressure9_hpa || "")}</td>
-        <td>${obs15 ? obs15.temp_c.toFixed(1) : (manual?.temp15 || "")}</td>
-        <td>${obs15 ? obs15.humidity.toFixed(0) : (manual?.humidity15 || "")}</td>
+        <td>${obs9Valid ? degToCompass(obs9.wind10_dir) : (manual?.wind9_dir || "")}</td>
+        <td>${obs9Valid ? obs9.wind10_kmh.toFixed(0) : (manual?.wind9_kmh || "")}</td>
+        <td>${obs9Valid ? obs9.pressure_hpa.toFixed(1) : (manual?.pressure9_hpa || "")}</td>
+        
+        <td>${obs15Valid ? obs15.temp_c.toFixed(1) : (manual?.temp15 || "")}</td>
+        <td>${obs15Valid ? obs15.humidity.toFixed(0) : (manual?.humidity15 || "")}</td>
         <td>${manual?.cloud15 || ""}</td>
-        <td>${obs15 ? degToCompass(obs15.wind10_dir) : (manual?.wind15_dir || "")}</td>
-        <td>${obs15 ? obs15.wind10_kmh.toFixed(0) : (manual?.wind15_kmh || "")}</td>
-        <td>${obs15 ? obs15.pressure_hpa.toFixed(1) : (manual?.pressure15_hpa || "")}</td>
+        <td>${obs15Valid ? degToCompass(obs15.wind10_dir) : (manual?.wind15_dir || "")}</td>
+        <td>${obs15Valid ? obs15.wind10_kmh.toFixed(0) : (manual?.wind15_kmh || "")}</td>
+        <td>${obs15Valid ? obs15.pressure_hpa.toFixed(1) : (manual?.pressure15_hpa || "")}</td>
         <td></td>
 
       `;
