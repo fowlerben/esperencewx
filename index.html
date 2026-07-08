@@ -325,7 +325,9 @@
 <h2>Alerts</h2>
 <div class="grid">
 <div class="card alert" id="fogAlert">No Fog</div>
-<div class="card alert" id="dewAlert">No Dew</div>
+<div class="card alert" id="dewAlert">
+  No Dew<br>No Frost
+</div>
 <div class="card alert" id="fireAlert" style="display:none;"></div>
 <div class="card alert" id="windAlert" style="display:none;"></div>
 <div class="card alert" id="gustAlert" style="display:none;"></div>
@@ -350,16 +352,6 @@
 <div class="card">
   Event Length
   <div class="value" id="dewEvent"></div>
-</div>
-  
-<div class="card">
-  Dew Status
-  <div class="value" id="dewStatus"></div>
-</div>
-
-<div class="card">
-  Frost
-  <div class="value" id="frostStatus"></div>
 </div>
 
 <div class="card">Temp1<div class="value" id="t1"></div></div>
@@ -969,36 +961,69 @@ if (tempC!=null && dewC!=null){
 // Dew / Frost
 dewAlert.classList.remove("warning");
 
-if (minT != null && dewC != null) {
+let dewText = "No Dew";
+let frostText = "No Frost";
 
-  const tdpdVal = minT - dewC;
+if (
+  leafValue >= 2 &&
+  minT != null &&
+  dewC != null &&
+  minT <= dewC
+) {
 
-  if (
-    dewHours >= 1 &&
-    leafValue >= 5 &&
-    tdpdVal > 1.0
-  ) {
+  dewText = "Dew Confirmed";
 
-    dewAlert.innerText = "Dew Evaporating";
+} else if (
+  minT != null &&
+  dewC != null &&
+  minT <= dewC
+) {
 
-  } else if (tdpdVal < 0) {
+  dewText = "Dew Likely";
 
-    if (minT < 0) {
+}
 
-      dewAlert.innerText = "Frost Forming";
-      dewAlert.classList.add("warning");
+if (
+  dewHours >= 1 &&
+  leafValue >= 5 &&
+  minT != null &&
+  dewC != null &&
+  (minT - dewC) > 1.0
+) {
 
-    } else {
+  dewText = "Dew Evaporating";
 
-      dewAlert.innerText = "Dew Forming";
+}
 
-    }
+if (
+  leafValue >= 2 &&
+  minT != null &&
+  minT < 0
+) {
 
-  } else {
+  frostText = "Frost Depositing";
+  dewAlert.classList.add("warning");
 
-    dewAlert.innerText = "No Dew";
+} else if (
+  minT != null &&
+  minT < 0
+) {
 
-  }
+  frostText = "Frost Possible";
+
+} else if (
+  dewHours >= 1 &&
+  leafValue >= 5 &&
+  minT != null &&
+  minT > 0.5
+) {
+
+  frostText = "Frost Melting";
+
+}
+
+dewAlert.innerHTML =
+  dewText + "<br>" + frostText;
 
 } else {
 
