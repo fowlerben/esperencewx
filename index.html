@@ -337,6 +337,10 @@
 <h2>Extras</h2>
 <div class="grid">
 <div class="card">Leaf<div class="value" id="leaf"></div></div>
+<div class="card">
+  Dew Duration
+  <div class="value" id="dewDuration"></div>
+</div>
 <div class="card">Temp1<div class="value" id="t1"></div></div>
 <div class="card">Temp2<div class="value" id="t2"></div></div>
 <div class="card">Temp3<div class="value" id="t3"></div></div>
@@ -777,7 +781,23 @@ storm_start.innerText=formatTime(iss.rain_storm_last_start_at);
 storm_end.innerText=formatTime(iss.rain_storm_last_end_at);
 
 // EXTRAS
-leaf.innerText=extra?.wet_leaf_1 ?? "N/A";
+const leafValue = extra?.wet_leaf_1;
+
+leaf.innerText =
+  leafValue != null
+    ? leafValue
+    : "N/A";
+
+const wetRecords =
+  todayHistory.filter(
+    r => (r.wet_leaf_1 ?? 0) > 0
+  );
+
+const dewHours =
+  ((wetRecords.length * 5) / 60).toFixed(1);
+
+dewDuration.innerText =
+  dewHours + " h";
 
 const t1C = extra?.temp_1!=null ? toC(extra.temp_1) : null;
 const t2C = extra?.temp_2!=null ? toC(extra.temp_2) : null;
