@@ -341,6 +341,18 @@
   Dew Duration
   <div class="value" id="dewDuration"></div>
 </div>
+<div class="card">
+  Last Wet
+  <div class="value" id="lastWet"></div>
+</div>
+<div class="card">
+  Dew Status
+  <div class="value" id="dewStatus"></div>
+</div>
+<div class="card">
+  Frost
+  <div class="value" id="frostStatus"></div>
+</div>
 <div class="card">Temp1<div class="value" id="t1"></div></div>
 <div class="card">Temp2<div class="value" id="t2"></div></div>
 <div class="card">Temp3<div class="value" id="t3"></div></div>
@@ -790,7 +802,7 @@ leaf.innerText =
 
 const wetRecords =
   todayHistory.filter(
-    r => (r.leaf ?? 0) > 0
+    r => (r.leaf ?? 0) >= 2
   );
 
 const dewHours =
@@ -798,6 +810,20 @@ const dewHours =
 
 dewDuration.innerText =
   dewHours + " h";
+
+const lastWetRecord =
+  [...todayHistory]
+    .reverse()
+    .find(r => (r.leaf ?? 0) >= 2);
+
+lastWet.innerText =
+  lastWetRecord
+    ? new Date(lastWetRecord.time * 1000)
+        .toLocaleTimeString("en-AU", {
+          hour: "2-digit",
+          minute: "2-digit"
+        })
+    : "None";
 
 const t1C = extra?.temp_1!=null ? toC(extra.temp_1) : null;
 const t2C = extra?.temp_2!=null ? toC(extra.temp_2) : null;
@@ -861,7 +887,48 @@ if (minT!=null && dewC!=null){
 } else {
   dewAlert.innerText = "No Dew";
 }
+if (
+  leafValue >= 2 &&
+  minT != null &&
+  dewC != null &&
+  minT <= dewC
+) {
 
+  dewStatus.innerText = "Confirmed";
+
+} else if (
+  minT != null &&
+  dewC != null &&
+  minT <= dewC
+) {
+
+  dewStatus.innerText = "Likely";
+
+} else {
+
+  dewStatus.innerText = "No Dew";
+
+}
+if (
+  leafValue >= 2 &&
+  minT != null &&
+  minT < 0
+) {
+
+  frostStatus.innerText = "Depositing";
+
+} else if (
+  minT != null &&
+  minT < 0
+) {
+
+  frostStatus.innerText = "Possible";
+
+} else {
+
+  frostStatus.innerText = "No Frost";
+
+}
 // Fire Danger
 fireAlert.classList.remove("warning");
 fireAlert.style.display = "none";
