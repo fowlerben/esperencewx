@@ -810,21 +810,34 @@ const dewHours =
 dewDuration.innerText =
   dewHours + " h";
 
-const lastWetRecord =
-  [...todayHistory]
-    .reverse()
-    .find(r => (r.leaf ?? 0) >= 2);
+let lastWetTime = null;
+
+for (let i = todayHistory.length - 1; i > 0; i--) {
+
+  const currentWet =
+    (todayHistory[i].leaf ?? 0) >= 2;
+
+  const previousWet =
+    (todayHistory[i - 1].leaf ?? 0) >= 2;
+
+  if (currentWet && !previousWet) {
+
+    lastWetTime = todayHistory[i].time;
+    break;
+
+  }
+
+}
 
 lastWet.innerText =
-  lastWetRecord
-    ? new Date(lastWetRecord.time * 1000)
+  lastWetTime
+    ? new Date(lastWetTime * 1000)
         .toLocaleTimeString("en-AU", {
           hour: "2-digit",
           minute: "2-digit",
           hour12: false
         })
     : "None";
-``
 
 const t1C = extra?.temp_1!=null ? toC(extra.temp_1) : null;
 const t2C = extra?.temp_2!=null ? toC(extra.temp_2) : null;
