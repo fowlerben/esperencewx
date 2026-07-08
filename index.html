@@ -347,6 +347,11 @@
   <div class="value" id="lastWet"></div>
 </div>
 
+<div class="card">
+  Dew Status
+  <div class="value" id="dewStatus"></div>
+</div>
+
 <div class="card">Temp1<div class="value" id="t1"></div></div>
 <div class="card">Temp2<div class="value" id="t2"></div></div>
 <div class="card">Temp3<div class="value" id="t3"></div></div>
@@ -843,6 +848,29 @@ if (temps.length > 0 && dewC!=null){
   tdpd.innerText = (minT - dewC).toFixed(1) + " °C";
 } else {
   tdpd.innerText = "N/A";
+}
+
+if (
+  leafValue >= 2 &&
+  minT != null &&
+  dewC != null &&
+  minT <= dewC
+) {
+
+  dewStatus.innerText = "Confirmed";
+
+} else if (
+  minT != null &&
+  dewC != null &&
+  minT <= dewC
+) {
+
+  dewStatus.innerText = "Likely";
+
+} else {
+
+  dewStatus.innerText = "No Dew";
+
 }
 
 // ✅ ALERTS
