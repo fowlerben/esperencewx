@@ -249,9 +249,28 @@ const historyDay =
     day
   );
 
+const overnightArchive =
+  archive.filter(r => {
+
+    const t =
+      new Date(r.time * 1000);
+
+    const start =
+      new Date(year, month, day - 1, 18, 0);
+
+    const end =
+      new Date(year, month, day, 9, 0);
+
+    return (
+      t >= start &&
+      t < end
+    );
+
+  });
+
 const minTempF =
   minValue(
-    archiveDay.map(r => r.temp_lo)
+    overnightArchive.map(r => r.temp_lo)
   );
 
 const minTemp =
