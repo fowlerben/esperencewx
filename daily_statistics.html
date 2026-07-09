@@ -210,21 +210,93 @@ const daysInMonth =
 
 for(let day=1; day<=daysInMonth; day++){
 
-    const tr =
-      document.createElement("tr");
+const periods =
+  getPeriods(year, month, day);
+
+const overnight =
+  history.filter(r => {
+
+    const t =
+      new Date(r.time * 1000);
+
+    return (
+      t >= periods.overnightStart &&
+      t < periods.overnightEnd
+    );
+
+  });
+
+const daytime =
+  history.filter(r => {
+
+    const t =
+      new Date(r.time * 1000);
+
+    return (
+      t >= periods.daytimeStart &&
+      t < periods.daytimeEnd
+    );
+
+  });
+
+const daily =
+  history.filter(r => {
+
+    const t =
+      new Date(r.time * 1000);
+
+    return (
+      t >= periods.dailyStart &&
+      t < periods.dailyEnd
+    );
+
+  });
+
+const minT =
+  minValue(
+    overnight.map(r => r.temp_c)
+  );
+
+const maxT =
+  maxValue(
+    daytime.map(r => r.temp_c)
+  );
+
+const avgT =
+  average(
+    daily.map(r => r.temp_c)
+  );
+
+const minRH =
+  minValue(
+    daytime.map(r => r.humidity)
+  );
+
+const maxRH =
+  maxValue(
+    overnight.map(r => r.humidity)
+  );
+
+const avgRH =
+  average(
+    daily.map(r => r.humidity)
+  );
+
+const tr =
+  document.createElement("tr");
 
 tr.innerHTML = `
   <td>${day}</td>
 
-  <td></td>
-  <td></td>
-  <td></td>
+  <td>${minT !== "" ? minT.toFixed(1) : ""}</td>
+  <td>${maxT !== "" ? maxT.toFixed(1) : ""}</td>
+  <td>${avgT !== "" ? avgT.toFixed(1) : ""}</td>
 
   <td></td>
 
-  <td></td>
-  <td></td>
-  <td></td>
+  <td>${minRH !== "" ? minRH.toFixed(0) : ""}</td>
+  <td>${maxRH !== "" ? maxRH.toFixed(0) : ""}</td>
+  <td>${avgRH !== "" ? avgRH.toFixed(0) : ""}</td>
 
   <td></td>
   <td></td>
@@ -252,6 +324,7 @@ tr.innerHTML = `
   <td></td>
   <td></td>
 `;
+  
     table.appendChild(tr);
   }
 }
