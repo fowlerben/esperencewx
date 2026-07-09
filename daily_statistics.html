@@ -156,56 +156,6 @@ function minValue(values){
     : "";
 }
 
-function degToCompass(deg){
-
-  const dirs = [
-    "N","NNE","NE","ENE",
-    "E","ESE","SE","SSE",
-    "S","SSW","SW","WSW",
-    "W","WNW","NW","NNW"
-  ];
-
-  return dirs[
-    Math.round(deg / 22.5) % 16
-  ];
-
-}
-
-function prevailingDirection(records){
-
-  const counts = {};
-
-  records.forEach(r => {
-
-    if(r.wind10_dir == null) return;
-
-    const dir =
-      degToCompass(r.wind10_dir);
-
-    counts[dir] =
-      (counts[dir] || 0) + 1;
-
-  });
-
-  let winner = "";
-  let highest = 0;
-
-  Object.entries(counts)
-    .forEach(([dir,count]) => {
-
-      if(count > highest){
-
-        highest = count;
-        winner = dir;
-
-      }
-
-    });
-
-  return winner;
-
-}
-
 function getPeriods(year, month, day){
 
   return {
@@ -227,9 +177,7 @@ function getPeriods(year, month, day){
 
     dailyEnd:
       new Date(year, month, day + 1, 0, 0)
-
   };
-
 }
 
 async function loadDailyStatistics(){
@@ -240,33 +188,10 @@ const table =
 table.innerHTML = "";
 
 const historyRes =
-  await fetch("/esperencewx/history.json?" + Date.now());
+  await fetch("history.json?" + Date.now());
 
 const history =
   await historyRes.json();
-
-const archiveRes =
-  await fetch("/esperencewx/archive_history.json?" + Date.now());
-
-const archive =
-  await archiveRes.json();
-
-function dayRecords(records, year, month, day){
-
-  return records.filter(r => {
-
-    const d =
-      new Date(r.time * 1000);
-
-    return (
-      d.getFullYear() === year &&
-      d.getMonth() === month &&
-      d.getDate() === day
-    );
-
-  });
-
-}
 
 const now = new Date();
 
@@ -285,156 +210,17 @@ const daysInMonth =
 
 for(let day=1; day<=daysInMonth; day++){
 
-const archiveDay =
-  dayRecords(
-    archive,
-    year,
-    month,
-    day
-  );
-
-const historyDay =
-  dayRecords(
-    history,
-    year,
-    month,
-    day
-  );
-
-const periods =
-  getPeriods(year, month, day);
-
-const overnight =
-  history.filter(r => {
-
-    const t =
-      new Date(r.time * 1000);
-
-    return (
-      t >= periods.overnightStart &&
-      t < periods.overnightEnd
-    );
-
-  });
-
-const daytime =
-  history.filter(r => {
-
-    const t =
-      new Date(r.time * 1000);
-
-    return (
-      t >= periods.daytimeStart &&
-      t < periods.daytimeEnd
-    );
-
-  });
-
-const daily =
-  history.filter(r => {
-
-    const t =
-      new Date(r.time * 1000);
-
-    return (
-      t >= periods.dailyStart &&
-      t < periods.dailyEnd
-    );
-
-  });
-
-const minT =
-  minValue(
-    overnight.map(r => r.temp_c)
-  );
-
-const maxT =
-  maxValue(
-    daytime.map(r => r.temp_c)
-  );
-
-const avgT =
-  average(
-    daily.map(r => r.temp_c)
-  );
-
-const minRH =
-  minValue(
-    daytime.map(r => r.humidity)
-  );
-
-const maxRH =
-  maxValue(
-    overnight.map(r => r.humidity)
-  );
-
-const avgRH =
-  average(
-    daily.map(r => r.humidity)
-  );
-
-const avgWind =
-  average(
-    historyDay.map(r => r.wind10_kmh)
-  );
-
-const avgDir =
-  prevailingDirection(
-    historyDay
-  );
-
-let maxGustRecord = null;
-
-historyDay.forEach(r => {
-
-  if(
-    !maxGustRecord ||
-    (r.gust10_kmh ?? 0) >
-    (maxGustRecord.gust10_kmh ?? 0)
-  ){
-    maxGustRecord = r;
-  }
-
-});
-
-const maxGust =
-  maxGustRecord?.gust10_kmh ?? "";
-
-const maxDir =
-  maxGustRecord?.wind10_dir != null
-    ? degToCompass(
-        maxGustRecord.wind10_dir
-      )
-    : "";
-
-const gustTime =
-  maxGustRecord
-    ? new Date(
-        maxGustRecord.time * 1000
-      ).toLocaleTimeString(
-        "en-AU",
-        {
-          hour:"2-digit",
-          minute:"2-digit"
-        }
-      )
-    : "";
-
-const tr =
-  document.createElement("tr");
+    const tr =
+      document.createElement("tr");
 
 tr.innerHTML = `
   <td>${day}</td>
 
-  <td>${minT !== "" ? minT.toFixed(1) : ""}</td>
-  <td>${maxT !== "" ? maxT.toFixed(1) : ""}</td>
-  <td>${avgT !== "" ? avgT.toFixed(1) : ""}</td>
-
+  <td></td>
+  <td></td>
   <td></td>
 
-  <td>${minRH !== "" ? minRH.toFixed(0) : ""}</td>
-  <td>${maxRH !== "" ? maxRH.toFixed(0) : ""}</td>
-  <td>${avgRH !== "" ? avgRH.toFixed(0) : ""}</td>
+  <td></td>
 
   <td></td>
   <td></td>
@@ -444,36 +230,28 @@ tr.innerHTML = `
   <td></td>
   <td></td>
 
-<td></td>
-<td></td>
+  <td></td>
+  <td></td>
+  <td></td>
 
-<td>${maxDir}</td>
+  <td></td>
+  <td></td>
 
-<td>${
-  maxGust !== ""
-    ? maxGust.toFixed(1)
-    : ""
-}</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
 
-<td>${gustTime}</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
 
-<td>${avgDir}</td>
-
-<td>${
-  avgWind !== ""
-    ? avgWind.toFixed(1)
-    : ""
-}</td>
-
-<td></td>
-<td></td>
-<td></td>
-<td></td>
   <td></td>
   <td></td>
   <td></td>
 `;
-  
     table.appendChild(tr);
   }
 }
