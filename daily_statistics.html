@@ -156,9 +156,7 @@ function minValue(values){
     : "";
 }
 
-function getPeriods(year, month, day){
-
-  function degToCompass(deg){
+function degToCompass(deg){
 
   const dirs = [
     "N","NNE","NE","ENE",
@@ -170,6 +168,7 @@ function getPeriods(year, month, day){
   return dirs[
     Math.round(deg / 22.5) % 16
   ];
+
 }
 
 function prevailingDirection(records){
@@ -204,10 +203,34 @@ function prevailingDirection(records){
     });
 
   return winner;
+
 }
+
+function getPeriods(year, month, day){
 
   return {
 
+    overnightStart:
+      new Date(year, month, day - 1, 18, 0),
+
+    overnightEnd:
+      new Date(year, month, day, 9, 0),
+
+    daytimeStart:
+      new Date(year, month, day, 9, 0),
+
+    daytimeEnd:
+      new Date(year, month, day + 1, 0, 0),
+
+    dailyStart:
+      new Date(year, month, day, 0, 0),
+
+    dailyEnd:
+      new Date(year, month, day + 1, 0, 0)
+
+  };
+
+}
     overnightStart:
       new Date(year, month, day - 1, 18, 0),
 
