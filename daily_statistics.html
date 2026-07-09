@@ -249,6 +249,21 @@ for(let day=1; day<=daysInMonth; day++){
         day
       );
 
+    const minTemp =
+      minValue(
+        archiveDay.map(r => r.temp_lo)
+      );
+    
+    const maxTemp =
+      maxValue(
+        archiveDay.map(r => r.temp_hi)
+      );
+    
+    const avgTemp =
+      average(
+        historyDay.map(r => r.temp_c)
+      );
+
     const tr =
       document.createElement("tr");
 
@@ -261,15 +276,37 @@ tr.innerHTML = `
       : ""
   }</td>
   
-  <td></td>
-  <td></td>
+  <td>${
+    maxTemp !== ""
+      ? maxTemp.toFixed(1)
+      : ""
+  }</td>
+  
+  <td>${
+    avgTemp !== ""
+      ? avgTemp.toFixed(1)
+      : ""
+  }</td>
   
   <td></td>
-
-  <td></td>
-  <td></td>
-  <td></td>
-
+  
+  <td>${
+    minRH !== ""
+      ? minRH.toFixed(0)
+      : ""
+  }</td>
+  
+  <td>${
+    maxRH !== ""
+      ? maxRH.toFixed(0)
+      : ""
+  }</td>
+  
+  <td>${
+    avgRH !== ""
+      ? avgRH.toFixed(0)
+      : ""
+  }</td>
   <td></td>
   <td></td>
   <td></td>
