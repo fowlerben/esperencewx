@@ -625,7 +625,7 @@ const threePMRecord =
 const dewPoint3PM =
   threePMRecord?.dew_c ?? null;
 
-const criticalTemp =
+const criticalTempValue =
   (
     maxTemp != null &&
     dewPoint3PM != null
@@ -1001,9 +1001,9 @@ if (temps.length > 0 && dewC!=null){
   tdpd.innerText = "N/A";
 }
 
-criticalTemp.innerText =
-  criticalTemp != null
-    ? criticalTemp.toFixed(1) + " °C"
+document.getElementById("criticalTemp").innerText =
+  criticalTempValue != null
+    ? criticalTempValue.toFixed(1) + " °C"
     : "N/A";
 
 // ✅ ALERTS
