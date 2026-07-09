@@ -98,14 +98,92 @@
 
 <script>
 
+function average(values){
+
+  const valid =
+    values.filter(v => v != null);
+
+  if (valid.length === 0) return "";
+
+  return (
+    valid.reduce((a,b) => a + b, 0)
+    / valid.length
+  );
+}
+
+function maxValue(values){
+
+  const valid =
+    values.filter(v => v != null);
+
+  return valid.length
+    ? Math.max(...valid)
+    : "";
+}
+
+function minValue(values){
+
+  const valid =
+    values.filter(v => v != null);
+
+  return valid.length
+    ? Math.min(...valid)
+    : "";
+}
+
+function getPeriods(year, month, day){
+
+  return {
+
+    overnightStart:
+      new Date(year, month, day - 1, 18, 0),
+
+    overnightEnd:
+      new Date(year, month, day, 9, 0),
+
+    daytimeStart:
+      new Date(year, month, day, 9, 0),
+
+    daytimeEnd:
+      new Date(year, month, day + 1, 0, 0),
+
+    dailyStart:
+      new Date(year, month, day, 0, 0),
+
+    dailyEnd:
+      new Date(year, month, day + 1, 0, 0)
+  };
+}
+
 async function loadDailyStatistics(){
 
-  const table =
-    document.getElementById("statsTable");
+const table =
+  document.getElementById("statsTable");
 
-  table.innerHTML = "";
+table.innerHTML = "";
 
-  for(let day=1; day<=31; day++){
+const historyRes =
+  await fetch("history.json?" + Date.now());
+
+const history =
+  await historyRes.json();
+
+const now = new Date();
+
+const year =
+  now.getFullYear();
+
+const month =
+  now.getMonth();
+
+const daysInMonth =
+  new Date(
+    year,
+    month + 1,
+    0
+  ).getDate();
+
+for(let day=1; day<=daysInMonth; day++){
 
     const tr =
       document.createElement("tr");
