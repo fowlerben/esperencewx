@@ -181,6 +181,26 @@ function degToCompass(deg) {
       document.getElementById("monthlyTable");
   
     tbody.innerHTML = "";
+    const stats = {
+      minTemp: [],
+      maxTemp: [],
+      rain: [],
+      evap: [],
+      sun: [],
+      gust: [],
+    
+      temp9: [],
+      rh9: [],
+      cloud9: [],
+      wind9: [],
+      mslp9: [],
+    
+      temp15: [],
+      rh15: [],
+      cloud15: [],
+      wind15: [],
+      mslp15: []
+    };
   
     for (let day = 1; day <= daysInMonth; day++) {
   
@@ -457,6 +477,32 @@ const maxGustTime =
       
       const manual =
         manualObs.find(r => r.date === dateString);
+      if (minTemp != null) stats.minTemp.push(minTemp);
+      if (maxTemp != null) stats.maxTemp.push(maxTemp);
+      if (rainTotal != null) stats.rain.push(rainTotal);
+      if (evapTotal != null) stats.evap.push(evapTotal);
+      
+      if (maxGustSpeed != null) stats.gust.push(maxGustSpeed);
+      
+      if (obs9Valid) {
+        stats.temp9.push(obs9.temp_c);
+        stats.rh9.push(obs9.humidity);
+        stats.wind9.push(obs9.wind10_kmh);
+        stats.mslp9.push(obs9.pressure_hpa);
+      }
+      
+      if (manual?.cloud9)
+        stats.cloud9.push(Number(manual.cloud9));
+      
+      if (obs15Valid) {
+        stats.temp15.push(obs15.temp_c);
+        stats.rh15.push(obs15.humidity);
+        stats.wind15.push(obs15.wind10_kmh);
+        stats.mslp15.push(obs15.pressure_hpa);
+      }
+      
+      if (manual?.cloud15)
+        stats.cloud15.push(Number(manual.cloud15));
       const tr = document.createElement("tr");
   
       tr.innerHTML = `
@@ -513,7 +559,6 @@ const maxGustTime =
       tbody.appendChild(tr);
     }
   }
-  
   loadMonthly();
   
   </script>
