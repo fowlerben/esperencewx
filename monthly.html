@@ -503,59 +503,56 @@ const maxGustTime =
       
       if (manual?.cloud15)
         stats.cloud15.push(Number(manual.cloud15));
-      const tr = document.createElement("tr");
+const tr = document.createElement("tr");
 
-        <td>${day}</td>
-        <td>${dayName}</td>
-  
-        <td>
-          ${minTemp != null ? minTemp.toFixed(1) : ""}
-        </td>
-        
-        <td>
-          ${maxTemp != null ? maxTemp.toFixed(1) : ""}
-        </td>
-        <td>
-          ${rainTotal != null
-              ? rainTotal.toFixed(1)
-              : ""}
-        </td>
-        
-        <td>
-          ${evapTotal != null
-              ? evapTotal.toFixed(1)
-              : ""}
-        </td>
-        
-        <td></td>
-        
-        <td>${gustComplete ? maxGustDir : ""}</td>
-        
-        <td>${
-          gustComplete && maxGustSpeed != null
-            ? maxGustSpeed.toFixed(0)
-            : ""
-        }</td>
-        
-        <td>${gustComplete ? maxGustTime : ""}</td>
-        
-        <td>${obs9Valid ? obs9.temp_c.toFixed(1) : (manual?.temp9 || "")}</td>
-        <td>${obs9Valid ? obs9.humidity.toFixed(0) : (manual?.humidity9 || "")}</td>
-        <td>${manual?.cloud9 || ""}</td>
-        <td>${obs9Valid ? degToCompass(obs9.wind10_dir) : (manual?.wind9_dir || "")}</td>
-        <td>${obs9Valid ? obs9.wind10_kmh.toFixed(0) : (manual?.wind9_kmh || "")}</td>
-        <td>${obs9Valid ? obs9.pressure_hpa.toFixed(1) : (manual?.pressure9_hpa || "")}</td>
-        
-        <td>${obs15Valid ? obs15.temp_c.toFixed(1) : (manual?.temp15 || "")}</td>
-        <td>${obs15Valid ? obs15.humidity.toFixed(0) : (manual?.humidity15 || "")}</td>
-        <td>${manual?.cloud15 || ""}</td>
-        <td>${obs15Valid ? degToCompass(obs15.wind10_dir) : (manual?.wind15_dir || "")}</td>
-        <td>${obs15Valid ? obs15.wind10_kmh.toFixed(0) : (manual?.wind15_kmh || "")}</td>
-        <td>${obs15Valid ? obs15.pressure_hpa.toFixed(1) : (manual?.pressure15_hpa || "")}</td>
+tr.innerHTML = `
+  <td>${day}</td>
+  <td>${dayName}</td>
 
-      `;
-  
-      tbody.appendChild(tr);
+  <td>${minTemp != null ? minTemp.toFixed(1) : ""}</td>
+
+  <td>${maxTemp != null ? maxTemp.toFixed(1) : ""}</td>
+
+  <td>${
+    rainTotal != null
+      ? rainTotal.toFixed(1)
+      : ""
+  }</td>
+
+  <td>${
+    evapTotal != null
+      ? evapTotal.toFixed(1)
+      : ""
+  }</td>
+
+  <td></td>
+
+  <td>${gustComplete ? maxGustDir : ""}</td>
+
+  <td>${
+    gustComplete && maxGustSpeed != null
+      ? maxGustSpeed.toFixed(0)
+      : ""
+  }</td>
+
+  <td>${gustComplete ? maxGustTime : ""}</td>
+
+  <td>${obs9Valid ? obs9.temp_c.toFixed(1) : (manual?.temp9 || "")}</td>
+  <td>${obs9Valid ? obs9.humidity.toFixed(0) : (manual?.humidity9 || "")}</td>
+  <td>${manual?.cloud9 || ""}</td>
+  <td>${obs9Valid ? degToCompass(obs9.wind10_dir) : (manual?.wind9_dir || "")}</td>
+  <td>${obs9Valid ? obs9.wind10_kmh.toFixed(0) : (manual?.wind9_kmh || "")}</td>
+  <td>${obs9Valid ? obs9.pressure_hpa.toFixed(1) : (manual?.pressure9_hpa || "")}</td>
+
+  <td>${obs15Valid ? obs15.temp_c.toFixed(1) : (manual?.temp15 || "")}</td>
+  <td>${obs15Valid ? obs15.humidity.toFixed(0) : (manual?.humidity15 || "")}</td>
+  <td>${manual?.cloud15 || ""}</td>
+  <td>${obs15Valid ? degToCompass(obs15.wind10_dir) : (manual?.wind15_dir || "")}</td>
+  <td>${obs15Valid ? obs15.wind10_kmh.toFixed(0) : (manual?.wind15_kmh || "")}</td>
+  <td>${obs15Valid ? obs15.pressure_hpa.toFixed(1) : (manual?.pressure15_hpa || "")}</td>
+`;
+
+tbody.appendChild(tr);
     }
 
 const separatorRow = document.createElement("tr");
