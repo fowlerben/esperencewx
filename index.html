@@ -367,6 +367,10 @@
 
 <!-- ✅ NEW -->
 <div class="card">DPD<div class="value" id="dpd"></div></div>
+<div class="card">
+  Critical Temp
+  <div class="value" id="criticalTemp"></div>
+</div>
 <div class="card">Terrestrial DPD<div class="value" id="tdpd"></div></div>
 
 </div>
@@ -530,6 +534,12 @@ const data=await res.json();
 const historyRes = await fetch("/esperencewx/history.json?"+Date.now());
 const history = await historyRes.json();
 
+const archiveRes =
+  await fetch("/esperencewx/archive_history.json?" + Date.now());
+
+const archive =
+  await archiveRes.json();
+
 if(data.generated_at){
 document.getElementById("dataTime").innerText =
   "Data timestamp: " +
@@ -545,6 +555,18 @@ const todayMelbourne = new Date().toLocaleDateString(
   { timeZone: "Australia/Melbourne" }
 );
 
+const todayArchive = archive.filter(r => {
+
+  const recordDate =
+    new Date(r.time * 1000).toLocaleDateString(
+      "en-AU",
+      { timeZone: "Australia/Melbourne" }
+    );
+
+  return recordDate === todayMelbourne;
+
+});
+  
 const todayHistory = history.filter(r => {
   const recordDate = new Date(r.time * 1000).toLocaleDateString(
     "en-AU",
@@ -553,8 +575,60 @@ const todayHistory = history.filter(r => {
 
   return recordDate === todayMelbourne;
 });
+  
 const latestHistory =
   todayHistory[todayHistory.length - 1];
+
+const maxTempF =
+  maxValue(
+    todayArchive
+      .filter(r => {
+
+        const t =
+          new Date(r.time * 1000);
+
+        const mins =
+          t.getHours() * 60 +
+          t.getMinutes();
+
+        return (
+          mins >= 545 &&   // 09:05
+          mins <= 900      // 15:00
+        );
+
+      })
+      .map(r => r.temp_hi)
+  );
+
+const maxTemp =
+  maxTempF !== ""
+    ? (maxTempF - 32) * 5 / 9
+    : null;
+
+const threePMRecord =
+  todayHistory.find(r => {
+
+    const t =
+      new Date(r.time * 1000);
+
+    return (
+      t.getHours() === 15 &&
+      t.getMinutes() === 0
+    );
+
+  });
+
+const dewPoint3PM =
+  threePMRecord?.dew_c ?? null;
+
+const criticalTemp =
+  (
+    maxTemp != null &&
+    dewPoint3PM != null
+  )
+    ? dewPoint3PM -
+      0.2 * (maxTemp - dewPoint3PM)
+    : null;
 
 const tenMinRecord =
   todayHistory.find(
@@ -922,6 +996,11 @@ if (temps.length > 0 && dewC!=null){
 } else {
   tdpd.innerText = "N/A";
 }
+
+criticalTemp.innerText =
+  criticalTemp != null
+    ? criticalTemp.toFixed(1) + " °C"
+    : "N/A";
 
 // ✅ ALERTS
 
