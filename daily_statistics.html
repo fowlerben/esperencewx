@@ -49,46 +49,71 @@
 <table>
 
 <thead>
+
 <tr>
-  <th>Date</th>
 
-  <th>Min T</th>
-  <th>Max T</th>
-  <th>Avg T</th>
+  <th rowspan="2">Date</th>
 
-  <th>Max RH</th>
-  <th>Min RH</th>
-  <th>Avg RH</th>
+  <th colspan="3">Temperature</th>
 
-  <th>Max SLP</th>
-  <th>Min SLP</th>
-  <th>Avg SLP</th>
+  <th colspan="1">Terrestrial</th>
 
-  <th>Max DP</th>
-  <th>Min DP</th>
-  <th>Avg DP</th>
+  <th colspan="3">Humidity</th>
 
-  <th>Ter Min</th>
+  <th colspan="3">Dew Point</th>
 
-  <th>Prev Dir</th>
-  <th>Avg Wind</th>
+  <th colspan="3">MSLP</th>
 
-  <th>Max Gust</th>
-  <th>Gust Dir</th>
+  <th colspan="2">Hydrology</th>
 
-  <th>Max Solar</th>
-  <th>Solar Energy</th>
+  <th colspan="5">Wind</th>
 
-  <th>Max UV</th>
-  <th>UV MEDs</th>
+  <th colspan="4">Radiation</th>
 
-  <th>Heat Index</th>
-  <th>Wind Chill</th>
-  <th>THSW</th>
+  <th colspan="3">Comfort</th>
+
+</tr>
+
+<tr>
+
+  <th>Min</th>
+  <th>Max</th>
+  <th>Avg</th>
+
+  <th>Min</th>
+
+  <th>Min</th>
+  <th>Max</th>
+  <th>Avg</th>
+
+  <th>Min</th>
+  <th>Max</th>
+  <th>Avg</th>
+
+  <th>Min</th>
+  <th>Max</th>
+  <th>Avg</th>
 
   <th>Rain</th>
   <th>ET</th>
+
+  <th>Max Dir</th>
+  <th>Max Spd</th>
+  <th>Time</th>
+  <th>Prev Dir</th>
+  <th>Avg Spd</th>
+
+  <th>Max Solar</th>
+  <th>Solar Energy</th>
+  <th>Max UV</th>
+  <th>UV MEDs</th>
+
+  <th>Max HI</th>
+  <th>Min WC</th>
+  <th>Max THSW</th>
+
 </tr>
+
 </thead>
 
 <tbody id="statsTable">
@@ -188,47 +213,45 @@ for(let day=1; day<=daysInMonth; day++){
     const tr =
       document.createElement("tr");
 
-    tr.innerHTML = `
-      <td>${day}</td>
+tr.innerHTML = `
+  <td>${day}</td>
 
-      <td></td>
-      <td></td>
-      <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
 
-      <td></td>
-      <td></td>
-      <td></td>
+  <td></td>
 
-      <td></td>
-      <td></td>
-      <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
 
-      <td></td>
-      <td></td>
-      <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
 
-      <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
 
-      <td></td>
-      <td></td>
+  <td></td>
+  <td></td>
 
-      <td></td>
-      <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
 
-      <td></td>
-      <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
 
-      <td></td>
-      <td></td>
-
-      <td></td>
-      <td></td>
-      <td></td>
-
-      <td></td>
-      <td></td>
-    `;
-
+  <td></td>
+  <td></td>
+  <td></td>
+`;
     table.appendChild(tr);
   }
 }
