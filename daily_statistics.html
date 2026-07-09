@@ -158,6 +158,54 @@ function minValue(values){
 
 function getPeriods(year, month, day){
 
+  function degToCompass(deg){
+
+  const dirs = [
+    "N","NNE","NE","ENE",
+    "E","ESE","SE","SSE",
+    "S","SSW","SW","WSW",
+    "W","WNW","NW","NNW"
+  ];
+
+  return dirs[
+    Math.round(deg / 22.5) % 16
+  ];
+}
+
+function prevailingDirection(records){
+
+  const counts = {};
+
+  records.forEach(r => {
+
+    if(r.wind10_dir == null) return;
+
+    const dir =
+      degToCompass(r.wind10_dir);
+
+    counts[dir] =
+      (counts[dir] || 0) + 1;
+
+  });
+
+  let winner = "";
+  let highest = 0;
+
+  Object.entries(counts)
+    .forEach(([dir,count]) => {
+
+      if(count > highest){
+
+        highest = count;
+        winner = dir;
+
+      }
+
+    });
+
+  return winner;
+}
+
   return {
 
     overnightStart:
@@ -321,6 +369,53 @@ const avgRH =
     daily.map(r => r.humidity)
   );
 
+const avgWind =
+  average(
+    historyDay.map(r => r.wind10_kmh)
+  );
+
+const avgDir =
+  prevailingDirection(
+    historyDay
+  );
+
+let maxGustRecord = null;
+
+historyDay.forEach(r => {
+
+  if(
+    !maxGustRecord ||
+    (r.gust10_kmh ?? 0) >
+    (maxGustRecord.gust10_kmh ?? 0)
+  ){
+    maxGustRecord = r;
+  }
+
+});
+
+const maxGust =
+  maxGustRecord?.gust10_kmh ?? "";
+
+const maxDir =
+  maxGustRecord?.wind10_dir != null
+    ? degToCompass(
+        maxGustRecord.wind10_dir
+      )
+    : "";
+
+const gustTime =
+  maxGustRecord
+    ? new Date(
+        maxGustRecord.time * 1000
+      ).toLocaleTimeString(
+        "en-AU",
+        {
+          hour:"2-digit",
+          minute:"2-digit"
+        }
+      )
+    : "";
+
 const tr =
   document.createElement("tr");
 
@@ -345,20 +440,31 @@ tr.innerHTML = `
   <td></td>
   <td></td>
 
-  <td></td>
-  <td></td>
+<td></td>
+<td></td>
 
-  <td></td>
-  <td></td>
-  <td></td>
-  <td></td>
-  <td></td>
+<td>${maxDir}</td>
 
-  <td></td>
-  <td></td>
-  <td></td>
-  <td></td>
+<td>${
+  maxGust !== ""
+    ? maxGust.toFixed(1)
+    : ""
+}</td>
 
+<td>${gustTime}</td>
+
+<td>${avgDir}</td>
+
+<td>${
+  avgWind !== ""
+    ? avgWind.toFixed(1)
+    : ""
+}</td>
+
+<td></td>
+<td></td>
+<td></td>
+<td></td>
   <td></td>
   <td></td>
   <td></td>
