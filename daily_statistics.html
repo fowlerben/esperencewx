@@ -188,10 +188,16 @@ const table =
 table.innerHTML = "";
 
 const historyRes =
-  await fetch("history.json?" + Date.now());
+  await fetch("/esperencewx/history.json?" + Date.now());
 
 const history =
   await historyRes.json();
+
+const archiveRes =
+  await fetch("/esperencewx/archive_history.json?" + Date.now());
+
+const archive =
+  await archiveRes.json();
 
 const now = new Date();
 
