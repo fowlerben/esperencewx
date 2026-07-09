@@ -277,7 +277,42 @@ const minTemp =
   minTempF !== ""
     ? (minTempF - 32) * 5 / 9
     : "";
+const minTemp =
+  minTempF !== ""
+    ? (minTempF - 32) * 5 / 9
+    : "";
 
+const daytimeArchive =
+  archive.filter(r => {
+
+    const t =
+      new Date(r.time * 1000);
+
+    const start =
+      new Date(year, month, day, 9, 0);
+
+    const end =
+      new Date(year, month, day + 1, 0, 0);
+
+    return (
+      t >= start &&
+      t < end
+    );
+
+  });
+
+const maxTempF =
+  maxValue(
+    daytimeArchive.map(r => r.temp_hi)
+  );
+
+const maxTemp =
+  maxTempF !== ""
+    ? (maxTempF - 32) * 5 / 9
+    : "";
+
+const tr =
+  document.createElement("tr");
 const tr =
   document.createElement("tr");
 
@@ -290,7 +325,12 @@ tr.innerHTML = `
       : ""
   }</td>
   
-  <td></td>
+  <td>${
+    maxTemp !== ""
+      ? maxTemp.toFixed(1)
+      : ""
+  }</td>
+  
   <td></td>
   
   <td></td>
