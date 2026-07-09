@@ -264,6 +264,21 @@ for(let day=1; day<=daysInMonth; day++){
         historyDay.map(r => r.temp_c)
       );
 
+    const minRH =
+      minValue(
+        archiveDay.map(r => r.hum_lo)
+      );
+    
+    const maxRH =
+      maxValue(
+        archiveDay.map(r => r.hum_hi)
+      );
+    
+    const avgRH =
+      average(
+        historyDay.map(r => r.humidity)
+      );
+
     const tr =
       document.createElement("tr");
 
