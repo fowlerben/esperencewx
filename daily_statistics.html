@@ -255,10 +255,15 @@ for(let day=1; day<=daysInMonth; day++){
 tr.innerHTML = `
   <td>${day}</td>
 
+  <td>${
+    minTemp !== ""
+      ? minTemp.toFixed(1)
+      : ""
+  }</td>
+  
   <td></td>
   <td></td>
-  <td></td>
-
+  
   <td></td>
 
   <td></td>
