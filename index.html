@@ -555,7 +555,11 @@ const todayHistory = history.filter(r => {
 });
 const latestHistory =
   todayHistory[todayHistory.length - 1];
-
+  
+if (!latestHistory) {
+  return;
+}
+  
 const tenMinRecord =
   todayHistory.find(
     r => r.time >= latestHistory.time - 600
