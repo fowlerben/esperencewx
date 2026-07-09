@@ -504,8 +504,7 @@ const maxGustTime =
       if (manual?.cloud15)
         stats.cloud15.push(Number(manual.cloud15));
       const tr = document.createElement("tr");
-  
-      tr.innerHTML = `
+
         <td>${day}</td>
         <td>${dayName}</td>
   
@@ -593,34 +592,46 @@ const calcSum = arr =>
 const makeRow = (label, values) => {
   const tr = document.createElement("tr");
 
+  const colour =
+    label === "Highest"
+      ? "red"
+      : label === "Lowest"
+      ? "blue"
+      : "black";
+
+  const cell = value =>
+    value == null
+      ? ""
+      : `<span style="color:${colour}">${value}</span>`;
+
   tr.innerHTML = `
     <td colspan="2" style="font-weight:bold;background:#ece9d8;">
       ${label}
     </td>
 
-    <td>${values.minTemp ?? ""}</td>
-    <td>${values.maxTemp ?? ""}</td>
-    <td>${values.rain ?? ""}</td>
-    <td>${values.evap ?? ""}</td>
+    <td>${cell(values.minTemp)}</td>
+    <td>${cell(values.maxTemp)}</td>
+    <td>${cell(values.rain)}</td>
+    <td>${cell(values.evap)}</td>
     <td></td>
 
     <td></td>
-    <td>${values.gust ?? ""}</td>
+    <td>${cell(values.gust)}</td>
     <td></td>
 
-    <td>${values.temp9 ?? ""}</td>
-    <td>${values.rh9 ?? ""}</td>
-    <td>${values.cloud9 ?? ""}</td>
+    <td>${cell(values.temp9)}</td>
+    <td>${cell(values.rh9)}</td>
+    <td>${cell(values.cloud9)}</td>
     <td></td>
-    <td>${values.wind9 ?? ""}</td>
-    <td>${values.mslp9 ?? ""}</td>
+    <td>${cell(values.wind9)}</td>
+    <td>${cell(values.mslp9)}</td>
 
-    <td>${values.temp15 ?? ""}</td>
-    <td>${values.rh15 ?? ""}</td>
-    <td>${values.cloud15 ?? ""}</td>
+    <td>${cell(values.temp15)}</td>
+    <td>${cell(values.rh15)}</td>
+    <td>${cell(values.cloud15)}</td>
     <td></td>
-    <td>${values.wind15 ?? ""}</td>
-    <td>${values.mslp15 ?? ""}</td>
+    <td>${cell(values.wind15)}</td>
+    <td>${cell(values.mslp15)}</td>
   `;
 
   tbody.appendChild(tr);
