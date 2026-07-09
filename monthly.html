@@ -558,6 +558,18 @@ const maxGustTime =
   
       tbody.appendChild(tr);
     }
+
+const separatorRow = document.createElement("tr");
+
+separatorRow.innerHTML = `
+  <td colspan="22" style="
+    border-top: 3px solid black;
+    background: white;
+    height: 8px;
+  "></td>
+`;
+
+tbody.appendChild(separatorRow);
 const calcAvg = arr =>
   arr.length
     ? arr.reduce((a, b) => a + b, 0) / arr.length
@@ -582,7 +594,9 @@ const makeRow = (label, values) => {
   const tr = document.createElement("tr");
 
   tr.innerHTML = `
-    <td colspan="2"><b>${label}</b></td>
+    <td colspan="2" style="font-weight:bold;background:#ece9d8;">
+      ${label}
+    </td>
 
     <td>${values.minTemp ?? ""}</td>
     <td>${values.maxTemp ?? ""}</td>
