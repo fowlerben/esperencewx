@@ -241,16 +241,21 @@ for(let day=1; day<=daysInMonth; day++){
         day
       );
     
-    const historyDay =
-      dayRecords(
-        history,
-        year,
-        month,
-        day
-      );
+const historyDay =
+  dayRecords(
+    history,
+    year,
+    month,
+    day
+  );
 
-    const tr =
-      document.createElement("tr");
+const minTemp =
+  minValue(
+    archiveDay.map(r => r.temp_lo)
+  );
+
+const tr =
+  document.createElement("tr");
 
 tr.innerHTML = `
   <td>${day}</td>
