@@ -206,56 +206,6 @@ function prevailingDirection(records){
 
 }
 
-function degToCompass(deg){
-
-  const dirs = [
-    "N","NNE","NE","ENE",
-    "E","ESE","SE","SSE",
-    "S","SSW","SW","WSW",
-    "W","WNW","NW","NNW"
-  ];
-
-  return dirs[
-    Math.round(deg / 22.5) % 16
-  ];
-
-}
-
-function prevailingDirection(records){
-
-  const counts = {};
-
-  records.forEach(r => {
-
-    if(r.wind10_dir == null) return;
-
-    const dir =
-      degToCompass(r.wind10_dir);
-
-    counts[dir] =
-      (counts[dir] || 0) + 1;
-
-  });
-
-  let winner = "";
-  let highest = 0;
-
-  Object.entries(counts)
-    .forEach(([dir,count]) => {
-
-      if(count > highest){
-
-        highest = count;
-        winner = dir;
-
-      }
-
-    });
-
-  return winner;
-
-}
-
 function getPeriods(year, month, day){
 
   return {
@@ -280,25 +230,6 @@ function getPeriods(year, month, day){
 
   };
 
-}
-    overnightStart:
-      new Date(year, month, day - 1, 18, 0),
-
-    overnightEnd:
-      new Date(year, month, day, 9, 0),
-
-    daytimeStart:
-      new Date(year, month, day, 9, 0),
-
-    daytimeEnd:
-      new Date(year, month, day + 1, 0, 0),
-
-    dailyStart:
-      new Date(year, month, day, 0, 0),
-
-    dailyEnd:
-      new Date(year, month, day + 1, 0, 0)
-  };
 }
 
 async function loadDailyStatistics(){
