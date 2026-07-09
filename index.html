@@ -579,26 +579,30 @@ const todayHistory = history.filter(r => {
 const latestHistory =
   todayHistory[todayHistory.length - 1];
 
+const maxTemps =
+  todayArchive
+    .filter(r => {
+
+      const t =
+        new Date(r.time * 1000);
+
+      const mins =
+        t.getHours() * 60 +
+        t.getMinutes();
+
+      return (
+        mins >= 545 &&
+        mins <= 900
+      );
+
+    })
+    .map(r => r.temp_hi)
+    .filter(v => v != null);
+
 const maxTempF =
-  maxValue(
-    todayArchive
-      .filter(r => {
-
-        const t =
-          new Date(r.time * 1000);
-
-        const mins =
-          t.getHours() * 60 +
-          t.getMinutes();
-
-        return (
-          mins >= 545 &&   // 09:05
-          mins <= 900      // 15:00
-        );
-
-      })
-      .map(r => r.temp_hi)
-  );
+  maxTemps.length
+    ? Math.max(...maxTemps)
+    : null;
 
 const maxTemp =
   maxTempF !== ""
