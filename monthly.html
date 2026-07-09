@@ -629,7 +629,6 @@ const makeRow = (label, values) => {
 makeRow("Mean", {
   minTemp: calcAvg(stats.minTemp)?.toFixed(1),
   maxTemp: calcAvg(stats.maxTemp)?.toFixed(1),
-  rain: calcAvg(stats.rain)?.toFixed(1),
   evap: calcAvg(stats.evap)?.toFixed(1),
   gust: calcAvg(stats.gust)?.toFixed(0),
 
@@ -649,7 +648,6 @@ makeRow("Mean", {
 makeRow("Lowest", {
   minTemp: calcMin(stats.minTemp)?.toFixed(1),
   maxTemp: calcMin(stats.maxTemp)?.toFixed(1),
-  rain: calcMin(stats.rain)?.toFixed(1),
   evap: calcMin(stats.evap)?.toFixed(1),
   gust: calcMin(stats.gust)?.toFixed(0),
 
