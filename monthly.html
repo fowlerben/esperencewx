@@ -558,8 +558,128 @@ const maxGustTime =
   
       tbody.appendChild(tr);
     }
-  }
-  loadMonthly();
+const calcAvg = arr =>
+  arr.length
+    ? arr.reduce((a, b) => a + b, 0) / arr.length
+    : null;
+
+const calcMin = arr =>
+  arr.length
+    ? Math.min(...arr)
+    : null;
+
+const calcMax = arr =>
+  arr.length
+    ? Math.max(...arr)
+    : null;
+
+const calcSum = arr =>
+  arr.length
+    ? arr.reduce((a, b) => a + b, 0)
+    : null;
+
+const makeRow = (label, values) => {
+  const tr = document.createElement("tr");
+
+  tr.innerHTML = `
+    <td colspan="2"><b>${label}</b></td>
+
+    <td>${values.minTemp ?? ""}</td>
+    <td>${values.maxTemp ?? ""}</td>
+    <td>${values.rain ?? ""}</td>
+    <td>${values.evap ?? ""}</td>
+    <td></td>
+
+    <td></td>
+    <td>${values.gust ?? ""}</td>
+    <td></td>
+
+    <td>${values.temp9 ?? ""}</td>
+    <td>${values.rh9 ?? ""}</td>
+    <td>${values.cloud9 ?? ""}</td>
+    <td></td>
+    <td>${values.wind9 ?? ""}</td>
+    <td>${values.mslp9 ?? ""}</td>
+
+    <td>${values.temp15 ?? ""}</td>
+    <td>${values.rh15 ?? ""}</td>
+    <td>${values.cloud15 ?? ""}</td>
+    <td></td>
+    <td>${values.wind15 ?? ""}</td>
+    <td>${values.mslp15 ?? ""}</td>
+  `;
+
+  tbody.appendChild(tr);
+};
+
+makeRow("Mean", {
+  minTemp: calcAvg(stats.minTemp)?.toFixed(1),
+  maxTemp: calcAvg(stats.maxTemp)?.toFixed(1),
+  rain: calcAvg(stats.rain)?.toFixed(1),
+  evap: calcAvg(stats.evap)?.toFixed(1),
+  gust: calcAvg(stats.gust)?.toFixed(0),
+
+  temp9: calcAvg(stats.temp9)?.toFixed(1),
+  rh9: calcAvg(stats.rh9)?.toFixed(0),
+  cloud9: calcAvg(stats.cloud9)?.toFixed(0),
+  wind9: calcAvg(stats.wind9)?.toFixed(0),
+  mslp9: calcAvg(stats.mslp9)?.toFixed(1),
+
+  temp15: calcAvg(stats.temp15)?.toFixed(1),
+  rh15: calcAvg(stats.rh15)?.toFixed(0),
+  cloud15: calcAvg(stats.cloud15)?.toFixed(0),
+  wind15: calcAvg(stats.wind15)?.toFixed(0),
+  mslp15: calcAvg(stats.mslp15)?.toFixed(1)
+});
+
+makeRow("Lowest", {
+  minTemp: calcMin(stats.minTemp)?.toFixed(1),
+  maxTemp: calcMin(stats.maxTemp)?.toFixed(1),
+  rain: calcMin(stats.rain)?.toFixed(1),
+  evap: calcMin(stats.evap)?.toFixed(1),
+  gust: calcMin(stats.gust)?.toFixed(0),
+
+  temp9: calcMin(stats.temp9)?.toFixed(1),
+  rh9: calcMin(stats.rh9)?.toFixed(0),
+  cloud9: calcMin(stats.cloud9)?.toFixed(0),
+  wind9: calcMin(stats.wind9)?.toFixed(0),
+  mslp9: calcMin(stats.mslp9)?.toFixed(1),
+
+  temp15: calcMin(stats.temp15)?.toFixed(1),
+  rh15: calcMin(stats.rh15)?.toFixed(0),
+  cloud15: calcMin(stats.cloud15)?.toFixed(0),
+  wind15: calcMin(stats.wind15)?.toFixed(0),
+  mslp15: calcMin(stats.mslp15)?.toFixed(1)
+});
+
+makeRow("Highest", {
+  minTemp: calcMax(stats.minTemp)?.toFixed(1),
+  maxTemp: calcMax(stats.maxTemp)?.toFixed(1),
+  rain: calcMax(stats.rain)?.toFixed(1),
+  evap: calcMax(stats.evap)?.toFixed(1),
+  gust: calcMax(stats.gust)?.toFixed(0),
+
+  temp9: calcMax(stats.temp9)?.toFixed(1),
+  rh9: calcMax(stats.rh9)?.toFixed(0),
+  cloud9: calcMax(stats.cloud9)?.toFixed(0),
+  wind9: calcMax(stats.wind9)?.toFixed(0),
+  mslp9: calcMax(stats.mslp9)?.toFixed(1),
+
+  temp15: calcMax(stats.temp15)?.toFixed(1),
+  rh15: calcMax(stats.rh15)?.toFixed(0),
+  cloud15: calcMax(stats.cloud15)?.toFixed(0),
+  wind15: calcMax(stats.wind15)?.toFixed(0),
+  mslp15: calcMax(stats.mslp15)?.toFixed(1)
+});
+
+makeRow("Total", {
+  rain: calcSum(stats.rain)?.toFixed(1),
+  evap: calcSum(stats.evap)?.toFixed(1)
+});
+
+}
+
+loadMonthly();
   
   </script>
 
