@@ -249,10 +249,15 @@ const historyDay =
     day
   );
 
-const minTemp =
+const minTempF =
   minValue(
     archiveDay.map(r => r.temp_lo)
   );
+
+const minTemp =
+  minTempF !== ""
+    ? (minTempF - 32) * 5 / 9
+    : "";
 
 const tr =
   document.createElement("tr");
