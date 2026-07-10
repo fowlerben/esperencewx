@@ -557,10 +557,16 @@ const todayMelbourne = new Date().toLocaleDateString(
 );
 
 const todayHistory = history.filter(r => {
-  const recordDate = new Date(r.time * 1000).toLocaleDateString(
-    "en-AU",
-    { timeZone: "Australia/Melbourne" }
-  );
+
+  const recordDate =
+    new Date(r.time * 1000).toLocaleDateString(
+      "en-AU",
+      { timeZone: "Australia/Melbourne" }
+    );
+
+  return recordDate === todayMelbourne;
+
+});
 
 const todayArchive = archive.filter(r => {
 
@@ -574,8 +580,6 @@ const todayArchive = archive.filter(r => {
 
 });
 
-  return recordDate === todayMelbourne;
-});
 const latestHistory =
   todayHistory[todayHistory.length - 1];
 
