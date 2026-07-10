@@ -40,6 +40,12 @@ jobs:
 
             curl -s "$URL" > historic.json
 
+            echo "===== SENSOR LIST ====="
+            jq '.sensors[] | {lsid, sensor_type, data_structure_type}' historic.json
+            
+            echo "===== LSID 838746 ====="
+            jq '.sensors[] | select(.lsid==838746)' historic.json
+
             jq '
             [
               .sensors[]
