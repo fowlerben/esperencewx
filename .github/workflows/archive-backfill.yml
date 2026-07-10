@@ -53,12 +53,24 @@ jobs:
               | .data[]
               | {
                   time: .ts,
-
+              
                   temp_hi,
                   temp_lo,
                   temp_hi_at,
                   temp_lo_at,
-
+              
+                  temp_lo_1,
+                  temp_last_1,
+              
+                  temp_lo_2,
+                  temp_last_2,
+              
+                  temp_lo_3,
+                  temp_last_3,
+              
+                  wet_leaf_hi_1,
+                  wet_leaf_last_volt_1,
+              
                   hum_hi,
                   hum_lo,
                   hum_hi_at,
