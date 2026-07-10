@@ -677,10 +677,15 @@ const chartTemps = todayHistory.map(r => r.temp_c);
 const chartDews = todayHistory.map(r => r.dew_c);
 const chartHumidity = todayHistory.map(r => r.humidity);
 const chartPressure = todayHistory.map(r => r.pressure_hpa);
-const tempsToday = todayHistory
-  .map(r => r.temp_c)
-  .filter(v => v != null);
+const archiveMaxTemps = todayArchive
+  .map(r => r.temp_hi)
+  .filter(v => v != null)
+  .map(v => (v - 32) * 5 / 9);
 
+const archiveMinTemps = todayArchive
+  .map(r => r.temp_lo)
+  .filter(v => v != null)
+  .map(v => (v - 32) * 5 / 9);
 const gustsToday = todayHistory
   .map(r => r.gust10_kmh)
   .filter(v => v != null);
@@ -739,12 +744,15 @@ if (todayHistory.length > 1) {
   }
 }
   
-if (tempsToday.length > 0) {
+if (
+  archiveMaxTemps.length > 0 &&
+  archiveMinTemps.length > 0
+) {
   tempStats.innerText =
     "Max " +
-    Math.max(...tempsToday).toFixed(1) +
+    Math.max(...archiveMaxTemps).toFixed(1) +
     "°C | Min " +
-    Math.min(...tempsToday).toFixed(1) +
+    Math.min(...archiveMinTemps).toFixed(1) +
     "°C";
 }
 
