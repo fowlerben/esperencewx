@@ -598,8 +598,8 @@ const minutesNow =
 let fogTemp = null;
 
 if (
-  minutesNow < 540 ||   // before 9am
-  minutesNow >= 900     // after 3pm
+  minutesNow < 540 ||
+  minutesNow >= 900
 ) {
 
   const threePMCandidates =
@@ -621,7 +621,7 @@ if (
 
   const td3pm =
     threePMRecord?.dew_point_last != null
-      ? (threePMRecord.dew_point_last - 32) * 5 / 9
+      ? toC(threePMRecord.dew_point_last)
       : null;
 
   let tmax = null;
@@ -629,7 +629,7 @@ if (
   if (threePMRecord) {
 
     const startTime =
-      threePMRecord.time - (6 * 60 * 60);
+      threePMRecord.time - 21600;
 
     const maxTemps = archive
       .filter(r =>
@@ -638,12 +638,13 @@ if (
       )
       .map(r => r.temp_hi)
       .filter(v => v != null)
-      .map(v => (v - 32) * 5 / 9);
+      .map(v => toC(v));
 
     tmax =
-      maxTemps.length
+      maxTemps.length > 0
         ? Math.max(...maxTemps)
         : null;
+
   }
 
   fogTemp =
@@ -651,15 +652,10 @@ if (
       td3pm != null &&
       tmax != null
     )
+      ? td3pm - 0.2 * (tmax - td3pm)
+      : null;
 
-
-const fogTemp =
-  (
-    td3pm != null &&
-    tmax != null
-  )
-    ? td3pm - 0.2 * (tmax - td3pm)
-    : null;
+}
   
 if (!latestHistory) {
   return;
