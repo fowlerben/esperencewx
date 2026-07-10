@@ -204,11 +204,12 @@ jobs:
           | map(add)
             ' historic.json > archive_records.json
 
-            jq -s '
-              add
-              | unique_by(.time)
-              | sort_by(.time)
-            ' archive_history.json archive_records.json > archive_tmp.json
+          jq -s '
+            add
+            | sort_by(.time)
+            | group_by(.time)
+            | map(add)
+          ' archive_history.json archive_records.json > archive_tmp.json
 
             mv archive_tmp.json archive_history.json
 
