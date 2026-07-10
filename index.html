@@ -1048,7 +1048,7 @@ if (
   minT <= dewC
 ) {
 
-  dewText = "Dew Likely";
+  dewText = "Dew Present";
 
 }
 
@@ -1057,7 +1057,7 @@ if (
   leafValue >= 5 &&
   minT != null &&
   dewC != null &&
-  (minT - dewC) > 1.0
+  (minT - dewC) > 0.0
 ) {
 
   dewText = "Dew Evaporating";
