@@ -367,8 +367,13 @@
 
 <!-- ✅ NEW -->
 <div class="card">DPD<div class="value" id="dpd"></div></div>
-<div class="card">Terrestrial DPD<div class="value" id="tdpd"></div></div>
 
+<div class="card">
+  Fog Temp
+  <div class="value" id="fogTemp"></div>
+</div>
+
+<div class="card">Terrestrial DPD<div class="value" id="tdpd"></div></div>
 </div>
 </div>
 
@@ -530,6 +535,12 @@ const data=await res.json();
 const historyRes = await fetch("/esperencewx/history.json?"+Date.now());
 const history = await historyRes.json();
 
+const archiveRes =
+  await fetch("/esperencewx/archive_history.json?" + Date.now());
+
+const archive =
+  await archiveRes.json();
+  
 if(data.generated_at){
 document.getElementById("dataTime").innerText =
   "Data timestamp: " +
@@ -551,10 +562,71 @@ const todayHistory = history.filter(r => {
     { timeZone: "Australia/Melbourne" }
   );
 
+const todayArchive = archive.filter(r => {
+
+  const recordDate =
+    new Date(r.time * 1000).toLocaleDateString(
+      "en-AU",
+      { timeZone: "Australia/Melbourne" }
+    );
+
+  return recordDate === todayMelbourne;
+
+});
+
   return recordDate === todayMelbourne;
 });
 const latestHistory =
   todayHistory[todayHistory.length - 1];
+
+const threePMRecord =
+  todayHistory.find(r => {
+
+    const t =
+      new Date(r.time * 1000);
+
+    return (
+      t.getHours() === 15 &&
+      t.getMinutes() < 5
+    );
+
+  });
+
+const td3pm =
+  threePMRecord?.dew_c ?? null;
+
+const maxTemps = todayArchive
+  .filter(r => {
+
+    const t =
+      new Date(r.time * 1000);
+
+    const mins =
+      t.getHours() * 60 +
+      t.getMinutes();
+
+    return (
+      mins >= 540 &&   // 09:00
+      mins <= 900      // 15:00
+    );
+
+  })
+  .map(r => r.temp_hi)
+  .filter(v => v != null)
+  .map(v => (v - 32) * 5 / 9);
+
+const tmax =
+  maxTemps.length > 0
+    ? Math.max(...maxTemps)
+    : null;
+
+const fogTemp =
+  (
+    td3pm != null &&
+    tmax != null
+  )
+    ? td3pm - 0.2 * (tmax - td3pm)
+    : null;
   
 if (!latestHistory) {
   return;
@@ -915,6 +987,11 @@ t3.innerText = t3C!=null ? t3C.toFixed(1)+" °C":"N/A";
 dpd.innerText = (tempC!=null && dewC!=null) 
   ? (tempC - dewC).toFixed(1) + " °C"
   : "N/A";
+
+document.getElementById("fogTemp").innerText =
+  fogTemp != null
+    ? fogTemp.toFixed(1) + " °C"
+    : "N/A";
 
 const temps = [t1C, t2C, t3C].filter(v => v!=null);
 
