@@ -204,6 +204,12 @@ jobs:
           | map(add)
             ' historic.json > archive_records.json
 
+          echo "Archive record count:"
+          jq 'length' archive_records.json
+          
+          echo "First record:"
+          jq '.[0]' archive_records.json
+
           jq -s '
             add
             | sort_by(.time)
