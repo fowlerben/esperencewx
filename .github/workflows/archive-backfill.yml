@@ -40,92 +40,114 @@ jobs:
 
             curl -s "$URL" > historic.json
 
-            echo "===== SENSOR LIST ====="
-            jq '.sensors[] | {lsid, sensor_type, data_structure_type}' historic.json
+            echo "===== LSID 553786 SAMPLE ====="
+            jq '.sensors[] | select(.lsid==553786) | .data[0]' historic.json
             
-            echo "===== LSID 838746 ====="
-            jq '.sensors[] | select(.lsid==838746)' historic.json
+            echo "===== LSID 838746 SAMPLE ====="
+            jq '.sensors[] | select(.lsid==838746) | .data[0]' historic.json
+            
+            echo "===== LSID 552869 SAMPLE ====="
+            jq '.sensors[] | select(.lsid==552869) | .data[0]' historic.json
+            
+            echo "===== LSID 551509 SAMPLE ====="
+            jq '.sensors[] | select(.lsid==551509) | .data[0]' historic.json
+            
+            echo "===== LSID 551510 SAMPLE ====="
+            jq '.sensors[] | select(.lsid==551510) | .data[0]' historic.json
 
             jq '
-            [
+          [
+            (
               .sensors[]
               | select(.lsid==553786)
               | .data[]
               | {
                   time: .ts,
-              
+          
                   temp_hi,
                   temp_lo,
                   temp_hi_at,
                   temp_lo_at,
-              
-                  temp_lo_1,
-                  temp_last_1,
-              
-                  temp_lo_2,
-                  temp_last_2,
-              
-                  temp_lo_3,
-                  temp_last_3,
-              
-                  wet_leaf_hi_1,
-                  wet_leaf_last_volt_1,
-              
+          
                   hum_hi,
                   hum_lo,
                   hum_hi_at,
                   hum_lo_at,
-
+          
                   dew_point_hi,
                   dew_point_lo,
                   dew_point_hi_at,
                   dew_point_lo_at,
-
+          
                   wet_bulb_hi,
                   wet_bulb_lo,
                   wet_bulb_hi_at,
                   wet_bulb_lo_at,
-
+          
                   heat_index_hi,
                   heat_index_hi_at,
-
+          
                   thw_index_hi,
                   thw_index_lo,
                   thw_index_hi_at,
                   thw_index_lo_at,
-
+          
                   thsw_index_hi,
                   thsw_index_lo,
                   thsw_index_hi_at,
                   thsw_index_lo_at,
-
+          
                   wind_speed_hi,
                   wind_speed_hi_at,
-
+          
                   rain_rate_hi_mm,
                   rain_rate_hi_in,
                   rain_rate_hi_clicks,
                   rain_rate_hi_at,
-
+          
                   rainfall_mm,
                   rainfall_in,
                   rainfall_clicks,
-
+          
                   solar_rad_hi,
                   solar_rad_hi_at,
-
+          
                   solar_energy,
-
+          
                   uv_index_hi,
                   uv_index_hi_at,
-
+          
                   uv_dose,
-
+          
                   wind_run,
-
+          
                   et
                 }
-            ]
+            ),
+          
+            (
+              .sensors[]
+              | select(.lsid==838746)
+              | .data[]
+              | {
+                  time: .ts,
+          
+                  temp_lo_1,
+                  temp_last_1,
+          
+                  temp_lo_2,
+                  temp_last_2,
+          
+                  temp_lo_3,
+                  temp_last_3,
+          
+                  wet_leaf_hi_1,
+                  wet_leaf_last_volt_1
+                }
+            )
+          ]
+          | group_by(.time)
+          | map(add)
             ' historic.json > archive_records.json
 
             jq -s '
