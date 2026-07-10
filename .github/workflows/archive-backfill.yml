@@ -40,21 +40,6 @@ jobs:
 
             curl -s "$URL" > historic.json
 
-            echo "===== LSID 553786 SAMPLE ====="
-            jq '.sensors[] | select(.lsid==553786) | .data[0]' historic.json
-            
-            echo "===== LSID 838746 SAMPLE ====="
-            jq '.sensors[] | select(.lsid==838746) | .data[0]' historic.json
-            
-            echo "===== LSID 552869 SAMPLE ====="
-            jq '.sensors[] | select(.lsid==552869) | .data[0]' historic.json
-            
-            echo "===== LSID 551509 SAMPLE ====="
-            jq '.sensors[] | select(.lsid==551509) | .data[0]' historic.json
-            
-            echo "===== LSID 551510 SAMPLE ====="
-            jq '.sensors[] | select(.lsid==551510) | .data[0]' historic.json
-
             jq '
           [
             (
@@ -69,36 +54,49 @@ jobs:
                   temp_hi_at,
                   temp_lo_at,
           
+                  temp_last,
+                  temp_avg,
+          
                   hum_hi,
                   hum_lo,
                   hum_hi_at,
                   hum_lo_at,
+                  hum_last,
           
                   dew_point_hi,
                   dew_point_lo,
                   dew_point_hi_at,
                   dew_point_lo_at,
+                  dew_point_last,
           
                   wet_bulb_hi,
                   wet_bulb_lo,
                   wet_bulb_hi_at,
                   wet_bulb_lo_at,
+                  wet_bulb_last,
           
                   heat_index_hi,
                   heat_index_hi_at,
+                  heat_index_last,
+          
+                  wind_chill_last,
           
                   thw_index_hi,
                   thw_index_lo,
                   thw_index_hi_at,
                   thw_index_lo_at,
+                  thw_index_last,
           
                   thsw_index_hi,
                   thsw_index_lo,
                   thsw_index_hi_at,
                   thsw_index_lo_at,
+                  thsw_index_last,
           
                   wind_speed_hi,
                   wind_speed_hi_at,
+                  wind_speed_avg,
+                  wind_dir_of_prevail,
           
                   rain_rate_hi_mm,
                   rain_rate_hi_in,
@@ -111,11 +109,13 @@ jobs:
           
                   solar_rad_hi,
                   solar_rad_hi_at,
+                  solar_rad_avg,
           
                   solar_energy,
           
                   uv_index_hi,
                   uv_index_hi_at,
+                  uv_index_avg,
           
                   uv_dose,
           
@@ -141,8 +141,62 @@ jobs:
                   temp_lo_3,
                   temp_last_3,
           
+                  temp_lo_4,
+                  temp_last_4,
+          
                   wet_leaf_hi_1,
+                  wet_leaf_last_1,
                   wet_leaf_last_volt_1
+                }
+            ),
+          
+            (
+              .sensors[]
+              | select(.lsid==552869)
+              | .data[]
+              | {
+                  time: .ts,
+          
+                  solar_rad_avg_552869: .solar_rad_avg,
+                  solar_rad_hi_552869: .solar_rad_hi,
+          
+                  uv_index_avg_552869: .uv_index_avg,
+                  uv_index_hi_552869: .uv_index_hi,
+          
+                  solar_energy_552869: .solar_energy
+                }
+            ),
+          
+            (
+              .sensors[]
+              | select(.lsid==551509)
+              | .data[]
+              | {
+                  time: .ts,
+          
+                  bar_absolute,
+                  bar_sea_level,
+          
+                  bar_hi,
+                  bar_lo
+                }
+            ),
+          
+            (
+              .sensors[]
+              | select(.lsid==551510)
+              | .data[]
+              | {
+                  time: .ts,
+          
+                  temp_in_last,
+                  hum_in_last,
+          
+                  dew_point_in,
+                  heat_index_in,
+          
+                  temp_in_hi,
+                  temp_in_lo
                 }
             )
           ]
