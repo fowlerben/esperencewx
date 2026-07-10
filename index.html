@@ -589,46 +589,69 @@ const todayArchive = archive.filter(r => {
 const latestHistory =
   todayHistory[todayHistory.length - 1];
 
-const threePMRecord =
-  todayHistory.find(r => {
+const nowMelbourne = new Date();
 
-    const t =
-      new Date(r.time * 1000);
+const minutesNow =
+  nowMelbourne.getHours() * 60 +
+  nowMelbourne.getMinutes();
 
-    return (
-      t.getHours() === 15 &&
-      t.getMinutes() < 5
-    );
+let fogTemp = null;
 
-  });
+if (
+  minutesNow < 540 ||   // before 9am
+  minutesNow >= 900     // after 3pm
+) {
 
-const td3pm =
-  threePMRecord?.dew_c ?? null;
+  const threePMCandidates =
+    archive.filter(r => {
 
-const maxTemps = todayArchive
-  .filter(r => {
+      const t = new Date(r.time * 1000);
 
-    const t =
-      new Date(r.time * 1000);
+      return (
+        t.getHours() === 15 &&
+        t.getMinutes() < 5
+      );
 
-    const mins =
-      t.getHours() * 60 +
-      t.getMinutes();
+    });
 
-    return (
-      mins >= 540 &&   // 09:00
-      mins <= 900      // 15:00
-    );
+  const threePMRecord =
+    threePMCandidates.length
+      ? threePMCandidates[threePMCandidates.length - 1]
+      : null;
 
-  })
-  .map(r => r.temp_hi)
-  .filter(v => v != null)
-  .map(v => (v - 32) * 5 / 9);
+  const td3pm =
+    threePMRecord?.dew_point_last != null
+      ? (threePMRecord.dew_point_last - 32) * 5 / 9
+      : null;
 
-const tmax =
-  maxTemps.length > 0
-    ? Math.max(...maxTemps)
-    : null;
+  let tmax = null;
+
+  if (threePMRecord) {
+
+    const startTime =
+      threePMRecord.time - (6 * 60 * 60);
+
+    const maxTemps = archive
+      .filter(r =>
+        r.time >= startTime &&
+        r.time <= threePMRecord.time
+      )
+      .map(r => r.temp_hi)
+      .filter(v => v != null)
+      .map(v => (v - 32) * 5 / 9);
+
+    tmax =
+      maxTemps.length
+        ? Math.max(...maxTemps)
+        : null;
+  }
+
+  fogTemp =
+    (
+      td3pm != null &&
+      tmax != null
+    )
+
 
 const fogTemp =
   (
