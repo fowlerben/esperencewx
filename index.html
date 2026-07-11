@@ -811,9 +811,24 @@ const tempC = toC(iss.temp);
 const dewC  = toC(iss.dew_point);
 
 const utc = new Date(data.generated_at * 1000);
+  
+const avgWindKt =
+  Math.round(
+    iss.wind_speed_avg_last_10_min * 0.868976
+  );
 
+const gustWindKt =
+  Math.round(
+    iss.wind_speed_hi_last_10_min * 0.868976
+  );
+
+const reportType =
+  avgWindKt >= 15 &&
+  gustWindKt >= 25
+    ? "SPECI"
+    : "METAR";
 const metarText =
-  "METAR ESWX " +
+  reportType + " ESWX " +
   String(utc.getUTCDate()).padStart(2, "0") +
   String(utc.getUTCHours()).padStart(2, "0") +
   String(utc.getUTCMinutes()).padStart(2, "0") +
@@ -821,14 +836,12 @@ const metarText =
   String(
     Math.round(iss.wind_dir_scalar_avg_last_10_min / 10) * 10
   ).padStart(3, "0") +
-  String(
-    Math.round(iss.wind_speed_avg_last_10_min)
-  ).padStart(2, "0") +
-  "G" +
-  String(
-    Math.round(iss.wind_speed_hi_last_10_min)
-  ).padStart(2, "0") +
-  "KT " +
+String(avgWindKt)
+  .padStart(2, "0") +
+"G" +
+String(gustWindKt)
+  .padStart(2, "0") +
+"KT " +
   Math.round(tempC) +
   "/" +
   Math.round(dewC) +
