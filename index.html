@@ -1081,6 +1081,31 @@ const wetRecordsOver5 =
     r => (r.leaf ?? 0) > 5
   );
 
+let currentWetMinutes = 0;
+
+for (
+  let i = todayHistory.length - 1;
+  i >= 0;
+  i--
+) {
+
+  if (
+    (todayHistory[i].leaf ?? 0) > 5
+  ) {
+
+    currentWetMinutes += 5;
+
+  } else {
+
+    break;
+
+  }
+
+}
+
+const currentWetHours =
+  currentWetMinutes / 60;
+
 const wetHoursOver5 =
   (wetRecordsOver5.length * 5) / 60;
 
@@ -1165,7 +1190,7 @@ if (
 
 }
 else if (
-  wetHoursOver5 >= 1 &&
+  currentWetHoursOver5 >= 1 &&
   terrDpd != null &&
   terrDpd > 0
 ) {
@@ -1174,7 +1199,7 @@ else if (
 
 }
 else if (
-  wetHoursOver5 >= 1 &&
+  currentWetHoursOver5 >= 1 &&
   terrDpd != null &&
   terrDpd <= 0
 ) {
@@ -1192,7 +1217,7 @@ else if (
     ) ||
     (
       wetNow &&
-      wetHoursOver5 < 1
+      currentWetHoursOver5 < 1
     )
   )
 ) {
