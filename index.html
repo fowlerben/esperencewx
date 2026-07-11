@@ -366,7 +366,10 @@
   Event Length
   <div class="value" id="dewEvent"></div>
 </div>
-
+<div class="card">
+  Surface State
+  <div class="value" id="surfaceState"></div>
+</div>
 <div class="card">Temp1<div class="value" id="t1"></div></div>
 <div class="card">Temp2<div class="value" id="t2"></div></div>
 <div class="card">Temp3<div class="value" id="t3"></div></div>
@@ -1277,7 +1280,18 @@ else if (
 
 dewAlert.innerHTML =
   dewText + "<br>" + frostText;
+let surfaceState = dewText;
 
+if (
+  frostText === "Frost Forming" ||
+  frostText === "Frost Present" ||
+  frostText === "Frost Melting"
+) {
+  surfaceState = frostText;
+}
+
+document.getElementById("surfaceState").innerText =
+  surfaceState;
 // Fire Danger
 fireAlert.classList.remove("warning");
 fireAlert.style.display = "none";
