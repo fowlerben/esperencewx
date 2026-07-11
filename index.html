@@ -827,6 +827,15 @@ const reportType =
   gustWindKt >= 25
     ? "SPECI"
     : "METAR";
+
+const rainCode =
+  rain10Min <= 0
+    ? ""
+    : rain10Min < 0.5
+      ? "-RA"
+      : rain10Min <= 1.6
+        ? "RA"
+        : "+RA";
 const metarText =
   reportType + " ESWX " +
   String(utc.getUTCDate()).padStart(2, "0") +
@@ -842,9 +851,10 @@ String(avgWindKt)
 String(gustWindKt)
   .padStart(2, "0") +
 "KT " +
-  Math.round(tempC) +
-  "/" +
-  Math.round(dewC) +
+(rainCode ? rainCode + " " : "") +
+Math.round(tempC) +
+"/" +
+Math.round(dewC) +
 " Q" +
 Math.floor(
   parseFloat(inHgToHpa(baro.bar_absolute))
