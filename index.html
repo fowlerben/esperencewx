@@ -1117,10 +1117,10 @@ if (dewC != null) {
     latestHistory.time - (4 * 60 * 60);
 
   const recentRecords =
-    todayHistory.filter(
+    history.filter(
       r => r.time >= lookbackTime
     );
-
+  
   for (const r of recentRecords) {
 
     const sensorTemps = [
