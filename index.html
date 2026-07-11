@@ -1056,12 +1056,73 @@ document.getElementById("fogTemp").innerText =
 const temps = [t1C, t2C, t3C].filter(v => v!=null);
 
 let minT = null;
+let terrDpd = null;
 
-if (temps.length > 0 && dewC!=null){
+if (temps.length > 0 && dewC != null) {
+
   minT = Math.min(...temps);
-  tdpd.innerText = (minT - dewC).toFixed(1) + " °C";
+
+  terrDpd = minT - dewC;
+
+  tdpd.innerText =
+    terrDpd.toFixed(1) + " °C";
+
 } else {
+
   tdpd.innerText = "N/A";
+
+}
+
+const wetNow =
+  (leafValue ?? 0) > 5;
+
+const wetRecordsOver5 =
+  todayHistory.filter(
+    r => (r.leaf ?? 0) > 5
+  );
+
+const wetHoursOver5 =
+  (wetRecordsOver5.length * 5) / 60;
+
+let terrDpdBelowZeroLast4h = false;
+
+if (dewC != null) {
+
+  const lookbackTime =
+    latestHistory.time - (4 * 60 * 60);
+
+  const recentRecords =
+    todayHistory.filter(
+      r => r.time >= lookbackTime
+    );
+
+  for (const r of recentRecords) {
+
+    const sensorTemps = [
+      r.temp1_c,
+      r.temp2_c,
+      r.temp3_c
+    ].filter(v => v != null);
+
+    if (sensorTemps.length === 0) {
+      continue;
+    }
+
+    const terrTemp =
+      Math.min(...sensorTemps);
+
+    const terrDpdHist =
+      terrTemp - r.dew_c;
+
+    if (terrDpdHist <= 0) {
+
+      terrDpdBelowZeroLast4h = true;
+      break;
+
+    }
+
+  }
+
 }
 
 // ✅ ALERTS
