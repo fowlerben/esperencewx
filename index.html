@@ -957,17 +957,17 @@ dewDuration.innerText =
 
 let lastWetTime = null;
 
-for (let i = todayHistory.length - 1; i > 0; i--) {
+for (let i = history.length - 1; i > 0; i--) {
 
   const currentWet =
-    (todayHistory[i].leaf ?? 0) >= 2;
+    (history[i].leaf ?? 0) > 5;
 
   const previousWet =
-    (todayHistory[i - 1].leaf ?? 0) >= 2;
+    (history[i - 1].leaf ?? 0) > 5;
 
   if (currentWet && !previousWet) {
 
-    lastWetTime = todayHistory[i].time;
+    lastWetTime = history[i].time;
     break;
 
   }
