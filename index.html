@@ -981,6 +981,13 @@ for (let i = todayHistory.length - 1; i > 0; i--) {
 
 }
 
+    lastWetTime = todayHistory[i].time;
+    break;
+
+  }
+
+}
+
 lastWet.innerText =
   lastWetTime
     ? new Date(lastWetTime * 1000)
