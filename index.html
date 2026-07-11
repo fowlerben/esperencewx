@@ -1148,36 +1148,64 @@ if (tempC!=null && dewC!=null){
 dewAlert.classList.remove("warning");
 
 let dewText = "No Dew";
-let frostText = "No Frost";
 
 if (
-  leafValue >= 2 &&
-  minT != null &&
-  dewC != null &&
-  minT <= dewC
+  wetNow &&
+  !terrDpdBelowZeroLast4h
 ) {
 
-  dewText = "Dew Confirmed";
+  const rainLastHour =
+    iss.rainfall_last_60_min_mm ?? 0;
 
-} else if (
-  minT != null &&
-  dewC != null &&
-  minT <= dewC
+  dewText =
+    rainLastHour >= 0.2
+      ? "Rain"
+      : "Drizzle";
+
+}
+else if (
+  wetHoursOver5 >= 1 &&
+  terrDpd != null &&
+  terrDpd > 0
+) {
+
+  dewText = "Dew Evaporating";
+
+}
+else if (
+  wetHoursOver5 >= 1 &&
+  terrDpd != null &&
+  terrDpd <= 0
 ) {
 
   dewText = "Dew Present";
 
 }
-
-if (
-  dewHours >= 1 &&
-  leafValue >= 5 &&
-  minT != null &&
-  dewC != null &&
-  (minT - dewC) > 0.0
+else if (
+  terrDpd != null &&
+  terrDpd <= 0 &&
+  (
+    (
+      (leafValue ?? 0) >= 1 &&
+      (leafValue ?? 0) <= 5
+    ) ||
+    (
+      wetNow &&
+      wetHoursOver5 < 1
+    )
+  )
 ) {
 
-  dewText = "Dew Evaporating";
+  dewText = "Dew Forming";
+
+}
+else if (
+  terrDpd != null &&
+  terrDpd <= 0 &&
+  (leafValue ?? 0) === 0
+) {
+
+  dewText = "Dew Possible";
 
 }
 
