@@ -682,8 +682,49 @@ if (
     tenMinRecord.rain_daily_mm;
 }
 
-const rainToday =
-  latestHistory?.rain_daily_mm ?? 0;  
+const rfStart = new Date();
+
+if (rfStart.getHours() < 9) {
+  rfStart.setDate(rfStart.getDate() - 1);
+}
+
+rfStart.setHours(9, 0, 0, 0);
+
+const rfStartUnix =
+  Math.floor(rfStart.getTime() / 1000);
+
+const rfRecords =
+  history.filter(
+    r => r.time >= rfStartUnix
+  );
+
+let rainSince9am = 0;
+
+for (let i = 1; i < rfRecords.length; i++) {
+
+  const current =
+    rfRecords[i].rain_daily_mm;
+
+  const previous =
+    rfRecords[i - 1].rain_daily_mm;
+
+  if (
+    current == null ||
+    previous == null
+  ) {
+    continue;
+  }
+
+  let increment =
+    current - previous;
+
+  if (increment < 0) {
+    increment = current;
+  }
+
+  rainSince9am += increment;
+
+}
 const chartLabels = todayHistory.map(r =>
   new Date(r.time * 1000).toLocaleTimeString(
     "en-AU",
@@ -865,7 +906,7 @@ Math.floor(
 " RF" +
 rain10Min.toFixed(1).padStart(4, "0") +
 "/" +
-rainToday.toFixed(1).padStart(5, "0");
+rainSince9am.toFixed(1).padStart(5, "0");
 document.getElementById("metarText").innerText =
   metarText;
 
