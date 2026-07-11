@@ -946,7 +946,7 @@ leaf.innerText =
 
 const wetRecords =
   todayHistory.filter(
-    r => (r.leaf ?? 0) >= 2
+    r => (r.leaf ?? 0) > 5
   );
 
 const dewHours =
@@ -959,12 +959,12 @@ let lastWetTime = null;
 
 for (let i = todayHistory.length - 1; i > 0; i--) {
 
-  const currentWet =
-    (todayHistory[i].leaf ?? 0) >= 2;
-
-  const previousWet =
-    (todayHistory[i - 1].leaf ?? 0) >= 2;
-
+(currentWet =
+  (todayHistory[i].leaf ?? 0) > 5)
+  
+(previousWet =
+  (todayHistory[i - 1].leaf ?? 0) > 5)
+  
   if (currentWet && !previousWet) {
 
     lastWetTime = todayHistory[i].time;
@@ -1211,15 +1211,26 @@ else if (
 }
 
 if (
-  leafValue >= 2 &&
+  wetHoursOver5 >= 1 &&
   minT != null &&
   minT < 0
 ) {
 
-  frostText = "Frost Depositing";
+  frostText = "Frost Present";
   dewAlert.classList.add("warning");
 
-} else if (
+}
+else if (
+  wetNow &&
+  minT != null &&
+  minT < 0
+) {
+
+  frostText = "Frost Forming";
+  dewAlert.classList.add("warning");
+
+}
+else if (
   frostOccurredThisEvent &&
   minT != null &&
   minT > 0
@@ -1227,7 +1238,10 @@ if (
 
   frostText = "Frost Melting";
 
-} else if (
+}
+else if (
+  terrDpd != null &&
+  terrDpd <= 0 &&
   minT != null &&
   minT < 0
 ) {
