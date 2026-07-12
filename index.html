@@ -1186,13 +1186,29 @@ if (
   !terrDpdBelowZeroLast4h
 ) {
 
-  const rainLastHour =
-    iss.rainfall_last_60_min_mm ?? 0;
+const rainLast30Min =
+  (iss.rainfall_last_15_min_mm ?? 0) +
+  Math.max(
+    0,
+    (iss.rainfall_last_60_min_mm ?? 0) -
+    (iss.rainfall_last_15_min_mm ?? 0)
+  ) / 3;
 
-  dewText =
-    rainLastHour >= 0.2
-      ? "Rain"
-      : "Drizzle";
+if (rainLast30Min >= 0.2) {
+
+  dewText = "Rain";
+
+}
+else if (rainLast30Min > 0) {
+
+  dewText = "Drizzle";
+
+}
+else {
+
+  dewText = "No Dew";
+
+}
 
 }
 else if (
@@ -1283,7 +1299,8 @@ else if (
 
 dewAlert.innerHTML =
   dewText + "<br>" + frostText;
-let surfaceState = dewText;
+let surfaceState =
+  wetNow ? "Wet" : dewText;
 
 if (
   frostText === "Frost Forming" ||
