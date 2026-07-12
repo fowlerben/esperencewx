@@ -872,44 +872,6 @@ const reportType =
     ? "SPECI"
     : "METAR";
 
-const rainCode =
-  rain10Min <= 0
-    ? ""
-    : rain10Min < 0.5
-      ? "-RA"
-      : rain10Min <= 1.6
-        ? "RA"
-        : "+RA";
-const metarText =
-  reportType + " ESWX " +
-  String(utc.getUTCDate()).padStart(2, "0") +
-  String(utc.getUTCHours()).padStart(2, "0") +
-  String(utc.getUTCMinutes()).padStart(2, "0") +
-  "Z AUTO " +
-  String(
-    Math.round(iss.wind_dir_scalar_avg_last_10_min / 10) * 10
-  ).padStart(3, "0") +
-String(avgWindKt)
-  .padStart(2, "0") +
-"G" +
-String(gustWindKt)
-  .padStart(2, "0") +
-"KT " +
-(rainCode ? rainCode + " " : "") +
-Math.round(tempC) +
-"/" +
-Math.round(dewC) +
-" Q" +
-Math.floor(
-  parseFloat(inHgToHpa(baro.bar_absolute))
-) +
-" RF" +
-rain10Min.toFixed(1).padStart(4, "0") +
-"/" +
-rainSince9am.toFixed(1).padStart(5, "0");
-document.getElementById("metarText").innerText =
-  metarText;
-
 temp.innerText = tempC!=null ? tempC.toFixed(1)+" °C":"N/A";
   tempTrend.innerText = tempTrendText;
 dew.innerText  = dewC!=null ? dewC.toFixed(1)+" °C":"N/A";
@@ -1333,6 +1295,58 @@ if (
 
 document.getElementById("surfaceState").innerText =
   surfaceState;
+
+let rainCode = "";
+
+if (dewText === "Drizzle") {
+
+  rainCode = "DZ";
+
+}
+else if (dewText === "Rain") {
+
+  rainCode =
+    rain10Min < 0.5
+      ? "-RA"
+      : rain10Min <= 1.6
+        ? "RA"
+        : "+RA";
+
+}
+
+const metarText =
+  reportType + " ESWX " +
+  String(utc.getUTCDate()).padStart(2, "0") +
+  String(utc.getUTCHours()).padStart(2, "0") +
+  String(utc.getUTCMinutes()).padStart(2, "0") +
+  "Z AUTO " +
+  String(
+    Math.round(
+      iss.wind_dir_scalar_avg_last_10_min / 10
+    ) * 10
+  ).padStart(3, "0") +
+  String(avgWindKt).padStart(2, "0") +
+  "G" +
+  String(gustWindKt).padStart(2, "0") +
+  "KT " +
+  (rainCode ? rainCode + " " : "") +
+  Math.round(tempC) +
+  "/" +
+  Math.round(dewC) +
+  " Q" +
+  Math.floor(
+    parseFloat(
+      inHgToHpa(baro.bar_absolute)
+    )
+  ) +
+  " RF" +
+  rain10Min.toFixed(1).padStart(4, "0") +
+  "/" +
+  rainSince9am.toFixed(1).padStart(5, "0");
+
+document.getElementById("metarText").innerText =
+  metarText;  
+  
 // Fire Danger
 fireAlert.classList.remove("warning");
 fireAlert.style.display = "none";
