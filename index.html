@@ -1177,9 +1177,10 @@ if (tempC!=null && dewC!=null){
 
 // Dew / Frost
 dewAlert.classList.remove("warning");
+dewAlert.style.display = "none";
 
-let dewText = "No Dew";
-let frostText = "No Frost";
+let dewText = "";
+let frostText = "";
   
 if (
   wetNow &&
@@ -1206,7 +1207,7 @@ else if (rainLast30Min > 0) {
 }
 else {
 
-  dewText = "No Dew";
+  dewText = "";
 
 }
 
@@ -1297,8 +1298,31 @@ else if (
 
 }
 
-dewAlert.innerHTML =
-  dewText + "<br>" + frostText;
+if (
+  dewText ||
+  frostText
+) {
+
+  dewAlert.style.display = "block";
+
+  if (dewText && frostText) {
+
+    dewAlert.innerHTML =
+      dewText + "<br>" + frostText;
+
+  } else {
+
+    dewAlert.innerHTML =
+      dewText || frostText;
+
+  }
+
+}
+else {
+
+  dewAlert.style.display = "none";
+
+}
 let surfaceState =
   wetNow ? "Wet" : dewText;
 
