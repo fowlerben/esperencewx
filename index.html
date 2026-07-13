@@ -833,38 +833,39 @@ for (let i = 0; i < labels.length; i++) {
 }
 ctx.fillStyle = "#ffffff";
 
-*tx.beginPath();
+ctx.beginPath();
 ctx.arc(
   330,
-  * - 38,
+  h - 38,
   5,
   0,
-  Math.PI** 2
+  Math.PI * 2
 );
 ctx.fill();
 
 ctx.fillText(
-* "Start",
+  "Start",
   342,
   h - 34
 );
 
-ctx.*illStyle = "#ff0000";
+ctx.fillStyle = "#ff0000";
 
-ctx.beginPa*h();
+ctx.beginPath();
 ctx.arc(
   330,
   h - 18,
-  5*
+  5,
   0,
   Math.PI * 2
 );
-ctx.fill();*
+ctx.fill();
+
 ctx.fillStyle = "#ffffff";
 
-ctx.f*llText(
+ctx.fillText(
   "Current",
-  342*
+  342,
   h - 14
 );
 }
