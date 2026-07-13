@@ -267,7 +267,22 @@
 
   </div>
 </div>
-  
+<div class="section">
+  <h2>Wind Hodograph</h2>
+
+  <div class="card">
+    <canvas
+      id="windRadarChart"
+      width="500"
+      height="500"
+      style="
+        width:100%;
+        max-width:500px;
+        background:#000;
+      ">
+    </canvas>
+  </div>
+</div>  
 <!-- COMFORT -->
 <div class="section">
 <h2>Heat & Comfort</h2>
@@ -536,6 +551,8 @@ setInterval(updateTime,1000);updateTime();
 let tempChart = null;
 let pressureChart = null;
 
+/* PASTE drawWindRadar() HERE */
+
 async function loadWeather(){
 
 const res=await fetch("/esperencewx/weather.json?"+Date.now(), { cache: "no-store" });
@@ -752,7 +769,7 @@ const archiveMinTemps = todayArchive
 const gustsToday = todayHistory
   .map(r => r.gust10_kmh)
   .filter(v => v != null);
-  
+drawWindRadar(todayHistory); 
 let pressureTrendText = "";
 
 if (todayHistory.length > 1) {
