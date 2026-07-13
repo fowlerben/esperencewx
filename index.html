@@ -268,7 +268,7 @@
   </div>
 </div>
 <div class="section">
-  <h2>Wind Hodograph</h2>
+  <h2>Wind Speed and Direction Map</h2>
 
   <div class="card">
     <canvas
@@ -577,7 +577,7 @@ function drawWindRadar(history) {
   );
 
   const maxRadius =
-    Math.min(w, h) * 0.45;
+    Math.min(w, h) * 0.38;
 
   ctx.strokeStyle = "#666";
 
@@ -607,18 +607,45 @@ function drawWindRadar(history) {
 
   }
 
-  ctx.strokeStyle = "#00ff00";
+const colours = [
+  "#ff3333", // 00-03
+  "#ff8800", // 03-06
+  "#ffe600", // 06-09
+  "#44dd44", // 09-12
+  "#00cccc", // 12-15
+  "#3399ff", // 15-18
+  "#aa44ff", // 18-21
+  "#ff44aa"  // 21-24
+];
+
+for (let block = 0; block < 8; block++) {
+
+  const startHour = block * 3;
+  const endHour = startHour + 3;
+
+  const records = history.filter(r => {
+
+    const d =
+      new Date(r.time * 1000);
+
+    const h = d.getHours();
+
+    return (
+      h >= startHour &&
+      h < endHour &&
+      r.wind10_kmh != null &&
+      r.wind10_dir != null
+    );
+
+  });
+
+  if (records.length < 2) continue;
+
+  ctx.strokeStyle = colours[block];
   ctx.lineWidth = 2;
   ctx.beginPath();
 
-  let first = true;
-
-  history.forEach(r => {
-
-    if (
-      r.wind10_kmh == null ||
-      r.wind10_dir == null
-    ) return;
+  records.forEach((r, i) => {
 
     const radius =
       (r.wind10_kmh / maxSpeed) *
@@ -629,17 +656,14 @@ function drawWindRadar(history) {
       Math.PI / 180;
 
     const x =
-      cx +
-      radius * Math.sin(rad);
+      cx + radius * Math.sin(rad);
 
     const y =
-      cy -
-      radius * Math.cos(rad);
+      cy - radius * Math.cos(rad);
 
-    if (first) {
+    if (i === 0) {
 
       ctx.moveTo(x, y);
-      first = false;
 
     } else {
 
@@ -649,7 +673,64 @@ function drawWindRadar(history) {
 
   });
 
-  ctx.stroke();
+ctx.stroke();
+
+}
+
+/* Compass labels */
+
+ctx.fillStyle = "#ffffff";
+ctx.font = "14px Arial";
+
+ctx.fillText("N", cx - 5, 20);
+ctx.fillText("E", w - 20, cy + 5);
+ctx.fillText("S", cx - 5, h - 10);
+ctx.fillText("W", 10, cy + 5);
+
+/* Legend */
+
+const labels = [
+  "00-03",
+  "03-06",
+  "06-09",
+  "09-12",
+  "12-15",
+  "15-18",
+  "18-21",
+  "21-24"
+];
+
+ctx.font = "12px Arial";
+
+let lx = 10;
+let ly = h - 35;
+
+for (let i = 0; i < labels.length; i++) {
+
+  if (i === 4) {
+    lx = 10;
+    ly += 18;
+  }
+
+  ctx.fillStyle = colours[i];
+  ctx.fillRect(
+    lx,
+    ly - 10,
+    12,
+    12
+  );
+
+  ctx.fillStyle = "#ffffff";
+
+  ctx.fillText(
+    labels[i],
+    lx + 18,
+    ly
+  );
+
+  lx += 80;
+}
+
 }
 
 async function loadWeather(){
