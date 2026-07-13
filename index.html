@@ -581,17 +581,25 @@ function drawWindRadar(history) {
 
   ctx.strokeStyle = "#666";
 
-  for (let s = 10; s <= maxSpeed; s += 10) {
+for (let s = 10; s <= maxSpeed; s += 10) {
 
-    const r =
-      (s / maxSpeed) * maxRadius;
+  const r =
+    (s / maxSpeed) * maxRadius;
 
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.stroke();
 
-  }
+  ctx.fillStyle = "#aaaaaa";
+  ctx.font = "10px Arial";
 
+  ctx.fillText(
+    s + " km/h",
+    cx + r + 4,
+    cy - 2
+  );
+
+}
   for (let d = 0; d < 360; d += 30) {
 
     const rad =
@@ -645,7 +653,7 @@ for (let block = 0; block < 8; block++) {
   ctx.lineWidth = 2;
   ctx.beginPath();
 
-  records.forEach((r, i) => {
+records.forEach((r, i) => {
 
     const radius =
       (r.wind10_kmh / maxSpeed) *
@@ -673,10 +681,79 @@ for (let block = 0; block < 8; block++) {
 
   });
 
-ctx.stroke();
+  if (
+    block === 0 &&
+    records.length > 0
+  ) {
+
+    const first = records[0];
+
+    const radius =
+      (first.wind10_kmh / maxSpeed) *
+      maxRadius;
+
+    const rad =
+      first.wind10_dir *
+      Math.PI / 180;
+
+    const x =
+      cx + radius * Math.sin(rad);
+
+    const y =
+      cy - radius * Math.cos(rad);
+
+    ctx.fillStyle = "#ffffff";
+
+    ctx.beginPath();
+    ctx.arc(
+      x,
+      y,
+      5,
+      0,
+      Math.PI * 2
+    );
+    ctx.fill();
+
+  }
+
+  ctx.stroke();
+}
+const latest =
+  history[history.length - 1];
+
+if (
+  latest &&
+  latest.wind10_kmh != null &&
+  latest.wind10_dir != null
+) {
+
+  const radius =
+    (latest.wind10_kmh / maxSpeed) *
+    maxRadius;
+
+  const rad =
+    latest.wind10_dir *
+    Math.PI / 180;
+
+  const x =
+    cx + radius * Math.sin(rad);
+
+  const y =
+    cy - radius * Math.cos(rad);
+
+  ctx.fillStyle = "#ff0000";
+
+  ctx.beginPath();
+  ctx.arc(
+    x,
+    y,
+    6,
+    0,
+    Math.PI * 2
+  );
+  ctx.fill();
 
 }
-
 /* Compass labels */
 
 ctx.fillStyle = "#ffffff";
@@ -686,6 +763,30 @@ ctx.fillText("N", cx - 5, 20);
 ctx.fillText("E", w - 20, cy + 5);
 ctx.fillText("S", cx - 5, h - 10);
 ctx.fillText("W", 10, cy + 5);
+ctx.fillStyle = "#cccccc";
+ctx.font = "11px Arial";
+
+for (let d = 30; d < 360; d += 30) {
+
+  const rad =
+    d * Math.PI / 180;
+
+  const labelRadius =
+    maxRadius + 25;
+
+  const x =
+    cx + labelRadius * Math.sin(rad);
+
+  const y =
+    cy - labelRadius * Math.cos(rad);
+
+  ctx.fillText(
+    d + "°",
+    x - 10,
+    y + 4
+  );
+
+}
 
 /* Legend */
 
@@ -730,7 +831,42 @@ for (let i = 0; i < labels.length; i++) {
 
   lx += 80;
 }
+ctx.fillStyle = "#ffffff";
 
+*tx.beginPath();
+ctx.arc(
+  330,
+  * - 38,
+  5,
+  0,
+  Math.PI** 2
+);
+ctx.fill();
+
+ctx.fillText(
+* "Start",
+  342,
+  h - 34
+);
+
+ctx.*illStyle = "#ff0000";
+
+ctx.beginPa*h();
+ctx.arc(
+  330,
+  h - 18,
+  5*
+  0,
+  Math.PI * 2
+);
+ctx.fill();*
+ctx.fillStyle = "#ffffff";
+
+ctx.f*llText(
+  "Current",
+  342*
+  h - 14
+);
 }
 
 async function loadWeather(){
