@@ -265,9 +265,19 @@
       </div>
     </div>
 
-  </div>
 </div>
-  
+</div>
+
+<div class="section">
+
+  <h2>Wind Radar Map</h2>
+
+  <div class="card" style="height:450px;">
+    <canvas id="windRadarChart"></canvas>
+  </div>
+
+</div>
+
 <!-- COMFORT -->
 <div class="section">
 <h2>Heat & Comfort</h2>
@@ -535,6 +545,7 @@ setInterval(updateTime,1000);updateTime();
 
 let tempChart = null;
 let pressureChart = null;
+let windRadarChart = null;
 
 async function loadWeather(){
 
@@ -1650,8 +1661,190 @@ if (!pressureChart) {
   pressureChart.update();
 
 }
+
+const windColours = [
+  "#ff3333",
+  "#ff8800",
+  "#ffd700",
+  "#33cc33",
+  "#00cccc",
+  "#3399ff",
+  "#9933ff",
+  "#ff33aa"
+];
+
+const windDatasets = [];
+
+for (let block = 0; block < 8; block++) {
+
+  const startHour = block * 3;
+  const endHour = startHour + 3;
+
+  const records = todayHistory.filter(r => {
+
+    const d = new Date(r.time * 1000);
+
+    const hour = parseInt(
+      d.toLocaleString(
+        "en-AU",
+        {
+          timeZone: "Australia/Melbourne",
+          hour: "2-digit",
+          hour12: false
+        }
+      )
+    );
+
+    return (
+      hour >= startHour &&
+      hour < endHour &&
+      r.wind10_kmh != null &&
+      r.wind10_dir != null
+    );
+
+  });
+
+  if (records.length === 0) continue;
+
+  windDatasets.push({
+
+    label:
+      String(startHour).padStart(2, "0") +
+      "-" +
+      String(endHour).padStart(2, "0"),
+
+    borderColor: windColours[block],
+
+    backgroundColor: windColours[block],
+
+    showLine: true,
+
+    pointRadius: 1,
+
+    tension: 0,
+
+    fill: false,
+
+    data: records.map(r => {
+
+      const angle =
+        (90 - r.wind10_dir) *
+        Math.PI / 180;
+
+      return {
+        x: r.wind10_kmh * Math.cos(angle),
+        y: r.wind10_kmh * Math.sin(angle)
+      };
+
+    })
+
+  });
+
 }
 
+const maxWind =
+  Math.max(
+    30,
+    ...todayHistory.map(
+      r => r.wind10_kmh || 0
+    )
+  );
+
+const chartLimit =
+  Math.ceil(maxWind / 10) * 10;
+
+if (!windRadarChart) {
+
+  windRadarChart = new Chart(
+    document.getElementById("windRadarChart"),
+    {
+
+      type: "scatter",
+
+      data: {
+        datasets: windDatasets
+      },
+
+      options: {
+
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false,
+
+        plugins: {
+
+          legend: {
+
+            labels: {
+              color: "white"
+            }
+
+          }
+
+        },
+
+        scales: {
+
+          x: {
+
+            min: -chartLimit,
+            max: chartLimit,
+
+            grid: {
+              color: "#555"
+            },
+
+            ticks: {
+              color: "white"
+            }
+
+          },
+
+          y: {
+
+            min: -chartLimit,
+            max: chartLimit,
+
+            grid: {
+              color: "#555"
+            },
+
+            ticks: {
+              color: "white"
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  );
+
+} else {
+
+  windRadarChart.options.scales.x.min =
+    -chartLimit;
+
+  windRadarChart.options.scales.x.max =
+    chartLimit;
+
+  windRadarChart.options.scales.y.min =
+    -chartLimit;
+
+  windRadarChart.options.scales.y.max =
+    chartLimit;
+
+  windRadarChart.data.datasets =
+    windDatasets;
+
+  windRadarChart.update();
+
+}
+
+}
 loadWeather();
 setInterval(loadWeather,3000);
 
