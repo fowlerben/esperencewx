@@ -551,7 +551,106 @@ setInterval(updateTime,1000);updateTime();
 let tempChart = null;
 let pressureChart = null;
 
-/* PASTE drawWindRadar() HERE */
+function drawWindRadar(history) {
+
+  const canvas =
+    document.getElementById("windRadarChart");
+
+  if (!canvas) return;
+
+  const ctx = canvas.getContext("2d");
+
+  const w = canvas.width;
+  const h = canvas.height;
+
+  ctx.clearRect(0, 0, w, h);
+
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, w, h);
+
+  const cx = w / 2;
+  const cy = h / 2;
+
+  const maxSpeed = Math.max(
+    60,
+    ...history.map(r => r.wind10_kmh || 0)
+  );
+
+  const maxRadius =
+    Math.min(w, h) * 0.45;
+
+  ctx.strokeStyle = "#666";
+
+  for (let s = 10; s <= maxSpeed; s += 10) {
+
+    const r =
+      (s / maxSpeed) * maxRadius;
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+
+  }
+
+  for (let d = 0; d < 360; d += 30) {
+
+    const rad =
+      d * Math.PI / 180;
+
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(
+      cx + maxRadius * Math.sin(rad),
+      cy - maxRadius * Math.cos(rad)
+    );
+    ctx.stroke();
+
+  }
+
+  ctx.strokeStyle = "#00ff00";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+
+  let first = true;
+
+  history.forEach(r => {
+
+    if (
+      r.wind10_kmh == null ||
+      r.wind10_dir == null
+    ) return;
+
+    const radius =
+      (r.wind10_kmh / maxSpeed) *
+      maxRadius;
+
+    const rad =
+      r.wind10_dir *
+      Math.PI / 180;
+
+    const x =
+      cx +
+      radius * Math.sin(rad);
+
+    const y =
+      cy -
+      radius * Math.cos(rad);
+
+    if (first) {
+
+      ctx.moveTo(x, y);
+      first = false;
+
+    } else {
+
+      ctx.lineTo(x, y);
+
+    }
+
+  });
+
+  ctx.stroke();
+}
 
 async function loadWeather(){
 
