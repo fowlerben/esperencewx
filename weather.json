@@ -210,12 +210,12 @@
       "lsid": 551509,
       "data": [
         {
-          "bar_absolute": 30.085,
+          "bar_absolute": 30.086,
           "tz_offset": 36000,
-          "bar_sea_level": 30.482,
+          "bar_sea_level": 30.483,
           "bar_offset": 0.012,
-          "bar_trend": 0.014,
-          "ts": 1784055352
+          "bar_trend": 0.016,
+          "ts": 1784055652
         }
       ],
       "sensor_type": 242,
@@ -225,11 +225,11 @@
       "lsid": 551510,
       "data": [
         {
-          "temp_in": 62.1,
+          "temp_in": 62,
           "tz_offset": 36000,
-          "heat_index_in": 59.9,
-          "dew_point_in": 42.2,
-          "ts": 1784055352,
+          "heat_index_in": 59.8,
+          "dew_point_in": 42.1,
+          "ts": 1784055652,
           "hum_in": 48
         }
       ],
@@ -315,6 +315,6 @@
       "data_structure_type": 18
     }
   ],
-  "generated_at": 1784055654,
+  "generated_at": 1784055922,
   "station_id": 144429
 }
