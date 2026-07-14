@@ -595,8 +595,8 @@ for (let s = 10; s <= maxSpeed; s += 10) {
 
   ctx.fillText(
     s + " km/h",
-    cx + r + 4,
-    cy - 2
+    cx + r - 15,
+    cy - 8
   );
 
 }
@@ -702,7 +702,14 @@ records.forEach((r, i) => {
     const y =
       cy - radius * Math.cos(rad);
 
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = "#000000";
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 2;
+    
+    ctx.beginPath();
+    ctx.arc(x, y, 6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
 
     ctx.beginPath();
     ctx.arc(
