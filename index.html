@@ -571,17 +571,30 @@ function drawWindRadar(history) {
   const cx = w / 2;
   const cy = h / 2;
 
-  const maxSpeed = Math.max(
-    60,
-    ...history.map(r => r.wind10_kmh || 0)
-  );
+const strongestWind = Math.max(
+  ...history.map(r => r.wind10_kmh || 0)
+);
+
+const maxSpeed =
+  Math.ceil(
+    strongestWind * 1.25 / 10
+  ) * 10;
 
   const maxRadius =
     Math.min(w, h) * 0.38;
 
   ctx.strokeStyle = "#666";
 
-for (let s = 10; s <= maxSpeed; s += 10) {
+const ringStep =
+  maxSpeed <= 30 ? 5 :
+  maxSpeed <= 60 ? 10 :
+  20;
+
+for (
+  let s = ringStep;
+  s <= maxSpeed;
+  s += ringStep
+) {
 
   const r =
     (s / maxSpeed) * maxRadius;
