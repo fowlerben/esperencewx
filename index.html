@@ -915,6 +915,11 @@ const archiveRes =
 
 const archive =
   await archiveRes.json();
+  const windRes =
+  await fetch("/esperencewx/wind_history.json?" + Date.now());
+
+const windArchive =
+  await windRes.json();
   const windDateSelector =
   document.getElementById(
     "windDateSelector"
@@ -925,9 +930,9 @@ if (
   windDateSelector.options.length === 0
 ) {
 
-  const availableDates =
-    [...new Set(
-      archive.map(r =>
+const availableDates =
+  [...new Set(
+    windArchive.map(r =>
         new Date(r.time * 1000)
           .toLocaleDateString(
             "en-AU",
@@ -1193,7 +1198,7 @@ const gustsToday = todayHistory
   .map(r => r.gust10_kmh)
   .filter(v => v != null);
 const windHistory =
-  archive.filter(r => {
+  windArchive.filter(r => {
 
     const recordDate =
       new Date(r.time * 1000)
