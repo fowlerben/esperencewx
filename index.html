@@ -268,7 +268,20 @@
   </div>
 </div>
 <div class="section">
-  <h2>Wind Speed and Direction Map</h2>
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <h2>Wind Speed and Direction Map</h2>
+  
+    <select
+      id="windDateSelector"
+      style="
+        background:#1f3b4d;
+        color:white;
+        border:1px solid #4a6a7d;
+        padding:4px 8px;
+        border-radius:4px;
+      ">
+    </select>
+  </div>
 
   <div class="card">
     <canvas
@@ -551,6 +564,8 @@ setInterval(updateTime,1000);updateTime();
 let tempChart = null;
 let pressureChart = null;
 
+let selectedWindDate = null;
+
 function drawWindRadar(history) {
 
   const canvas =
@@ -572,13 +587,16 @@ function drawWindRadar(history) {
   const cy = h / 2;
 
 const strongestWind = Math.max(
+  0,
   ...history.map(r => r.wind10_kmh || 0)
 );
 
-const maxSpeed =
+const maxSpeed = Math.max(
+  10,
   Math.ceil(
     strongestWind * 1.25 / 10
-  ) * 10;
+  ) * 10
+);
 
   const maxRadius =
     Math.min(w, h) * 0.38;
@@ -694,49 +712,43 @@ records.forEach((r, i) => {
 
   });
 
-  if (
-    block === 0 &&
-    records.length > 0
-  ) {
-
-    const first = records[0];
-
-    const radius =
-      (first.wind10_kmh / maxSpeed) *
-      maxRadius;
-
-    const rad =
-      first.wind10_dir *
-      Math.PI / 180;
-
-    const x =
-      cx + radius * Math.sin(rad);
-
-    const y =
-      cy - radius * Math.cos(rad);
-
-    ctx.fillStyle = "#000000";
-    ctx.strokeStyle = "#ffffff";
-    ctx.lineWidth = 2;
-    
-    ctx.beginPath();
-    ctx.arc(x, y, 6, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.arc(
-      x,
-      y,
-      5,
-      0,
-      Math.PI * 2
-    );
-    ctx.fill();
-
-  }
-
   ctx.stroke();
+}
+const first =
+  history.find(
+    r =>
+      r.wind10_kmh != null &&
+      r.wind10_dir != null
+  );
+
+if (first) {
+
+  const radius =
+    (first.wind10_kmh / maxSpeed) *
+    maxRadius;
+
+  const rad =
+    first.wind10_dir *
+    Math.PI / 180;
+
+  const x =
+    cx + radius * Math.sin(rad);
+
+  const y =
+    cy - radius * Math.cos(rad);
+
+  ctx.fillStyle = "#ffffff";
+
+  ctx.beginPath();
+  ctx.arc(
+    x,
+    y,
+    5,
+    0,
+    Math.PI * 2
+  );
+  ctx.fill();
+
 }
 const latest =
   history[history.length - 1];
@@ -903,6 +915,68 @@ const archiveRes =
 
 const archive =
   await archiveRes.json();
+  const windDateSelector =
+  document.getElementById(
+    "windDateSelector"
+  );
+
+if (
+  windDateSelector &&
+  windDateSelector.options.length === 0
+) {
+
+  const availableDates =
+    [...new Set(
+      archive.map(r =>
+        new Date(r.time * 1000)
+          .toLocaleDateString(
+            "en-AU",
+            {
+              timeZone:
+                "Australia/Melbourne"
+            }
+          )
+      )
+    )];
+
+  availableDates.reverse();
+
+  availableDates.forEach(date => {
+
+    const option =
+      document.createElement(
+        "option"
+      );
+
+    option.value = date;
+    option.textContent = date;
+
+    windDateSelector.appendChild(
+      option
+    );
+
+  });
+
+  selectedWindDate =
+    availableDates[0];
+
+  windDateSelector.value =
+    selectedWindDate;
+
+  windDateSelector.addEventListener(
+    "change",
+    () => {
+
+      selectedWindDate =
+        windDateSelector.value;
+
+      loadWeather();
+
+    }
+  );
+
+}
+
   
 if(data.generated_at){
 document.getElementById("dataTime").innerText =
@@ -930,7 +1004,19 @@ const todayHistory = history.filter(r => {
   return recordDate === todayMelbourne;
 
 });
+if (!selectedWindDate) {
 
+  selectedWindDate =
+    new Date()
+      .toLocaleDateString(
+        "en-AU",
+        {
+          timeZone:
+            "Australia/Melbourne"
+        }
+      );
+
+}
 const todayArchive = archive.filter(r => {
 
   const recordDate =
@@ -1106,7 +1192,27 @@ const archiveMinTemps = todayArchive
 const gustsToday = todayHistory
   .map(r => r.gust10_kmh)
   .filter(v => v != null);
-drawWindRadar(todayHistory); 
+const windHistory =
+  archive.filter(r => {
+
+    const recordDate =
+      new Date(r.time * 1000)
+        .toLocaleDateString(
+          "en-AU",
+          {
+            timeZone:
+              "Australia/Melbourne"
+          }
+        );
+
+    return (
+      recordDate ===
+      selectedWindDate
+    );
+
+  });
+
+drawWindRadar(windHistory);
 let pressureTrendText = "";
 
 if (todayHistory.length > 1) {
