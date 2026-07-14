@@ -295,32 +295,11 @@ jobs:
           ' history.json > history_tmp.json
 
           mv history_tmp.json history.json
-          cp history.json wind_history.json
-          if [ ! -f wind_history.json ]; then
-            echo "[]" > wind_history.json
-          fi
-
-          jq --argjson obs "$(cat weather.json)" '
-            . + [{
-              time: $obs.generated_at,
-
-              wind10_kmh: (
-                ($obs.sensors[] | select(.lsid==553786).data[0].wind_speed_avg_last_10_min)
-                * 1.60934
-              ),
-
-              wind10_dir: (
-                $obs.sensors[] | select(.lsid==553786).data[0].wind_dir_scalar_avg_last_10_min
-              )
-            }]
-          ' wind_history.json > wind_tmp.json
-
-          mv wind_tmp.json wind_history.json
 
       - name: Commit
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add weather.json history.json archive_history.json wind_history.json
+          git add weather.json history.json archive_history.json
           git commit -m "update weather" || echo "no changes"
           git push
