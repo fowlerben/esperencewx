@@ -295,7 +295,7 @@ jobs:
           ' history.json > history_tmp.json
 
           mv history_tmp.json history.json
-
+          cp history.json wind_history.json
           if [ ! -f wind_history.json ]; then
             echo "[]" > wind_history.json
           fi
