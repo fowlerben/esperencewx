@@ -328,7 +328,40 @@ jobs:
           
                 - name: Commit
                   run: |
+                      echo "[]" > wind_history.json
+                    fi
+          
+                    jq --argjson obs "$(cat weather.json)" '
+                      . + [{
+                        time: $obs.generated_at,
+          
+                        wind10_kmh: (
+                          ($obs.sensors[] | select(.lsid==553786).data[0].wind_speed_avg_last_10_min)
+                          * 1.60934
+                        ),
+          
+                        wind10_dir: (
+                          $obs.sensors[] | select(.lsid==553786).data[0].wind_dir_scalar_avg_last_10_min
+                        ),
+          
+                        gust10_kmh: (
+                          ($obs.sensors[] | select(.lsid==553786).data[0].wind_speed_hi_last_10_min)
+                          * 1.60934
+                        )
+                      }]
+                      | unique_by(.time)
+                      | sort_by(.time)
+                    ' wind_history.json > wind_tmp.json
+          
+                    mv wind_tmp.json wind_history.json
+          
+          - name: Commit
+                  run: |
           git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add weather.json history.json archive_history.json wind_history.json
+          git commit -m "update weather" || echo "no changes"
+          git push
           git config user.email "actions@github.com"
           git add weather.json history.json archive_history.json
           git commit -m "update weather" || echo "no changes"
