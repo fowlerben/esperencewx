@@ -964,74 +964,149 @@ function drawWindRose(history) {
 
   const maxRadius = 180;
 
-  const sectors =
-    Array(16).fill(0);
+const sectors =
+  Array.from(
+    { length: 16 },
+    () => [0, 0, 0, 0, 0]
+  );
 
-  history.forEach(r => {
+history.forEach(r => {
 
-    if (
-      r.wind10_dir == null ||
-      r.wind10_kmh == null
-    ) return;
+  if (
+    r.wind10_dir == null ||
+    r.wind10_kmh == null
+  ) return;
 
-    const sector =
-      Math.round(
-        r.wind10_dir / 22.5
-      ) % 16;
+  const sector =
+    Math.round(
+      r.wind10_dir / 22.5
+    ) % 16;
 
-    sectors[sector]++;
+  const speed =
+    r.wind10_kmh;
 
-  });
+  const bin =
+    speed < 10 ? 0 :
+    speed < 20 ? 1 :
+    speed < 30 ? 2 :
+    speed < 40 ? 3 :
+    4;
 
-  const maxCount =
-    Math.max(
-      1,
-      ...sectors
-    );
+  sectors[sector][bin]++;
+
+});
+
+const maxCount =
+  Math.max(
+    1,
+    ...sectors.map(
+      s => s.reduce(
+        (a, b) => a + b,
+        0
+      )
+    )
+  );
+
+const colours = [
+  "#4fc3f7",  // 0-10
+  "#66bb6a",  // 10-20
+  "#ffd54f",  // 20-30
+  "#ff8a65",  // 30-40
+  "#ef5350"   // 40+
+];
+
+for (
+  let i = 0;
+  i < 16;
+  i++
+) {
+
+  const start =
+    (i * 22.5 - 11.25) *
+    Math.PI / 180;
+
+  const end =
+    (i * 22.5 + 11.25) *
+    Math.PI / 180;
+
+  let cumulative = 0;
 
   for (
-    let i = 0;
-    i < 16;
-    i++
+    let b = 0;
+    b < 5;
+    b++
   ) {
 
-    const start =
-      (i * 22.5 - 11.25) *
-      Math.PI / 180;
+    const value =
+      sectors[i][b];
 
-    const end =
-      (i * 22.5 + 11.25) *
-      Math.PI / 180;
-
-    const radius =
-      sectors[i] / maxCount *
+    const inner =
+      cumulative /
+      maxCount *
       maxRadius;
+
+    cumulative += value;
+
+    const outer =
+      cumulative /
+      maxCount *
+      maxRadius;
+
+    if (outer <= inner)
+      continue;
 
     ctx.beginPath();
 
-    ctx.moveTo(cx,cy);
+    ctx.moveTo(
+      cx +
+      inner *
+      Math.cos(start - Math.PI / 2),
+      cy +
+      inner *
+      Math.sin(start - Math.PI / 2)
+    );
 
     ctx.arc(
       cx,
       cy,
-      radius,
-      start - Math.PI/2,
-      end - Math.PI/2
+      outer,
+      start - Math.PI / 2,
+      end - Math.PI / 2
+    );
+
+    ctx.lineTo(
+      cx +
+      inner *
+      Math.cos(end - Math.PI / 2),
+      cy +
+      inner *
+      Math.sin(end - Math.PI / 2)
+    );
+
+    ctx.arc(
+      cx,
+      cy,
+      inner,
+      end - Math.PI / 2,
+      start - Math.PI / 2,
+      true
     );
 
     ctx.closePath();
 
     ctx.fillStyle =
-      "#4fc3f7";
+      colours[b];
 
     ctx.fill();
 
     ctx.strokeStyle =
-      "#ffffff";
+      "#202020";
 
     ctx.stroke();
 
   }
+
+}
 
   ctx.strokeStyle =
     "#555";
@@ -1104,27 +1179,57 @@ for (
   const deg =
     i * 22.5;
 
-  const rad =
-    deg * Math.PI / 180;
-
-  const labelRadius =
-    maxRadius + 25;
-
-  const x =
-    cx +
-    labelRadius *
-    Math.sin(rad);
-
-  const y =
-    cy -
-    labelRadius *
-    Math.cos(rad);
+  ...
 
   ctx.fillText(
     compass[i],
     x - 12,
     y + 4
   );
+
+}
+
+/* LEGEND */
+
+const legend = [
+  "0-10",
+  "10-20",
+  "20-30",
+  "30-40",
+  "40+"
+];
+
+let lx = 15;
+let ly = h - 80;
+
+ctx.font = "12px Arial";
+
+for (
+  let i = 0;
+  i < legend.length;
+  i++
+) {
+
+  ctx.fillStyle =
+    colours[i];
+
+  ctx.fillRect(
+    lx,
+    ly,
+    14,
+    14
+  );
+
+  ctx.fillStyle =
+    "#ffffff";
+
+  ctx.fillText(
+    legend[i] + " km/h",
+    lx + 20,
+    ly + 12
+  );
+
+  ly += 20;
 
 }
 
