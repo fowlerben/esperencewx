@@ -268,11 +268,52 @@
   </div>
 </div>
 <div class="section">
-  <div style="display:flex;justify-content:space-between;align-items:center;">
-    <h2>Wind Speed and Direction Map</h2>
-  
+<div style="display:flex;justify-content:space-between;align-items:center;">
+
+  <h2>Wind Speed and Direction Map</h2>
+
+  <div style="display:flex;gap:8px;align-items:center;">
+
+    <button
+      id="windTrackBtn"
+      style="
+        background:#1f3b4d;
+        color:white;
+        border:1px solid #4a6a7d;
+        padding:4px 8px;
+        border-radius:4px;
+        cursor:pointer;
+      ">
+      Track
+    </button>
+
+    <button
+      id="windRoseBtn"
+      style="
+        background:#1f3b4d;
+        color:white;
+        border:1px solid #4a6a7d;
+        padding:4px 8px;
+        border-radius:4px;
+        cursor:pointer;
+      ">
+      Wind Rose
+    </button>
+
     <select
       id="windDateSelector"
+      style="
+        background:#1f3b4d;
+        color:white;
+        border:1px solid #4a6a7d;
+        padding:4px 8px;
+        border-radius:4px;
+      ">
+    </select>
+
+  </div>
+
+</div>
       style="
         background:#1f3b4d;
         color:white;
@@ -565,6 +606,7 @@ let tempChart = null;
 let pressureChart = null;
 
 let selectedWindDate = null;
+let selectedWindMode = "track";
 
 function drawWindRadar(history) {
 
@@ -902,6 +944,155 @@ ctx.fillText(
 );
 }
 
+function drawWindRose(history) {
+
+  const canvas =
+    document.getElementById(
+      "windRadarChart"
+    );
+
+  if (!canvas) return;
+
+  const ctx =
+    canvas.getContext("2d");
+
+  const w = canvas.width;
+  const h = canvas.height;
+
+  ctx.clearRect(0,0,w,h);
+
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0,0,w,h);
+
+  const cx = w / 2;
+  const cy = h / 2;
+
+  const maxRadius = 180;
+
+  const sectors =
+    Array(16).fill(0);
+
+  history.forEach(r => {
+
+    if (
+      r.wind10_dir == null ||
+      r.wind10_kmh == null
+    ) return;
+
+    const sector =
+      Math.round(
+        r.wind10_dir / 22.5
+      ) % 16;
+
+    sectors[sector]++;
+
+  });
+
+  const maxCount =
+    Math.max(
+      1,
+      ...sectors
+    );
+
+  for (
+    let i = 0;
+    i < 16;
+    i++
+  ) {
+
+    const start =
+      (i * 22.5 - 11.25) *
+      Math.PI / 180;
+
+    const end =
+      (i * 22.5 + 11.25) *
+      Math.PI / 180;
+
+    const radius =
+      sectors[i] / maxCount *
+      maxRadius;
+
+    ctx.beginPath();
+
+    ctx.moveTo(cx,cy);
+
+    ctx.arc(
+      cx,
+      cy,
+      radius,
+      start - Math.PI/2,
+      end - Math.PI/2
+    );
+
+    ctx.closePath();
+
+    ctx.fillStyle =
+      "#4fc3f7";
+
+    ctx.fill();
+
+    ctx.strokeStyle =
+      "#ffffff";
+
+    ctx.stroke();
+
+  }
+
+  ctx.strokeStyle =
+    "#555";
+
+  for (
+    let r=45;
+    r<=maxRadius;
+    r+=45
+  ) {
+
+    ctx.beginPath();
+
+    ctx.arc(
+      cx,
+      cy,
+      r,
+      0,
+      Math.PI*2
+    );
+
+    ctx.stroke();
+
+  }
+
+  ctx.fillStyle =
+    "#ffffff";
+
+  ctx.font =
+    "14px Arial";
+
+  ctx.fillText(
+    "N",
+    cx - 5,
+    cy - maxRadius - 10
+  );
+
+  ctx.fillText(
+    "E",
+    cx + maxRadius + 10,
+    cy + 5
+  );
+
+  ctx.fillText(
+    "S",
+    cx - 5,
+    cy + maxRadius + 20
+  );
+
+  ctx.fillText(
+    "W",
+    cx - maxRadius - 20,
+    cy + 5
+  );
+
+}
+
 async function loadWeather(){
 
 const res=await fetch("/esperencewx/weather.json?"+Date.now(), { cache: "no-store" });
@@ -979,7 +1170,23 @@ const availableDates =
 
     }
   );
+document
+  .getElementById("windTrackBtn")
+  .addEventListener("click", () => {
 
+    selectedWindMode = "track";
+    loadWeather();
+
+  });
+
+document
+  .getElementById("windRoseBtn")
+  .addEventListener("click", () => {
+
+    selectedWindMode = "rose";
+    loadWeather();
+
+  });
 }
 
   
@@ -1236,7 +1443,22 @@ const windHistory =
 
   });
 
-drawWindRadar(windHistory);
+if (
+  selectedWindMode === "rose"
+) {
+
+  drawWindRose(
+    windHistory
+  );
+
+}
+else {
+
+  drawWindRadar(
+    windHistory
+  );
+
+}
 let pressureTrendText = "";
 
 if (todayHistory.length > 1) {
