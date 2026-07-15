@@ -962,7 +962,7 @@ function drawWindRose(history) {
   const cx = w / 2;
   const cy = h / 2;
 
-  const maxRadius = 180;
+const maxRadius = 220;
 
 const sectors =
   Array.from(
@@ -996,15 +996,15 @@ history.forEach(r => {
 
 });
 
-const maxCount =
-  Math.max(
-    1,
-    ...sectors.map(
-      s => s.reduce(
+const totalObservations =
+  sectors.reduce(
+    (sum, sector) =>
+      sum +
+      sector.reduce(
         (a, b) => a + b,
         0
-      )
-    )
+      ),
+    0
   );
 
 const colours = [
@@ -1042,14 +1042,14 @@ for (
 
     const inner =
       cumulative /
-      maxCount *
+      totalObservations *
       maxRadius;
 
     cumulative += value;
 
     const outer =
       cumulative /
-      maxCount *
+      totalObservations *
       maxRadius;
 
     if (outer <= inner)
@@ -1131,7 +1131,7 @@ for (
 
   const pct =
     Math.round(
-      (r / maxRadius) * 100
+      (r / maxRadius) * 20
     );
 
   ctx.fillStyle =
@@ -1213,8 +1213,8 @@ const legend = [
   "40+"
 ];
 
-let lx = 15;
-let ly = h - 130;
+let lx = 0;
+let ly = h - 100;
 
 ctx.font = "12px Arial";
 
