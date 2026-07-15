@@ -1179,7 +1179,21 @@ for (
   const deg =
     i * 22.5;
 
-  ...
+  const rad =
+    deg * Math.PI / 180;
+
+  const labelRadius =
+    maxRadius + 25;
+
+  const x =
+    cx +
+    labelRadius *
+    Math.sin(rad);
+
+  const y =
+    cy -
+    labelRadius *
+    Math.cos(rad);
 
   ctx.fillText(
     compass[i],
