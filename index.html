@@ -1166,19 +1166,14 @@ const availableDates =
     }
   );
 document
-  .getElementById("windTrackBtn")
+  .getElementById("windModeBtn")
   .addEventListener("click", () => {
 
-    selectedWindMode = "track";
-    loadWeather();
+    selectedWindMode =
+      selectedWindMode === "track"
+        ? "rose"
+        : "track";
 
-  });
-
-document
-  .getElementById("windRoseBtn")
-  .addEventListener("click", () => {
-
-    selectedWindMode = "rose";
     loadWeather();
 
   });
@@ -1438,9 +1433,25 @@ const windHistory =
 
   });
 
+const heading =
+  document.getElementById(
+    "windModeHeading"
+  );
+
+const button =
+  document.getElementById(
+    "windModeBtn"
+  );
+
 if (
   selectedWindMode === "rose"
 ) {
+
+  heading.innerText =
+    "Wind Rose";
+
+  button.innerText =
+    "Wind Track";
 
   drawWindRose(
     windHistory
@@ -1448,6 +1459,12 @@ if (
 
 }
 else {
+
+  heading.innerText =
+    "Wind Track";
+
+  button.innerText =
+    "Wind Rose";
 
   drawWindRadar(
     windHistory
