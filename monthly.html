@@ -163,16 +163,28 @@ function degToCompass(deg) {
       new Date(archive[archive.length - 1].time * 1000)
     );
     
-    const now = new Date();
-  
-    document.getElementById("title").innerText =
-      now.toLocaleString("en-AU", {
-        month: "long",
-        year: "numeric"
-      }) + " Daily Weather Observations";
-  
-    const year = now.getFullYear();
-    const month = now.getMonth();
+const params = new URLSearchParams(window.location.search);
+
+const yearParam = params.get("year");
+const monthParam = params.get("month");
+
+const now =
+  (yearParam && monthParam)
+    ? new Date(
+        Number(yearParam),
+        Number(monthParam) - 1,
+        15
+      )
+    : new Date();
+
+document.getElementById("title").innerText =
+  now.toLocaleString("en-AU", {
+    month: "long",
+    year: "numeric"
+  }) + " Daily Weather Observations";
+
+const year = now.getFullYear();
+const month = now.getMonth();
   
     const daysInMonth =
       new Date(year, month + 1, 0).getDate();
