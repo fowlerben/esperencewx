@@ -1053,7 +1053,18 @@ if (
   const threePMCandidates =
     archive.filter(r => {
 
-      const t = new Date(r.time * 1000);
+      const melTime =
+        new Date(r.time * 1000)
+          .toLocaleString(
+            "en-AU",
+            {
+              timeZone:
+                "Australia/Melbourne"
+            }
+          );
+
+      const t =
+        new Date(melTime);
 
       return (
         t.getHours() === 15 &&
@@ -1064,36 +1075,45 @@ if (
 
   const threePMRecord =
     threePMCandidates.length
-      ? threePMCandidates[threePMCandidates.length - 1]
+      ? threePMCandidates[
+          threePMCandidates.length - 1
+        ]
       : null;
 
   const td3pm =
-    threePMRecord?.dew_point_last != null
-      ? toC(threePMRecord.dew_point_last)
+    threePMRecord?.dew_point_hi != null
+      ? toC(
+          threePMRecord.dew_point_hi
+        )
       : null;
 
   let tmax = null;
 
-  if (threePMRecord) {
-
-    const startTime =
-      threePMRecord.time - 21600;
-
-    const maxTemps = archive
-      .filter(r =>
-        r.time >= startTime &&
-        r.time <= threePMRecord.time
-      )
-      .map(r => r.temp_hi)
-      .filter(v => v != null)
-      .map(v => toC(v));
+  if (
+    threePMRecord &&
+    threePMRecord.temp_hi != null
+  ) {
 
     tmax =
-      maxTemps.length > 0
-        ? Math.max(...maxTemps)
-        : null;
+      toC(
+        threePMRecord.temp_hi
+      );
 
   }
+
+  if (
+    td3pm != null &&
+    tmax != null
+  ) {
+
+    fogTemp =
+      td3pm -
+      0.2 *
+      (tmax - td3pm);
+
+  }
+
+}
 
   fogTemp =
     (
