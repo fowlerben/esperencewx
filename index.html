@@ -268,14 +268,29 @@
   </div>
 </div>
 <div class="section">
-<div style="display:flex;justify-content:space-between;align-items:center;">
+<div
+  style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+  "
+>
 
-  <h2>Wind Speed and Direction Map</h2>
+  <h2 id="windModeHeading">
+    Wind Track
+  </h2>
 
-  <div style="display:flex;gap:8px;align-items:center;">
+  <div
+    style="
+      display:flex;
+      gap:8px;
+      align-items:center;
+    "
+  >
 
     <button
-      id="windTrackBtn"
+      id="windModeBtn"
       style="
         background:#1f3b4d;
         color:white;
@@ -283,36 +298,26 @@
         padding:4px 8px;
         border-radius:4px;
         cursor:pointer;
-      ">
-      Track
-    </button>
-
-    <button
-      id="windRoseBtn"
-      style="
-        background:#1f3b4d;
-        color:white;
-        border:1px solid #4a6a7d;
-        padding:4px 8px;
-        border-radius:4px;
-        cursor:pointer;
-      ">
+      "
+    >
       Wind Rose
     </button>
 
     <select
       id="windDateSelector"
-
-</div>
       style="
         background:#1f3b4d;
         color:white;
         border:1px solid #4a6a7d;
         padding:4px 8px;
         border-radius:4px;
-      ">
+      "
+    >
     </select>
+
   </div>
+
+</div>
 
   <div class="card">
     <canvas
