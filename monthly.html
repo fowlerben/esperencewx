@@ -218,8 +218,8 @@ function degToCompass(deg) {
       
       const minRecords =
         archive.filter(r =>
-          r.time >= minStart &&
-          r.time < minEnd
+          r.time > minStart &&
+          r.time <= minEnd
         );
       
       if (day === 1) {
