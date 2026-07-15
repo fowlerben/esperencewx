@@ -1050,35 +1050,44 @@ if (
   minutesNow >= 900
 ) {
 
-  const threePMCandidates =
-    archive.filter(r => {
+const threePMCandidates =
+  archive.filter(r => {
 
-      const melTime =
-        new Date(r.time * 1000)
-          .toLocaleString(
-            "en-AU",
-            {
-              timeZone:
-                "Australia/Melbourne"
-            }
-          );
+    const t =
+      new Date(r.time * 1000);
 
-      const t =
-        new Date(melTime);
-
-      return (
-        t.getHours() === 15 &&
-        t.getMinutes() < 5
+    const melDate =
+      t.toLocaleDateString(
+        "en-AU",
+        {
+          timeZone:
+            "Australia/Melbourne"
+        }
       );
 
-    });
+    const melHour =
+      Number(
+        t.toLocaleString(
+          "en-AU",
+          {
+            timeZone:
+              "Australia/Melbourne",
+            hour: "2-digit",
+            hour12: false
+          }
+        )
+      );
 
-  const threePMRecord =
-    threePMCandidates.length
-      ? threePMCandidates[
-          threePMCandidates.length - 1
-        ]
-      : null;
+    return melHour === 15;
+
+  });
+
+const threePMRecord =
+  threePMCandidates.length
+    ? threePMCandidates[
+        threePMCandidates.length - 1
+      ]
+    : null;
 
   const td3pm =
     threePMRecord?.dew_point_hi != null
