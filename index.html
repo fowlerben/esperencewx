@@ -1123,16 +1123,6 @@ const threePMRecord =
   }
 
 }
-
-  fogTemp =
-    (
-      td3pm != null &&
-      tmax != null
-    )
-      ? td3pm - 0.2 * (tmax - td3pm)
-      : null;
-
-}
   
 if (!latestHistory) {
   return;
