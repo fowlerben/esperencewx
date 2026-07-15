@@ -221,6 +221,15 @@ function degToCompass(deg) {
           r.time > minStart &&
           r.time <= minEnd
         );
+      
+      if (day <= 5) {
+        alert(
+          `Day ${day}\n` +
+          `Start: ${new Date(minStart * 1000)}\n` +
+          `End: ${new Date(minEnd * 1000)}\n` +
+          `Records: ${minRecords.length}`
+        );
+      }
       if (day <= 5) {
         console.log(
           day,
