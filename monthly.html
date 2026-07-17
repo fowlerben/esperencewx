@@ -141,11 +141,6 @@ function degToCompass(deg) {
     
     const archive =
       await archiveRes.json();
-    const historyRes =
-      await fetch("history.json?" + Date.now());
-
-    const history =
-      await historyRes.json();
     const manualRes =
       await fetch("manual_obs.json?" + Date.now());
     
@@ -397,13 +392,10 @@ function degToCompass(deg) {
       const gustComplete =
         gustEnd <= Date.now() / 1000;
 
-      const gustObs =
-        maxGustTimestamp
-          ? history.reduce((closest, r) =>
-              Math.abs(r.time - maxGustTimestamp) <
-              Math.abs(closest.time - maxGustTimestamp)
-                ? r
-                : closest
+const maxGustDir =
+  maxGustRecord?.wind_dir_of_prevail != null
+    ? degToCompass(maxGustRecord.wind_dir_of_prevail)
+    : "";
             )
           : null;
 
@@ -425,53 +417,9 @@ const maxGustTime =
       const target9 =
         new Date(year, month, day, 9, 0, 0).getTime() / 1000;
       
-      const dayRecords9 =
-        history.filter(r => {
-          const t = new Date(r.time * 1000);
-      
-          return t.getFullYear() === year
-            && t.getMonth() === month
-            && t.getDate() === day;
-        });
-      
-      const obs9 =
-        dayRecords9.length > 0
-          ? dayRecords9.reduce((closest, r) =>
-              Math.abs(r.time - target9) <
-              Math.abs(closest.time - target9)
-                ? r
-                : closest
-            )
-          : null;
-
-      const obs9Valid =
-        obs9 &&
-        Math.abs(obs9.time - target9) <= 180;
-      
       const target15 =
         new Date(year, month, day, 15, 0, 0).getTime() / 1000;
       
-      const dayRecords15 =
-        history.filter(r => {
-          const t = new Date(r.time * 1000);
-      
-          return t.getFullYear() === year
-            && t.getMonth() === month
-            && t.getDate() === day;
-        });
-      
-      const obs15 =
-        dayRecords15.length > 0
-          ? dayRecords15.reduce((closest, r) =>
-              Math.abs(r.time - target15) <
-              Math.abs(closest.time - target15)
-                ? r
-                : closest
-            )
-          : null;
-      const obs15Valid =
-        obs15 &&
-        Math.abs(obs15.time - target15) <= 180;
       const dateString =
         `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
       
