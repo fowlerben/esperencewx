@@ -485,6 +485,33 @@ const maxGustTime =
       
       const manual =
         manualObs.find(r => r.date === dateString);
+      const archive9 =
+  archive.length
+    ? archive.reduce((closest, r) =>
+        Math.abs(r.time - target9) <
+        Math.abs(closest.time - target9)
+          ? r
+          : closest
+      )
+    : null;
+
+const archive9Valid =
+  archive9 &&
+  Math.abs(archive9.time - target9) <= 600;
+
+const archive15 =
+  archive.length
+    ? archive.reduce((closest, r) =>
+        Math.abs(r.time - target15) <
+        Math.abs(closest.time - target15)
+          ? r
+          : closest
+      )
+    : null;
+
+const archive15Valid =
+  archive15 &&
+  Math.abs(archive15.time - target15) <= 600;
       if (minTemp != null) stats.minTemp.push(minTemp);
       if (maxTemp != null) stats.maxTemp.push(maxTemp);
       if (rainTotal != null) stats.rain.push(rainTotal);
@@ -497,6 +524,11 @@ const maxGustTime =
         stats.rh9.push(obs9.humidity);
         stats.wind9.push(obs9.wind10_kmh);
         stats.mslp9.push(obs9.pressure_hpa);
+      } else if (archive9Valid) {
+        stats.temp9.push((archive9.temp_last - 32) * 5 / 9);
+        stats.rh9.push(Number(archive9.hum_last));
+        stats.wind9.push(Number(archive9.wind_speed_avg) * 1.60934);
+        stats.mslp9.push(Number(archive9.bar_sea_level));
       }
       
       if (manual?.cloud9)
@@ -507,6 +539,11 @@ const maxGustTime =
         stats.rh15.push(obs15.humidity);
         stats.wind15.push(obs15.wind10_kmh);
         stats.mslp15.push(obs15.pressure_hpa);
+      } else if (archive15Valid) {
+        stats.temp15.push((archive15.temp_last - 32) * 5 / 9);
+        stats.rh15.push(Number(archive15.hum_last));
+        stats.wind15.push(Number(archive15.wind_speed_avg) * 1.60934);
+        stats.mslp15.push(Number(archive15.bar_sea_level));
       }
       
       if (manual?.cloud15)
@@ -545,19 +582,88 @@ tr.innerHTML = `
 
   <td>${gustComplete ? maxGustTime : ""}</td>
 
-  <td>${obs9Valid ? obs9.temp_c.toFixed(1) : (manual?.temp9 || "")}</td>
-  <td>${obs9Valid ? obs9.humidity.toFixed(0) : (manual?.humidity9 || "")}</td>
-  <td>${manual?.cloud9 || ""}</td>
-  <td>${obs9Valid ? degToCompass(obs9.wind10_dir) : (manual?.wind9_dir || "")}</td>
-  <td>${obs9Valid ? obs9.wind10_kmh.toFixed(0) : (manual?.wind9_kmh || "")}</td>
-  <td>${obs9Valid ? obs9.pressure_hpa.toFixed(1) : (manual?.pressure9_hpa || "")}</td>
+<td>${
+  archive9Valid
+    ? ((archive9.temp_last - 32) * 5 / 9).toFixed(1)
+    : obs9Valid
+      ? obs9.temp_c.toFixed(1)
+      : (manual?.temp9 || "")
+}</td>
 
-  <td>${obs15Valid ? obs15.temp_c.toFixed(1) : (manual?.temp15 || "")}</td>
-  <td>${obs15Valid ? obs15.humidity.toFixed(0) : (manual?.humidity15 || "")}</td>
-  <td>${manual?.cloud15 || ""}</td>
-  <td>${obs15Valid ? degToCompass(obs15.wind10_dir) : (manual?.wind15_dir || "")}</td>
-  <td>${obs15Valid ? obs15.wind10_kmh.toFixed(0) : (manual?.wind15_kmh || "")}</td>
-  <td>${obs15Valid ? obs15.pressure_hpa.toFixed(1) : (manual?.pressure15_hpa || "")}</td>
+<td>${
+  archive9Valid
+    ? Number(archive9.hum_last).toFixed(0)
+    : obs9Valid
+      ? obs9.humidity.toFixed(0)
+      : (manual?.humidity9 || "")
+}</td>
+
+<td>${manual?.cloud9 || ""}</td>
+
+<td>${
+  archive9Valid
+    ? degToCompass(archive9.wind_dir_of_prevail)
+    : obs9Valid
+      ? degToCompass(obs9.wind10_dir)
+      : (manual?.wind9_dir || "")
+}</td>
+
+<td>${
+  archive9Valid
+    ? (Number(archive9.wind_speed_avg) * 1.60934).toFixed(0)
+    : obs9Valid
+      ? obs9.wind10_kmh.toFixed(0)
+      : (manual?.wind9_kmh || "")
+}</td>
+
+<td>${
+  archive9Valid
+    ? Number(archive9.bar_sea_level).toFixed(1)
+    : obs9Valid
+      ? obs9.pressure_hpa.toFixed(1)
+      : (manual?.pressure9_hpa || "")
+}</td>
+<td>${
+  archive15Valid
+    ? ((archive15.temp_last - 32) * 5 / 9).toFixed(1)
+    : obs15Valid
+      ? obs15.temp_c.toFixed(1)
+      : (manual?.temp15 || "")
+}</td>
+
+<td>${
+  archive15Valid
+    ? Number(archive15.hum_last).toFixed(0)
+    : obs15Valid
+      ? obs15.humidity.toFixed(0)
+      : (manual?.humidity15 || "")
+}</td>
+
+<td>${manual?.cloud15 || ""}</td>
+
+<td>${
+  archive15Valid
+    ? degToCompass(archive15.wind_dir_of_prevail)
+    : obs15Valid
+      ? degToCompass(obs15.wind10_dir)
+      : (manual?.wind15_dir || "")
+}</td>
+
+<td>${
+  archive15Valid
+    ? (Number(archive15.wind_speed_avg) * 1.60934).toFixed(0)
+    : obs15Valid
+      ? obs15.wind10_kmh.toFixed(0)
+      : (manual?.wind15_kmh || "")
+}</td>
+
+<td>${
+  archive15Valid
+    ? Number(archive15.bar_sea_level).toFixed(1)
+    : obs15Valid
+      ? obs15.pressure_hpa.toFixed(1)
+      : (manual?.pressure15_hpa || "")
+}</td>
 `;
 
 tbody.appendChild(tr);
