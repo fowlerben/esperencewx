@@ -21,8 +21,8 @@ jobs:
             echo "[]" > archive_history.json
           fi
 
-          CURRENT=1751223600
-          NOW=1751655600
+          CURRENT=1751749200
+          NOW=$(date +%s)
           
           while [ "$CURRENT" -lt "$NOW" ]; do
 
