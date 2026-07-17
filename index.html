@@ -841,7 +841,7 @@ for (let d = 30; d < 360; d += 30) {
     d * Math.PI / 180;
 
   const labelRadius =
-    maxRadius + 12;
+    maxRadius + 25;
 
   const x =
     cx + labelRadius * Math.sin(rad);
@@ -962,7 +962,7 @@ function drawWindRose(history) {
   const cx = w / 2;
   const cy = h / 2;
 
-const maxRadius = 190;
+  const maxRadius = 180;
 
 const sectors =
   Array.from(
@@ -996,15 +996,15 @@ history.forEach(r => {
 
 });
 
-const totalObservations =
-  sectors.reduce(
-    (sum, sector) =>
-      sum +
-      sector.reduce(
+const maxCount =
+  Math.max(
+    1,
+    ...sectors.map(
+      s => s.reduce(
         (a, b) => a + b,
         0
-      ),
-    0
+      )
+    )
   );
 
 const colours = [
@@ -1042,14 +1042,14 @@ for (
 
     const inner =
       cumulative /
-      totalObservations *
+      maxCount *
       maxRadius;
 
     cumulative += value;
 
     const outer =
       cumulative /
-      totalObservations *
+      maxCount *
       maxRadius;
 
     if (outer <= inner)
@@ -1131,7 +1131,7 @@ for (
 
   const pct =
     Math.round(
-      (r / maxRadius) * 20
+      (r / maxRadius) * 100
     );
 
   ctx.fillStyle =
@@ -1183,7 +1183,7 @@ for (
     deg * Math.PI / 180;
 
   const labelRadius =
-    maxRadius + 10;
+    maxRadius + 25;
 
   const x =
     cx +
@@ -1213,8 +1213,8 @@ const legend = [
   "40+"
 ];
 
-let lx = 0;
-let ly = h - 100;
+let lx = 15;
+let ly = h - 130;
 
 ctx.font = "12px Arial";
 
@@ -1394,12 +1394,7 @@ const todayArchive = archive.filter(r => {
 
 const latestHistory =
   todayHistory[todayHistory.length - 1];
-const latestArchive =
-  [...archive]
-    .reverse()
-    .find(r =>
-      r.temp_last != null
-    );
+
 const nowMelbourne = new Date();
 
 const minutesNow =
@@ -1735,15 +1730,8 @@ document.getElementById("daylength").innerText =
   dayHrs + "h " + dayMin + "m";
 
 // CORE
-const tempC =
-  latestArchive?.temp_last != null
-    ? toC(latestArchive.temp_last)
-    : null;
-
-const dewC =
-  latestArchive?.dew_point_last != null
-    ? toC(latestArchive.dew_point_last)
-    : null;
+const tempC = toC(iss.temp);
+const dewC  = toC(iss.dew_point);
 
 const utc = new Date(data.generated_at * 1000);
   
@@ -1766,18 +1754,9 @@ const reportType =
 temp.innerText = tempC!=null ? tempC.toFixed(1)+" °C":"N/A";
   tempTrend.innerText = tempTrendText;
 dew.innerText  = dewC!=null ? dewC.toFixed(1)+" °C":"N/A";
-wet.innerText =
-  latestArchive?.wet_bulb_last != null
-    ? toC(latestArchive.wet_bulb_last).toFixed(1) + " °C"
-    : "N/A";
-hum.innerText =
-  latestArchive?.hum_last != null
-    ? latestArchive.hum_last + " %"
-    : "N/A";
-pressure.innerText =
-  latestArchive?.bar_sea_level != null
-    ? inHgToHpa(latestArchive.bar_sea_level) + " hPa"
-    : "N/A";
+wet.innerText  = iss.wet_bulb!=null ? toC(iss.wet_bulb).toFixed(1)+" °C":"N/A";
+hum.innerText  = iss.hum+" %";
+pressure.innerText = baro?inHgToHpa(baro.bar_sea_level)+" hPa":"N/A";
   pressureTrend.innerText = pressureTrendText;
 
 // COMFORT
