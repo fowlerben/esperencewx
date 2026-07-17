@@ -486,19 +486,29 @@ const maxGustTime =
       const manual =
         manualObs.find(r => r.date === dateString);
       const archive9 =
-        archive.find(r => r.time === target9);
+        archive.reduce((closest, r) =>
+          Math.abs(r.time - target9) <
+          Math.abs(closest.time - target9)
+            ? r
+            : closest
+        );
       
       const archive9Valid =
-        archive &&
         archive9 &&
+        Math.abs(archive9.time - target9) <= 600 &&
         archive9.temp_last != null;
       
       const archive15 =
-        archive.find(r => r.time === target15);
+        archive.reduce((closest, r) =>
+          Math.abs(r.time - target15) <
+          Math.abs(closest.time - target15)
+            ? r
+            : closest
+        );
       
       const archive15Valid =
-        archive &&
         archive15 &&
+        Math.abs(archive15.time - target15) <= 600 &&
         archive15.temp_last != null;
       
       if (minTemp != null) stats.minTemp.push(minTemp);
