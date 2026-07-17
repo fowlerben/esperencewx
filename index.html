@@ -396,7 +396,16 @@
 <div class="card">End<div class="value" id="storm_end"></div></div>
 </div>
 </div>
+<div class="section">
 
+  <h2>Terrestrial DPD & Leaf Wetness</h2>
+
+  <div class="card" style="height:250px;">
+    <canvas id="terrChart"></canvas>
+  </div>
+
+</div>
+  
 <!-- ✅ NEW ALERTS -->
 <div class="section">
 <h2>Alerts</h2>
@@ -599,6 +608,7 @@ setInterval(updateTime,1000);updateTime();
 
 let tempChart = null;
 let pressureChart = null;
+let terrChart = null;
 
 let selectedWindDate = null;
 let selectedWindMode = "track";
@@ -1562,6 +1572,29 @@ const chartTemps = todayHistory.map(r => r.temp_c);
 const chartDews = todayHistory.map(r => r.dew_c);
 const chartHumidity = todayHistory.map(r => r.humidity);
 const chartPressure = todayHistory.map(r => r.pressure_hpa);
+const chartTerrDpd = todayHistory.map(r => {
+
+  const temps = [
+    r.temp1_c,
+    r.temp2_c,
+    r.temp3_c
+  ].filter(v => v != null);
+
+  if (
+    temps.length === 0 ||
+    r.dew_c == null
+  ) {
+    return null;
+  }
+
+  return Math.min(...temps) - r.dew_c;
+
+});
+
+const chartLeaf =
+  todayHistory.map(
+    r => r.leaf ?? null
+  );
 const archiveMaxTemps = todayArchive
   .map(r => r.temp_hi)
   .filter(v => v != null)
@@ -2503,6 +2536,107 @@ if (!pressureChart) {
   pressureChart.data.labels = chartLabels;
   pressureChart.data.datasets[0].data = chartPressure;
   pressureChart.update();
+
+}
+if (!terrChart) {
+
+  terrChart = new Chart(
+    document.getElementById("terrChart"),
+    {
+      type: "line",
+
+      data: {
+        labels: chartLabels,
+
+        datasets: [
+
+          {
+            label: "Terrestrial DPD °C",
+            data: chartTerrDpd,
+            borderColor: "#66bb6a",
+            fill: false,
+            tension: 0.3,
+            pointRadius: 0,
+            yAxisID: "y"
+          },
+
+          {
+            label: "Leaf Wetness",
+            data: chartLeaf,
+            borderColor: "#ffd166",
+            fill: false,
+            tension: 0,
+            pointRadius: 0,
+            yAxisID: "y1"
+          }
+
+        ]
+      },
+
+      options: {
+
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false,
+
+        plugins: {
+          legend: {
+            labels: {
+              color: "white"
+            }
+          }
+        },
+
+        scales: {
+
+          x: {
+            ticks: {
+              color: "white"
+            }
+          },
+
+          y: {
+            position: "left",
+
+            ticks: {
+              color: "#66bb6a"
+            }
+          },
+
+          y1: {
+
+            position: "right",
+
+            min: 0,
+            max: 15,
+
+            grid: {
+              drawOnChartArea: false
+            },
+
+            ticks: {
+              color: "#ffd166"
+            }
+
+          }
+
+        }
+      }
+    }
+  );
+
+} else {
+
+  terrChart.data.labels =
+    chartLabels;
+
+  terrChart.data.datasets[0].data =
+    chartTerrDpd;
+
+  terrChart.data.datasets[1].data =
+    chartLeaf;
+
+  terrChart.update();
 
 }
 }
