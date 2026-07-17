@@ -454,7 +454,7 @@ const archive15Valid =
         stats.temp9.push((archive9.temp_last - 32) * 5 / 9);
         stats.rh9.push(Number(archive9.hum_last));
         stats.wind9.push(Number(archive9.wind_speed_avg) * 1.60934);
-        stats.mslp9.push(Number(archive9.bar_sea_level));
+        stats.mslp9.push(Number(archive9.bar_sea_level) * 33.8639);
       }
       
       if (manual?.cloud9)
@@ -464,7 +464,7 @@ const archive15Valid =
         stats.temp15.push((archive15.temp_last - 32) * 5 / 9);
         stats.rh15.push(Number(archive15.hum_last));
         stats.wind15.push(Number(archive15.wind_speed_avg) * 1.60934);
-        stats.mslp15.push(Number(archive15.bar_sea_level));
+        stats.mslp15.push(Number(archive15.bar_sea_level) * 33.8639);
       }
       
       if (manual?.cloud15)
@@ -508,14 +508,14 @@ tr.innerHTML = `
   <td>${manual?.cloud9 || ""}</td>
   <td>${archive9Valid ? degToCompass(archive9.wind_dir_of_prevail) : ""}</td>
   <td>${archive9Valid ? (Number(archive9.wind_speed_avg) * 1.60934).toFixed(0) : ""}</td>
-  <td>${archive9Valid ? Number(archive9.bar_sea_level).toFixed(1) : ""}</td>
+  <td>${archive9Valid ? (Number(archive9.bar_sea_level) * 33.8639).toFixed(1) : ""}</td>
 
   <td>${archive15Valid ? ((archive15.temp_last - 32) * 5 / 9).toFixed(1) : ""}</td>
   <td>${archive15Valid ? Number(archive15.hum_last).toFixed(0) : ""}</td>
   <td>${manual?.cloud15 || ""}</td>
   <td>${archive15Valid ? degToCompass(archive15.wind_dir_of_prevail) : ""}</td>
   <td>${archive15Valid ? (Number(archive15.wind_speed_avg) * 1.60934).toFixed(0) : ""}</td>
-  <td>${archive15Valid ? Number(archive15.bar_sea_level).toFixed(1) : ""}</td>
+  <td>${archive15Valid ? (Number(archive15.bar_sea_level) * 33.8639).toFixed(1) : ""}</td>
 `;
 
 tbody.appendChild(tr);
