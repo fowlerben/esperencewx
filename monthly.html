@@ -485,31 +485,43 @@ const maxGustTime =
       
       const manual =
         manualObs.find(r => r.date === dateString);
-      const archive9 =
-        archive.reduce((closest, r) =>
-          Math.abs(r.time - target9) <
-          Math.abs(closest.time - target9)
-            ? r
-            : closest
-        );
-      
-      const archive9Valid =
-        archive9 &&
-        Math.abs(archive9.time - target9) <= 600 &&
-        archive9.temp_last != null;
-      
-      const archive15 =
-        archive.reduce((closest, r) =>
-          Math.abs(r.time - target15) <
-          Math.abs(closest.time - target15)
-            ? r
-            : closest
-        );
-      
-      const archive15Valid =
-        archive15 &&
-        Math.abs(archive15.time - target15) <= 600 &&
-        archive15.temp_last != null;
+const archive9Candidates =
+  archive.filter(r =>
+    r.time >= target9 - 600 &&
+    r.time <= target9 + 600 &&
+    r.temp_last != null
+  );
+
+const archive9 =
+  archive9Candidates.length
+    ? archive9Candidates.reduce((closest, r) =>
+        Math.abs(r.time - target9) <
+        Math.abs(closest.time - target9)
+          ? r
+          : closest
+      )
+    : null;
+
+const archive9Valid = archive9 != null;
+
+const archive15Candidates =
+  archive.filter(r =>
+    r.time >= target15 - 600 &&
+    r.time <= target15 + 600 &&
+    r.temp_last != null
+  );
+
+const archive15 =
+  archive15Candidates.length
+    ? archive15Candidates.reduce((closest, r) =>
+        Math.abs(r.time - target15) <
+        Math.abs(closest.time - target15)
+          ? r
+          : closest
+      )
+    : null;
+
+const archive15Valid = archive15 != null;
       
       if (minTemp != null) stats.minTemp.push(minTemp);
       if (maxTemp != null) stats.maxTemp.push(maxTemp);
