@@ -2071,15 +2071,22 @@ if (dewC != null) {
 // ✅ ALERTS
 
 // Fog
-fogAlert.classList.remove("warning");
-if (tempC!=null && dewC!=null){
-  const dpdVal = tempC - dewC;
+
+const fogTempDelta =
+  fogTemp != null &&
+  tempC != null
+    ? tempC - fogTemp
+    : null;
 
 fogAlert.classList.remove("warning");
 
-if (tempC != null && dewC != null) {
+if (
+  tempC != null &&
+  dewC != null
+) {
 
-  const dpdVal = tempC - dewC;
+  const dpdVal =
+    tempC - dewC;
 
   if (
     dpdVal < 0.5 ||
@@ -2089,23 +2096,36 @@ if (tempC != null && dewC != null) {
     )
   ) {
 
-    fogAlert.innerText = "Fog Likely";
-    fogAlert.classList.add("warning");
+    fogAlert.innerText =
+      "Fog Likely";
+
+    fogAlert.classList.add(
+      "warning"
+    );
 
   }
-  else if (dpdVal < 1) {
+  else if (
+    dpdVal < 1
+  ) {
 
-    fogAlert.innerText = "Fog Possible";
+    fogAlert.innerText =
+      "Fog Possible";
 
   }
   else {
 
-    fogAlert.innerText = "No Fog";
+    fogAlert.innerText =
+      "No Fog";
 
   }
 
 }
+else {
 
+  fogAlert.innerText =
+    "No Fog";
+
+}
 // Dew / Frost
 dewAlert.classList.remove("warning");
 
@@ -2195,6 +2215,7 @@ if (
 ) {
 
   frostText = "Frost Present";
+  dewAlert.classList.add("warning");
 
 }
 else if (
@@ -2206,6 +2227,7 @@ else if (
 ) {
 
   frostText = "Frost Forming";
+  dewAlert.classList.add("warning");
 
 }
 else if (
