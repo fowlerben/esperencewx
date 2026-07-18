@@ -2133,12 +2133,14 @@ else if (
 
 }
 else if (
-  currentWetHours >= 1 &&
+  wetNow &&
   terrDpd != null &&
   terrDpd <= 0
 ) {
 
   dewText = "Dew Present";
+
+}
 
 }
 else if (
@@ -2170,10 +2172,10 @@ else if (
 }
 
 if (
-  currentWetHours >= 1 &&
+  wetNow &&
   minT != null &&
   minT < 0
-) {
+)
 
   frostText = "Frost Present";
   dewAlert.classList.add("warning");
