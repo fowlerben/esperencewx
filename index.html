@@ -2075,16 +2075,40 @@ fogAlert.classList.remove("warning");
 if (tempC!=null && dewC!=null){
   const dpdVal = tempC - dewC;
 
-  if (dpdVal < 0.5){
+fogAlert.classList.remove("warning");
+
+if (tempC != null && dewC != null) {
+
+  const dpdVal = tempC - dewC;
+
+  if (
+    dpdVal < 0.5 ||
+    (
+      fogTempDelta != null &&
+      fogTempDelta <= -3
+    )
+  ) {
+
     fogAlert.innerText = "Fog Likely";
     fogAlert.classList.add("warning");
-  } else if (dpdVal < 1){
-    fogAlert.innerText = "Fog Possible";
-  } else {
-    fogAlert.innerText = "No Fog";
+
   }
-} else {
+  else if (dpdVal < 1) {
+
+    fogAlert.innerText = "Fog Possible";
+
+  }
+  else {
+
+    fogAlert.innerText = "No Fog";
+
+  }
+
+}
+else {
+
   fogAlert.innerText = "No Fog";
+
 }
 
 // Dew / Frost
