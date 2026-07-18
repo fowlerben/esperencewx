@@ -2105,11 +2105,6 @@ if (tempC != null && dewC != null) {
   }
 
 }
-else {
-
-  fogAlert.innerText = "No Fog";
-
-}
 
 // Dew / Frost
 dewAlert.classList.remove("warning");
@@ -2165,8 +2160,6 @@ else if (
   dewText = "Dew Present";
 
 }
-
-}
 else if (
   terrDpd != null &&
   terrDpd <= 0 &&
@@ -2199,20 +2192,20 @@ if (
   wetNow &&
   minT != null &&
   minT < 0
-)
+) {
 
   frostText = "Frost Present";
-  dewAlert.classList.add("warning");
 
 }
 else if (
-  wetNow &&
+  terrDpd != null &&
+  terrDpd <= 0 &&
   minT != null &&
-  minT < 0
+  minT < 0 &&
+  !wetNow
 ) {
 
   frostText = "Frost Forming";
-  dewAlert.classList.add("warning");
 
 }
 else if (
