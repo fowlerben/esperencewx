@@ -414,8 +414,20 @@ const maxGustTime =
       
       const manual =
         manualObs.find(r => r.date === dateString);
-      const archive9 =
-  archive.reduce((closest, r) =>
+const dayStart =
+  new Date(year, month, day, 0, 0, 0).getTime() / 1000;
+
+const dayEnd =
+  new Date(year, month, day + 1, 0, 0, 0).getTime() / 1000;
+
+const dayArchive =
+  archive.filter(r =>
+    r.time >= dayStart &&
+    r.time < dayEnd
+  );
+
+const archive9 =
+  dayArchive.reduce((closest, r) =>
     Math.abs(r.time - target9) <
     Math.abs(closest.time - target9)
       ? r
@@ -428,7 +440,7 @@ const archive9Valid =
   archive9.temp_last != null;
 
 const archive15 =
-  archive.reduce((closest, r) =>
+  dayArchive.reduce(...)
     Math.abs(r.time - target15) <
     Math.abs(closest.time - target15)
       ? r
