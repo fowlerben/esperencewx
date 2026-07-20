@@ -427,8 +427,8 @@ const dayArchive =
   );
 
 const archive9 =
-  archive.length > 0
-    ? archive.reduce((closest, r) =>
+  dayArchive.length > 0
+    ? dayArchive.reduce((closest, r) =>
         Math.abs(r.time - target9) <
         Math.abs(closest.time - target9)
           ? r
@@ -442,10 +442,10 @@ const archive9Valid =
   archive9.temp_last != null;
 
 const archive15 =
-  archive.length > 0
-    ? archive.reduce((closest, r) =>
-        Math.abs(r.time - target9) <
-        Math.abs(closest.time - target9)
+  dayArchive.length > 0
+    ? dayArchive.reduce((closest, r) =>
+        Math.abs(r.time - target15) <
+        Math.abs(closest.time - target15)
           ? r
           : closest
       )
