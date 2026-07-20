@@ -427,12 +427,14 @@ const dayArchive =
   );
 
 const archive9 =
-  dayArchive.reduce((closest, r) =>
-    Math.abs(r.time - target9) <
-    Math.abs(closest.time - target9)
-      ? r
-      : closest
-  );
+  archive.length > 0
+    ? archive.reduce((closest, r) =>
+        Math.abs(r.time - target9) <
+        Math.abs(closest.time - target9)
+          ? r
+          : closest
+      )
+    : null;
 
 const archive9Valid =
   archive9 &&
@@ -440,12 +442,14 @@ const archive9Valid =
   archive9.temp_last != null;
 
 const archive15 =
-  dayArchive.reduce(...)
-    Math.abs(r.time - target15) <
-    Math.abs(closest.time - target15)
-      ? r
-      : closest
-  );
+  archive.length > 0
+    ? archive.reduce((closest, r) =>
+        Math.abs(r.time - target9) <
+        Math.abs(closest.time - target9)
+          ? r
+          : closest
+      )
+    : null;
 
 const archive15Valid =
   archive15 &&
