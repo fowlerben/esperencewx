@@ -455,6 +455,73 @@ const archive15Valid =
   archive15 &&
   Math.abs(archive15.time - target15) <= 600 &&
   archive15.temp_last != null;
+      if (
+  day >= 18 &&
+  day <= 21
+) {
+
+  console.log(
+    "DAY",
+    day
+  );
+
+  console.log(
+    "TARGET 9AM:",
+    target9,
+    new Date(target9 * 1000)
+  );
+
+  console.log(
+    "FOUND 9AM:",
+    archive9?.time,
+    archive9
+      ? new Date(archive9.time * 1000)
+      : "NONE"
+  );
+
+  console.log(
+    "DIFF 9AM (mins):",
+    archive9
+      ? Math.round(
+          (archive9.time - target9) / 60
+        )
+      : "NONE"
+  );
+
+  console.log(
+    "VALID 9AM:",
+    archive9Valid
+  );
+
+  console.log(
+    "TARGET 3PM:",
+    target15,
+    new Date(target15 * 1000)
+  );
+
+  console.log(
+    "FOUND 3PM:",
+    archive15?.time,
+    archive15
+      ? new Date(archive15.time * 1000)
+      : "NONE"
+  );
+
+  console.log(
+    "DIFF 3PM (mins):",
+    archive15
+      ? Math.round(
+          (archive15.time - target15) / 60
+        )
+      : "NONE"
+  );
+
+  console.log(
+    "VALID 3PM:",
+    archive15Valid
+  );
+
+}
       if (minTemp != null) stats.minTemp.push(minTemp);
       if (maxTemp != null) stats.maxTemp.push(maxTemp);
       if (rainTotal != null) stats.rain.push(rainTotal);
