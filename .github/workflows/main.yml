@@ -81,72 +81,106 @@ jobs:
         
           jq '
           [
-            .sensors[]
-            | select(.lsid==553786)
-            | .data[]
-            | {
-                time: .ts,
-
-                temp_hi,
-                temp_lo,
-                temp_hi_at,
-                temp_lo_at,
-
-                hum_hi,
-                hum_lo,
-                hum_hi_at,
-                hum_lo_at,
-
-                dew_point_hi,
-                dew_point_lo,
-                dew_point_hi_at,
-                dew_point_lo_at,
-
-                wet_bulb_hi,
-                wet_bulb_lo,
-                wet_bulb_hi_at,
-                wet_bulb_lo_at,
-
-                heat_index_hi,
-                heat_index_hi_at,
-
-                thw_index_hi,
-                thw_index_lo,
-                thw_index_hi_at,
-                thw_index_lo_at,
-
-                thsw_index_hi,
-                thsw_index_lo,
-                thsw_index_hi_at,
-                thsw_index_lo_at,
-
-                wind_speed_hi,
-                wind_speed_hi_at,
-
-                rain_rate_hi_mm,
-                rain_rate_hi_in,
-                rain_rate_hi_clicks,
-                rain_rate_hi_at,
-
-                rainfall_mm,
-                rainfall_in,
-                rainfall_clicks,
-
-                solar_rad_hi,
-                solar_rad_hi_at,
-
-                solar_energy,
-
-                uv_index_hi,
-                uv_index_hi_at,
-
-                uv_dose,
-
-                wind_run,
-
-                et
-              }
+            (
+              .sensors[]
+              | select(.lsid==553786)
+              | .data[]
+              | {
+                  time: .ts,
+          
+                  temp_hi,
+                  temp_lo,
+                  temp_hi_at,
+                  temp_lo_at,
+          
+                  temp_last,
+                  temp_avg,
+          
+                  hum_hi,
+                  hum_lo,
+                  hum_hi_at,
+                  hum_lo_at,
+                  hum_last,
+          
+                  dew_point_hi,
+                  dew_point_lo,
+                  dew_point_hi_at,
+                  dew_point_lo_at,
+                  dew_point_last,
+          
+                  wet_bulb_hi,
+                  wet_bulb_lo,
+                  wet_bulb_hi_at,
+                  wet_bulb_lo_at,
+                  wet_bulb_last,
+          
+                  heat_index_hi,
+                  heat_index_hi_at,
+                  heat_index_last,
+          
+                  wind_chill_last,
+          
+                  thw_index_hi,
+                  thw_index_lo,
+                  thw_index_hi_at,
+                  thw_index_lo_at,
+                  thw_index_last,
+          
+                  thsw_index_hi,
+                  thsw_index_lo,
+                  thsw_index_hi_at,
+                  thsw_index_lo_at,
+                  thsw_index_last,
+          
+                  wind_speed_hi,
+                  wind_speed_hi_at,
+                  wind_speed_avg,
+                  wind_dir_of_prevail,
+          
+                  rain_rate_hi_mm,
+                  rain_rate_hi_in,
+                  rain_rate_hi_clicks,
+                  rain_rate_hi_at,
+          
+                  rainfall_mm,
+                  rainfall_in,
+                  rainfall_clicks,
+          
+                  solar_rad_hi,
+                  solar_rad_hi_at,
+                  solar_rad_avg,
+          
+                  solar_energy,
+          
+                  uv_index_hi,
+                  uv_index_hi_at,
+                  uv_index_avg,
+          
+                  uv_dose,
+          
+                  wind_run,
+          
+                  et
+                }
+            ),
+          
+            (
+              .sensors[]
+              | select(.lsid==551509)
+              | .data[]
+              | {
+                  time: .ts,
+          
+                  bar_absolute,
+                  bar_sea_level,
+          
+                  bar_hi,
+                  bar_lo
+                }
+            )
           ]
+          | group_by(.time)
+          | map(add)
           ' historic.json > archive_records.json
 
           jq -s '
