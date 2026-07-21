@@ -455,15 +455,18 @@ const archive15Valid =
   archive15 &&
   Math.abs(archive15.time - target15) <= 600 &&
   archive15.temp_last != null;
-      if (
-  day >= 18 &&
-  day <= 21
-) {
+if (day === 20) {
 
-  console.log(
-    "DAY",
-    day
-  );
+  document.getElementById("title").innerText =
+    `Day=${day}
+T9=${target9}
+F9=${archive9?.time}
+V9=${archive9Valid}
+T15=${target15}
+F15=${archive15?.time}
+V15=${archive15Valid}`;
+
+}
 
   console.log(
     "TARGET 9AM:",
