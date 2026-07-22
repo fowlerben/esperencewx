@@ -1288,16 +1288,16 @@ if (
 const availableDates =
   [...new Set(
     windArchive.map(r =>
-        new Date(r.time * 1000)
-          .toLocaleDateString(
-            "en-AU",
-            {
-              timeZone:
-                "Australia/Melbourne"
-            }
-          )
-      )
-    )];
+      new Date(r.time * 1000)
+        .toLocaleDateString(
+          "en-AU",
+          {
+            timeZone: "Australia/Melbourne"
+          }
+        )
+    )
+  )];
+
 
   availableDates.reverse();
 
