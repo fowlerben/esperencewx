@@ -259,6 +259,14 @@
 
 <script>
 
+async function loadMonthly() {
+
+const manualRes =
+  await fetch("manual_obs.json?" + Date.now());
+
+const manualObs =
+  await manualRes.json();
+
 const now = new Date();
 
 document.getElementById("pageTitle").innerText =
@@ -290,6 +298,11 @@ const tbody =
 for (let day = 1; day <= daysInMonth; day++) {
 
   const d = new Date(year, month, day);
+const dateString =
+  `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+const manual =
+  manualObs.find(r => r.date === dateString);
 
   const dayName =
     d.toLocaleDateString(
@@ -317,21 +330,25 @@ for (let day = 1; day <= daysInMonth; day++) {
 
     <td></td>
     <td></td>
+    <td>${manual?.cloud9 || ""}</td>
     <td></td>
     <td></td>
     <td></td>
-    <td></td>
-
-    <td></td>
+    
     <td></td>
     <td></td>
+    <td>${manual?.cloud15 || ""}</td>
     <td></td>
     <td></td>
     <td></td>
   `;
 
-  tbody.appendChild(tr);
+tbody.appendChild(tr);
 }
+
+}
+
+loadMonthly();
 
 </script>
 
