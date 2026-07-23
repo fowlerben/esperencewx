@@ -62,7 +62,15 @@
       margin-top: 20px;
       font-size: 13px;
     }
-
+    .table-wrapper {
+      width: 92%;
+      margin: 0 auto;
+    }
+    
+    table {
+      width: 100%;
+      table-layout: fixed;
+    }
     .high {
       color: red;
     }
@@ -91,8 +99,9 @@
   Observations from Esperence Weather Station
 </div>
 
-<table>
+<div class="table-wrapper">
 
+<table>
   <thead>
 
     <tr>
@@ -147,8 +156,6 @@
   <div class="stats-title" id="statsTitle">
     Statistics for the Month
   </div>
-  
-</table>
 
 <table>
 
@@ -228,9 +235,11 @@
 
   </tbody>
 
-</table>
-
-<div class="footer">
+  </table>
+  
+  </div>
+  
+  <div class="footer">
 
   <h3>Source of Data</h3>
 
