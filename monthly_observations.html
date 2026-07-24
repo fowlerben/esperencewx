@@ -435,7 +435,8 @@ const archive9 =
 
 const archive9Valid =
   archive9 &&
-  archive9.temp_last != null;
+  archive9.temp_last != null &&
+  archive9.hum_last != null;
 
   const dayName =
     d.toLocaleDateString(
@@ -462,7 +463,7 @@ const archive9Valid =
     <td>${maxGustTime}</td>
 
     <td>${archive9Valid ? ((archive9.temp_last - 32) * 5 / 9).toFixed(1) : ""}</td>
-    <td></td>
+    <td>${archive9Valid ? Number(archive9.hum_last).toFixed(0) : ""}</td>
     <td>${manual?.cloud9 || ""}</td>
     <td></td>
     <td></td>
