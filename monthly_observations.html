@@ -528,7 +528,9 @@ if (maxGustSpeed != null) gustSpeeds.push(maxGustSpeed);
 if (archive9Valid) {
   temp9Values.push((archive9.temp_last - 32) * 5 / 9);
   rh9Values.push(Number(archive9.hum_last));
-  cloud9Values.push(Number(manual?.cloud9));
+if (manual?.cloud9 != null && manual.cloud9 !== "") {
+  cloud9Values.push(Number(manual.cloud9));
+}
   spd9Values.push(Number(archive9.wind_speed_avg) * 1.60934);
   mslp9Values.push(Number(archive9.bar_sea_level) * 33.8639);
 }
@@ -536,7 +538,9 @@ if (archive9Valid) {
 if (archive15Valid) {
   temp15Values.push((archive15.temp_last - 32) * 5 / 9);
   rh15Values.push(Number(archive15.hum_last));
-  cloud15Values.push(Number(manual?.cloud15));
+if (manual?.cloud15 != null && manual.cloud15 !== "") {
+  cloud15Values.push(Number(manual.cloud15));
+}
   spd15Values.push(Number(archive15.wind_speed_avg) * 1.60934);
   mslp15Values.push(Number(archive15.bar_sea_level) * 33.8639);
 }
