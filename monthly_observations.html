@@ -325,6 +325,26 @@ const minTemp =
   minComplete && minRecords.length
     ? (Math.min(...minRecords.map(r => Number(r.temp_lo))) - 32) * 5 / 9
     : null;
+const maxStart =
+  new Date(year, month, day, 9, 5, 0).getTime() / 1000;
+
+const maxEnd =
+  new Date(year, month, day + 1, 9, 0, 0).getTime() / 1000;
+
+const maxRecords =
+  archive.filter(r =>
+    r.time >= maxStart &&
+    r.time <= maxEnd &&
+    r.temp_hi != null
+  );
+
+const maxComplete =
+  maxEnd <= Date.now() / 1000;
+
+const maxTemp =
+  maxComplete && maxRecords.length
+    ? (Math.max(...maxRecords.map(r => Number(r.temp_hi))) - 32) * 5 / 9
+    : null;
   const dayName =
     d.toLocaleDateString(
       "en-AU",
@@ -339,7 +359,7 @@ const minTemp =
     <td>${dayName}</td>
 
     <td>${minTemp != null ? minTemp.toFixed(1) : ""}</td>
-    <td></td>
+    <td>${maxTemp != null ? maxTemp.toFixed(1) : ""}</td>
 
     <td></td>
     <td></td>
