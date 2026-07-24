@@ -266,7 +266,11 @@ const manualRes =
 
 const manualObs =
   await manualRes.json();
+const archiveRes =
+  await fetch("archive_history.json?" + Date.now());
 
+const archive =
+  await archiveRes.json();
 const now = new Date();
 
 document.getElementById("pageTitle").innerText =
@@ -303,7 +307,23 @@ const dateString =
 
 const manual =
   manualObs.find(r => r.date === dateString);
+const minStart =
+  new Date(year, month, day - 1, 9, 5, 0).getTime() / 1000;
 
+const minEnd =
+  new Date(year, month, day, 9, 0, 0).getTime() / 1000;
+
+const minRecords =
+  archive.filter(r =>
+    r.time >= minStart &&
+    r.time <= minEnd &&
+    r.temp_lo != null
+  );
+
+const minTemp =
+  minRecords.length
+    ? (Math.min(...minRecords.map(r => Number(r.temp_lo))) - 32) * 5 / 9
+    : null;
   const dayName =
     d.toLocaleDateString(
       "en-AU",
@@ -317,7 +337,7 @@ const manual =
     <td>${day}</td>
     <td>${dayName}</td>
 
-    <td></td>
+    <td>${minTemp != null ? minTemp.toFixed(1) : ""}</td>
     <td></td>
 
     <td></td>
