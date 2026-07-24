@@ -451,7 +451,8 @@ const archive9Valid =
   archive9.temp_last != null &&
   archive9.hum_last != null &&
   archive9.wind_speed_avg != null &&
-  archive9.wind_dir_of_prevail != null;
+  archive9.wind_dir_of_prevail != null &&
+  archive9.bar_sea_level != null;
 
   const dayName =
     d.toLocaleDateString(
@@ -482,7 +483,7 @@ const archive9Valid =
     <td>${manual?.cloud9 || ""}</td>
     <td>${archive9Valid ? degToCompass(Number(archive9.wind_dir_of_prevail)) : ""}</td>
     <td>${archive9Valid ? (Number(archive9.wind_speed_avg) * 1.60934).toFixed(0) : ""}</td>
-    <td></td>
+    <td>${archive9Valid ? (Number(archive9.bar_sea_level) * 33.8639).toFixed(1) : ""}</td>
     
     <td></td>
     <td></td>
