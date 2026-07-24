@@ -311,7 +311,8 @@ const daysInMonth =
 
 const tbody =
   document.getElementById("dailyRows");
-
+let monthlyRain = 0;
+let monthlyEvap = 0;
 for (let day = 1; day <= daysInMonth; day++) {
 
   const d = new Date(year, month, day);
@@ -468,6 +469,13 @@ const archive15Valid =
   archive15.wind_speed_avg != null &&
   archive15.wind_dir_of_prevail != null &&
   archive15.bar_sea_level != null;
+  if (rainTotal != null) {
+  monthlyRain += rainTotal;
+}
+
+if (evapTotal != null) {
+  monthlyEvap += evapTotal;
+}
   const dayName =
     d.toLocaleDateString(
       "en-AU",
