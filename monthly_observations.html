@@ -246,12 +246,36 @@
 </tr>
 
 
-    <tr>
-      <td colspan="2"><b>Highest</b></td>
-      <td></td><td></td><td></td><td></td><td></td><td></td>
-      <td></td><td></td><td></td><td></td><td></td><td></td>
-      <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-    </tr>
+<tr>
+  <td colspan="2"><b>Highest</b></td>
+
+  <td id="highestMin"></td>
+  <td id="highestMax"></td>
+
+  <td id="highestRain"></td>
+
+  <td id="highestEvap"></td>
+
+  <td></td>
+
+  <td></td>
+  <td id="highestGustSpd"></td>
+  <td></td>
+
+  <td id="highestTemp9"></td>
+  <td id="highestRh9"></td>
+  <td id="highestCloud9"></td>
+  <td></td>
+  <td id="highestSpd9"></td>
+  <td id="highestMslp9"></td>
+
+  <td id="highestTemp15"></td>
+  <td id="highestRh15"></td>
+  <td id="highestCloud15"></td>
+  <td></td>
+  <td id="highestSpd15"></td>
+  <td id="highestMslp15"></td>
+</tr>
 
 
 <tr>
@@ -342,7 +366,7 @@ let monthlyEvap = 0;
 let minTemps = [];
 let maxTemps = [];
 let evapValues = [];
-
+let rainValues = [];
 let gustSpeeds = [];
 
 let temp9Values = [];
@@ -522,7 +546,7 @@ if (evapTotal != null) {
 if (minTemp != null) minTemps.push(minTemp);
 if (maxTemp != null) maxTemps.push(maxTemp);
 if (evapTotal != null) evapValues.push(evapTotal);
-
+if (rainTotal != null) rainValues.push(rainTotal);
 if (maxGustSpeed != null) gustSpeeds.push(maxGustSpeed);
 
 if (archive9Valid) {
@@ -627,7 +651,50 @@ document.getElementById("lowestSpd15").innerText =
 
 document.getElementById("lowestMslp15").innerText =
   Math.min(...mslp15Values).toFixed(1);
+document.getElementById("highestMin").innerText =
+  Math.max(...minTemps).toFixed(1);
 
+document.getElementById("highestMax").innerText =
+  Math.max(...maxTemps).toFixed(1);
+
+document.getElementById("highestRain").innerText =
+  Math.max(...rainValues).toFixed(1);
+
+document.getElementById("highestEvap").innerText =
+  Math.max(...evapValues).toFixed(2);
+
+document.getElementById("highestGustSpd").innerText =
+  Math.max(...gustSpeeds).toFixed(0);
+
+document.getElementById("highestTemp9").innerText =
+  Math.max(...temp9Values).toFixed(1);
+
+document.getElementById("highestRh9").innerText =
+  Math.max(...rh9Values).toFixed(0);
+
+document.getElementById("highestCloud9").innerText =
+  Math.max(...cloud9Values).toFixed(0);
+
+document.getElementById("highestSpd9").innerText =
+  Math.max(...spd9Values).toFixed(0);
+
+document.getElementById("highestMslp9").innerText =
+  Math.max(...mslp9Values).toFixed(1);
+
+document.getElementById("highestTemp15").innerText =
+  Math.max(...temp15Values).toFixed(1);
+
+document.getElementById("highestRh15").innerText =
+  Math.max(...rh15Values).toFixed(0);
+
+document.getElementById("highestCloud15").innerText =
+  Math.max(...cloud15Values).toFixed(0);
+
+document.getElementById("highestSpd15").innerText =
+  Math.max(...spd15Values).toFixed(0);
+
+document.getElementById("highestMslp15").innerText =
+  Math.max(...mslp15Values).toFixed(1);
 document.getElementById("totalRain").innerText =
   monthlyRain.toFixed(1);
 
