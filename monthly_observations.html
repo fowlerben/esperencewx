@@ -425,6 +425,18 @@ const maxGustTime =
           hour12: false
         })
     : "";
+  const target9 =
+  new Date(year, month, day, 9, 0, 0).getTime() / 1000;
+
+const archive9 =
+  archive.find(r =>
+    r.time === target9
+  );
+
+const archive9Valid =
+  archive9 &&
+  archive9.temp_last != null;
+
   const dayName =
     d.toLocaleDateString(
       "en-AU",
@@ -449,7 +461,7 @@ const maxGustTime =
     <td>${maxGustSpeed != null ? maxGustSpeed.toFixed(0) : ""}</td>
     <td>${maxGustTime}</td>
 
-    <td></td>
+    <td>${archive9Valid ? ((archive9.temp_last - 32) * 5 / 9).toFixed(1) : ""}</td>
     <td></td>
     <td>${manual?.cloud9 || ""}</td>
     <td></td>
