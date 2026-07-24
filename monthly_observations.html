@@ -453,7 +453,17 @@ const archive9Valid =
   archive9.wind_speed_avg != null &&
   archive9.wind_dir_of_prevail != null &&
   archive9.bar_sea_level != null;
+const target15 =
+  new Date(year, month, day, 15, 0, 0).getTime() / 1000;
 
+const archive15 =
+  archive.find(r =>
+    r.time === target15
+  );
+
+const archive15Valid =
+  archive15 &&
+  archive15.temp_last != null;
   const dayName =
     d.toLocaleDateString(
       "en-AU",
@@ -485,7 +495,7 @@ const archive9Valid =
     <td>${archive9Valid ? (Number(archive9.wind_speed_avg) * 1.60934).toFixed(0) : ""}</td>
     <td>${archive9Valid ? (Number(archive9.bar_sea_level) * 33.8639).toFixed(1) : ""}</td>
     
-    <td></td>
+    <td>${archive15Valid ? ((archive15.temp_last - 32) * 5 / 9).toFixed(1) : ""}</td>
     <td></td>
     <td>${manual?.cloud15 || ""}</td>
     <td></td>
