@@ -362,7 +362,7 @@ function colourColumn(colIndex, includeLow = true) {
 
     if (!cell) return;
 
-    const value = Number(cell.innerText);
+    const value = parseFloat(cell.textContent);
 
     if (!isNaN(value)) {
       values.push(value);
@@ -381,7 +381,7 @@ function colourColumn(colIndex, includeLow = true) {
 
     if (!cell) return;
 
-    const value = Number(cell.innerText);
+    const value = parseFloat(cell.textContent);
 
     if (isNaN(value)) return;
 
