@@ -214,12 +214,36 @@
       <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
     </tr>
 
-  <tr>
-    <td colspan="2"><b>Lowest</b></td>
-      <td></td><td></td><td></td><td></td><td></td><td></td>
-      <td></td><td></td><td></td><td></td><td></td><td></td>
-      <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-    </tr>
+<tr>
+  <td colspan="2"><b>Lowest</b></td>
+
+  <td id="lowestMin"></td>
+  <td id="lowestMax"></td>
+
+  <td></td>
+
+  <td id="lowestEvap"></td>
+
+  <td></td>
+
+  <td></td>
+  <td id="lowestGustSpd"></td>
+  <td></td>
+
+  <td id="lowestTemp9"></td>
+  <td id="lowestRh9"></td>
+  <td id="lowestCloud9"></td>
+  <td></td>
+  <td id="lowestSpd9"></td>
+  <td id="lowestMslp9"></td>
+
+  <td id="lowestTemp15"></td>
+  <td id="lowestRh15"></td>
+  <td id="lowestCloud15"></td>
+  <td></td>
+  <td id="lowestSpd15"></td>
+  <td id="lowestMslp15"></td>
+</tr>
 
 
     <tr>
@@ -315,6 +339,23 @@ const tbody =
   document.getElementById("dailyRows");
 let monthlyRain = 0;
 let monthlyEvap = 0;
+let minTemps = [];
+let maxTemps = [];
+let evapValues = [];
+
+let gustSpeeds = [];
+
+let temp9Values = [];
+let rh9Values = [];
+let cloud9Values = [];
+let spd9Values = [];
+let mslp9Values = [];
+
+let temp15Values = [];
+let rh15Values = [];
+let cloud15Values = [];
+let spd15Values = [];
+let mslp15Values = [];
 for (let day = 1; day <= daysInMonth; day++) {
 
   const d = new Date(year, month, day);
@@ -478,6 +519,27 @@ const archive15Valid =
 if (evapTotal != null) {
   monthlyEvap += evapTotal;
 }
+if (minTemp != null) minTemps.push(minTemp);
+if (maxTemp != null) maxTemps.push(maxTemp);
+if (evapTotal != null) evapValues.push(evapTotal);
+
+if (maxGustSpeed != null) gustSpeeds.push(maxGustSpeed);
+
+if (archive9Valid) {
+  temp9Values.push((archive9.temp_last - 32) * 5 / 9);
+  rh9Values.push(Number(archive9.hum_last));
+  cloud9Values.push(Number(manual?.cloud9));
+  spd9Values.push(Number(archive9.wind_speed_avg) * 1.60934);
+  mslp9Values.push(Number(archive9.bar_sea_level) * 33.8639);
+}
+
+if (archive15Valid) {
+  temp15Values.push((archive15.temp_last - 32) * 5 / 9);
+  rh15Values.push(Number(archive15.hum_last));
+  cloud15Values.push(Number(manual?.cloud15));
+  spd15Values.push(Number(archive15.wind_speed_avg) * 1.60934);
+  mslp15Values.push(Number(archive15.bar_sea_level) * 33.8639);
+}
   const dayName =
     d.toLocaleDateString(
       "en-AU",
@@ -520,6 +582,47 @@ if (evapTotal != null) {
 
 tbody.appendChild(tr);
 }
+document.getElementById("lowestMin").innerText =
+  Math.min(...minTemps).toFixed(1);
+
+document.getElementById("lowestMax").innerText =
+  Math.min(...maxTemps).toFixed(1);
+
+document.getElementById("lowestEvap").innerText =
+  Math.min(...evapValues).toFixed(2);
+
+document.getElementById("lowestGustSpd").innerText =
+  Math.min(...gustSpeeds).toFixed(0);
+
+document.getElementById("lowestTemp9").innerText =
+  Math.min(...temp9Values).toFixed(1);
+
+document.getElementById("lowestRh9").innerText =
+  Math.min(...rh9Values).toFixed(0);
+
+document.getElementById("lowestCloud9").innerText =
+  Math.min(...cloud9Values).toFixed(0);
+
+document.getElementById("lowestSpd9").innerText =
+  Math.min(...spd9Values).toFixed(0);
+
+document.getElementById("lowestMslp9").innerText =
+  Math.min(...mslp9Values).toFixed(1);
+
+document.getElementById("lowestTemp15").innerText =
+  Math.min(...temp15Values).toFixed(1);
+
+document.getElementById("lowestRh15").innerText =
+  Math.min(...rh15Values).toFixed(0);
+
+document.getElementById("lowestCloud15").innerText =
+  Math.min(...cloud15Values).toFixed(0);
+
+document.getElementById("lowestSpd15").innerText =
+  Math.min(...spd15Values).toFixed(0);
+
+document.getElementById("lowestMslp15").innerText =
+  Math.min(...mslp15Values).toFixed(1);
 
 document.getElementById("totalRain").innerText =
   monthlyRain.toFixed(1);
