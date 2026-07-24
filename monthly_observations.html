@@ -349,6 +349,53 @@ function degToCompass(deg) {
 function mean(arr) {
   return arr.reduce((a, b) => a + b, 0) / arr.length;
 }
+function colourColumn(colIndex, includeLow = true) {
+
+  const rows =
+    document.querySelectorAll("#dailyRows tr");
+
+  const values = [];
+
+  rows.forEach(row => {
+
+    const cell = row.cells[colIndex];
+
+    if (!cell) return;
+
+    const value = Number(cell.innerText);
+
+    if (!isNaN(value)) {
+      values.push(value);
+    }
+
+  });
+
+  if (!values.length) return;
+
+  const max = Math.max(...values);
+  const min = Math.min(...values);
+
+  rows.forEach(row => {
+
+    const cell = row.cells[colIndex];
+
+    if (!cell) return;
+
+    const value = Number(cell.innerText);
+
+    if (isNaN(value)) return;
+
+    if (value === max) {
+      cell.classList.add("high");
+    }
+
+    if (includeLow && value === min) {
+      cell.classList.add("low");
+    }
+
+  });
+
+}
 async function loadMonthly() {
 
 const manualRes =
@@ -769,6 +816,24 @@ document.getElementById("totalRain").innerText =
 document.getElementById("totalEvap").innerText =
   monthlyEvap.toFixed(1);
 }
+colourColumn(2);   // Min Temp
+colourColumn(3);   // Max Temp
+colourColumn(4, false); // Rain (highest only)
+colourColumn(5);   // Evap
+
+colourColumn(8);   // Gust Speed
+
+colourColumn(10);  // 9am Temp
+colourColumn(11);  // 9am RH
+colourColumn(12);  // 9am Cloud
+colourColumn(14);  // 9am Speed
+colourColumn(15);  // 9am MSLP
+
+colourColumn(16);  // 3pm Temp
+colourColumn(17);  // 3pm RH
+colourColumn(18);  // 3pm Cloud
+colourColumn(20);  // 3pm Speed
+colourColumn(21);  // 3pm MSLP
 loadMonthly();
 
 </script>
