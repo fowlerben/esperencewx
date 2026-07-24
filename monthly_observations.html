@@ -384,6 +384,47 @@ const maxTemp =
   maxComplete && maxRecords.length
     ? (Math.max(...maxRecords.map(r => Number(r.temp_hi))) - 32) * 5 / 9
     : null;
+const gustStart =
+  new Date(year, month, day, 0, 5, 0).getTime() / 1000;
+
+const gustEnd =
+  new Date(year, month, day + 1, 0, 0, 0).getTime() / 1000;
+
+const gustRecords =
+  archive.filter(r =>
+    r.time >= gustStart &&
+    r.time <= gustEnd &&
+    r.wind_speed_hi != null
+  );
+
+const gustComplete =
+  gustEnd <= Date.now() / 1000;
+
+const maxGustRecord =
+  gustRecords.length
+    ? gustRecords.reduce((a, b) =>
+        Number(b.wind_speed_hi || 0) >
+        Number(a.wind_speed_hi || 0)
+          ? b
+          : a
+      )
+    : null;
+
+const maxGustSpeed =
+  gustComplete && maxGustRecord
+    ? Number(maxGustRecord.wind_speed_hi) * 1.60934
+    : null;
+
+const maxGustTime =
+  gustComplete &&
+  maxGustRecord?.wind_speed_hi_at
+    ? new Date(maxGustRecord.wind_speed_hi_at * 1000)
+        .toLocaleTimeString("en-AU", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false
+        })
+    : "";
   const dayName =
     d.toLocaleDateString(
       "en-AU",
@@ -405,8 +446,8 @@ const maxTemp =
     <td></td>
 
     <td></td>
-    <td></td>
-    <td></td>
+    <td>${maxGustSpeed != null ? maxGustSpeed.toFixed(0) : ""}</td>
+    <td>${maxGustTime}</td>
 
     <td></td>
     <td></td>
