@@ -481,30 +481,30 @@ const archive15Valid =
     <td>${day}</td>
     <td>${dayName}</td>
 
-    <td>${minTemp != null ? minTemp.toFixed(1) : ""}</td>
-    <td>${maxTemp != null ? maxTemp.toFixed(1) : ""}</td>
+    <td>${minTemp != null ? minTemp.toFixed(1) : (manual?.minTemp ?? "")}</td>
+    <td>${maxTemp != null ? maxTemp.toFixed(1) : (manual?.maxTemp ?? "")}</td>
 
-    <td>${rainTotal != null ? rainTotal.toFixed(1) : ""}</td>
-    <td>${evapTotal != null ? evapTotal.toFixed(2) : ""}</td>
+    <td>${rainTotal != null ? rainTotal.toFixed(1) : (manual?.rain ?? "")}</td>
+    <td>${evapTotal != null ? evapTotal.toFixed(2) : (manual?.evap ?? "")}</td>
     <td></td>
 
     <td></td>
-    <td>${maxGustSpeed != null ? maxGustSpeed.toFixed(0) : ""}</td>
-    <td>${maxGustTime}</td>
+    <td>${maxGustSpeed != null ? maxGustSpeed.toFixed(0) : (manual?.gustSpeed ?? "")}</td>
+    <td>${maxGustTime || manual?.gustTime || ""}</td>
 
-    <td>${archive9Valid ? ((archive9.temp_last - 32) * 5 / 9).toFixed(1) : ""}</td>
-    <td>${archive9Valid ? Number(archive9.hum_last).toFixed(0) : ""}</td>
+    <td>${archive9Valid ? ((archive9.temp_last - 32) * 5 / 9).toFixed(1) : (manual?.temp9 ?? "")}</td>
+    <td>${archive9Valid ? Number(archive9.hum_last).toFixed(0) : (manual?.rh9 ?? "")}</td>
     <td>${manual?.cloud9 || ""}</td>
-    <td>${archive9Valid ? degToCompass(Number(archive9.wind_dir_of_prevail)) : ""}</td>
-    <td>${archive9Valid ? (Number(archive9.wind_speed_avg) * 1.60934).toFixed(0) : ""}</td>
-    <td>${archive9Valid ? (Number(archive9.bar_sea_level) * 33.8639).toFixed(1) : ""}</td>
+    <td>${archive9Valid ? degToCompass(Number(archive9.wind_dir_of_prevail)) : (manual?.dir9 ?? "")}</td>
+    <td>${archive9Valid ? (Number(archive9.wind_speed_avg) * 1.60934).toFixed(0) : (manual?.spd9 ?? "")}</td>
+    <td>${archive9Valid ? (Number(archive9.bar_sea_level) * 33.8639).toFixed(1) : (manual?.mslp9 ?? "")}</td> * 33.8639).toFixed(1) : ""}</td>
     
-    <td>${archive15Valid ? ((archive15.temp_last - 32) * 5 / 9).toFixed(1) : ""}</td>
-    <td>${archive15Valid ? Number(archive15.hum_last).toFixed(0) : ""}</td>
+    <td>${archive15Valid ? ((archive15.temp_last - 32) * 5 / 9).toFixed(1) : (manual?.temp9 ?? "")}</td>
+    <td>${archive15Valid ? Number(archive15.hum_last).toFixed(0) : (manual?.rh9 ?? "")}</td>
     <td>${manual?.cloud15 || ""}</td>
-    <td>${archive15Valid ? degToCompass(Number(archive15.wind_dir_of_prevail)) : ""}</td>
-    <td>${archive15Valid ? (Number(archive15.wind_speed_avg) * 1.60934).toFixed(0) : ""}</td>
-    <td>${archive15Valid ? (Number(archive15.bar_sea_level) * 33.8639).toFixed(1) : ""}</td>
+    <td>${archive15Valid ? degToCompass(Number(archive15.wind_dir_of_prevail)) : (manual?.dir9 ?? "")}</td>
+    <td>${archive15Valid ? (Number(archive15.wind_speed_avg) * 1.60934).toFixed(0) : (manual?.spd9 ?? "")}</td>
+    <td>${archive15Valid ? (Number(archive15.bar_sea_level) * 33.8639).toFixed(1) : (manual?.mslp9 ?? "")}</td> * 33.8639).toFixed(1) : ""}</td>
   `;
 
 tbody.appendChild(tr);
