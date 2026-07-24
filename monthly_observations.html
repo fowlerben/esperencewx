@@ -464,7 +464,9 @@ const archive15 =
 const archive15Valid =
   archive15 &&
   archive15.temp_last != null &&
-  archive15.hum_last != null;
+  archive15.hum_last != null &&
+  archive15.wind_speed_avg != null &&
+  archive15.wind_dir_of_prevail != null;
   const dayName =
     d.toLocaleDateString(
       "en-AU",
@@ -499,8 +501,8 @@ const archive15Valid =
     <td>${archive15Valid ? ((archive15.temp_last - 32) * 5 / 9).toFixed(1) : ""}</td>
     <td>${archive15Valid ? Number(archive15.hum_last).toFixed(0) : ""}</td>
     <td>${manual?.cloud15 || ""}</td>
-    <td></td>
-    <td></td>
+    <td>${archive15Valid ? degToCompass(Number(archive15.wind_dir_of_prevail)) : ""}</td>
+    <td>${archive15Valid ? (Number(archive15.wind_speed_avg) * 1.60934).toFixed(0) : ""}</td>
     <td></td>
   `;
 
