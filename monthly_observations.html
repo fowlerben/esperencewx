@@ -339,6 +339,31 @@ const rainTotal =
         0
       )
     : null;
+const evapRecords =
+  archive.filter(r => {
+    if (
+      r.time < minStart ||
+      r.time > minEnd ||
+      r.et == null
+    ) {
+      return false;
+    }
+
+    const obsTime = new Date(r.time * 1000);
+
+    return (
+      obsTime.getMinutes() === 0 &&
+      obsTime.getSeconds() === 0
+    );
+  });
+
+const evapTotal =
+  minComplete && evapRecords.length
+    ? evapRecords.reduce(
+        (sum, r) => sum + Number(r.et || 0),
+        0
+      )
+    : null;
 const maxStart =
   new Date(year, month, day, 9, 5, 0).getTime() / 1000;
 
@@ -376,7 +401,7 @@ const maxTemp =
     <td>${maxTemp != null ? maxTemp.toFixed(1) : ""}</td>
 
     <td>${rainTotal != null ? rainTotal.toFixed(1) : ""}</td>
-    <td></td>
+    <td>${evapTotal != null ? evapTotal.toFixed(2) : ""}</td>
     <td></td>
 
     <td></td>
