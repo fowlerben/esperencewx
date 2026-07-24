@@ -325,6 +325,20 @@ const minTemp =
   minComplete && minRecords.length
     ? (Math.min(...minRecords.map(r => Number(r.temp_lo))) - 32) * 5 / 9
     : null;
+const rainRecords =
+  archive.filter(r =>
+    r.time >= minStart &&
+    r.time <= minEnd &&
+    r.rainfall_mm != null
+  );
+
+const rainTotal =
+  minComplete && rainRecords.length
+    ? rainRecords.reduce(
+        (sum, r) => sum + Number(r.rainfall_mm || 0),
+        0
+      )
+    : null;
 const maxStart =
   new Date(year, month, day, 9, 5, 0).getTime() / 1000;
 
@@ -361,7 +375,7 @@ const maxTemp =
     <td>${minTemp != null ? minTemp.toFixed(1) : ""}</td>
     <td>${maxTemp != null ? maxTemp.toFixed(1) : ""}</td>
 
-    <td></td>
+    <td>${rainTotal != null ? rainTotal.toFixed(1) : ""}</td>
     <td></td>
     <td></td>
 
