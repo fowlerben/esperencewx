@@ -207,12 +207,36 @@
 
   <tbody>
 
-  <tr>
-    <td colspan="2"><b>Mean</b></td>
-      <td></td><td></td><td></td><td></td><td></td><td></td>
-      <td></td><td></td><td></td><td></td><td></td><td></td>
-      <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-    </tr>
+<tr>
+  <td colspan="2"><b>Mean</b></td>
+
+  <td id="meanMin"></td>
+  <td id="meanMax"></td>
+
+  <td></td>
+
+  <td id="meanEvap"></td>
+
+  <td></td>
+
+  <td></td>
+  <td id="meanGustSpd"></td>
+  <td></td>
+
+  <td id="meanTemp9"></td>
+  <td id="meanRh9"></td>
+  <td id="meanCloud9"></td>
+  <td></td>
+  <td id="meanSpd9"></td>
+  <td id="meanMslp9"></td>
+
+  <td id="meanTemp15"></td>
+  <td id="meanRh15"></td>
+  <td id="meanCloud15"></td>
+  <td></td>
+  <td id="meanSpd15"></td>
+  <td id="meanMslp15"></td>
+</tr>
 
 <tr>
   <td colspan="2"><b>Lowest</b></td>
@@ -321,6 +345,9 @@ function degToCompass(deg) {
     Math.round(deg / 22.5) % 16
   ];
 
+}
+function mean(arr) {
+  return arr.reduce((a, b) => a + b, 0) / arr.length;
 }
 async function loadMonthly() {
 
@@ -610,6 +637,47 @@ if (manual?.cloud15 != null && manual.cloud15 !== "") {
 
 tbody.appendChild(tr);
 }
+document.getElementById("meanMin").innerText =
+  mean(minTemps).toFixed(1);
+
+document.getElementById("meanMax").innerText =
+  mean(maxTemps).toFixed(1);
+
+document.getElementById("meanEvap").innerText =
+  mean(evapValues).toFixed(2);
+
+document.getElementById("meanGustSpd").innerText =
+  mean(gustSpeeds).toFixed(0);
+
+document.getElementById("meanTemp9").innerText =
+  mean(temp9Values).toFixed(1);
+
+document.getElementById("meanRh9").innerText =
+  mean(rh9Values).toFixed(0);
+
+document.getElementById("meanCloud9").innerText =
+  mean(cloud9Values).toFixed(0);
+
+document.getElementById("meanSpd9").innerText =
+  mean(spd9Values).toFixed(0);
+
+document.getElementById("meanMslp9").innerText =
+  mean(mslp9Values).toFixed(1);
+
+document.getElementById("meanTemp15").innerText =
+  mean(temp15Values).toFixed(1);
+
+document.getElementById("meanRh15").innerText =
+  mean(rh15Values).toFixed(0);
+
+document.getElementById("meanCloud15").innerText =
+  mean(cloud15Values).toFixed(0);
+
+document.getElementById("meanSpd15").innerText =
+  mean(spd15Values).toFixed(0);
+
+document.getElementById("meanMslp15").innerText =
+  mean(mslp15Values).toFixed(1);
 document.getElementById("lowestMin").innerText =
   Math.min(...minTemps).toFixed(1);
 
