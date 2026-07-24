@@ -258,7 +258,20 @@
 </div>
 
 <script>
+function degToCompass(deg) {
 
+  const dirs = [
+    "N","NNE","NE","ENE",
+    "E","ESE","SE","SSE",
+    "S","SSW","SW","WSW",
+    "W","WNW","NW","NNW"
+  ];
+
+  return dirs[
+    Math.round(deg / 22.5) % 16
+  ];
+
+}
 async function loadMonthly() {
 
 const manualRes =
@@ -436,7 +449,9 @@ const archive9 =
 const archive9Valid =
   archive9 &&
   archive9.temp_last != null &&
-  archive9.hum_last != null;
+  archive9.hum_last != null &&
+  archive9.wind_speed_avg != null &&
+  archive9.wind_dir_of_prevail != null;
 
   const dayName =
     d.toLocaleDateString(
@@ -465,8 +480,8 @@ const archive9Valid =
     <td>${archive9Valid ? ((archive9.temp_last - 32) * 5 / 9).toFixed(1) : ""}</td>
     <td>${archive9Valid ? Number(archive9.hum_last).toFixed(0) : ""}</td>
     <td>${manual?.cloud9 || ""}</td>
-    <td></td>
-    <td></td>
+    <td>${archive9Valid ? degToCompass(Number(archive9.wind_dir_of_prevail)) : ""}</td>
+    <td>${archive9Valid ? (Number(archive9.wind_speed_avg) * 1.60934).toFixed(0) : ""}</td>
     <td></td>
     
     <td></td>
