@@ -230,12 +230,14 @@
     </tr>
 
 
-    <tr>
-      <td colspan="2"><b>Total</b></td>
-      <td></td><td></td><td></td><td></td><td></td><td></td>
-      <td></td><td></td><td></td><td></td><td></td><td></td>
-      <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-    </tr>
+<tr>
+  <td colspan="2"><b>Total</b></td>
+  <td></td><td></td>
+  <td id="totalRain"></td><td id="totalEvap"></td>
+  <td></td><td></td><td></td><td></td><td></td><td></td>
+  <td></td><td></td><td></td><td></td><td></td><td></td>
+  <td></td><td></td><td></td><td></td>
+</tr>
 
 
   </tbody>
@@ -518,8 +520,12 @@ if (evapTotal != null) {
 tbody.appendChild(tr);
 }
 
-}
+document.getElementById("totalRain").innerText =
+  monthlyRain.toFixed(1);
 
+document.getElementById("totalEvap").innerText =
+  monthlyEvap.toFixed(1);
+}
 loadMonthly();
 
 </script>
