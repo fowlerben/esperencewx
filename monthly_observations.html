@@ -375,7 +375,7 @@ const evapTotal =
     ? evapRecords.reduce(
         (sum, r) => sum + Number(r.et || 0),
         0
-      )
+      ) * 25.4
     : null;
 const maxStart =
   new Date(year, month, day, 9, 5, 0).getTime() / 1000;
