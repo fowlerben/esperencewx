@@ -1089,6 +1089,55 @@ highRow.innerHTML = `
 <td>${Math.max(...maxThsws).toFixed(1)}</td>
 `;
 summaryTable.appendChild(highRow);
+summaryTable.appendChild(totalRow);
+const totalRow =
+  document.createElement("tr");
+
+totalRow.innerHTML = `
+<td><b>Total</b></td>
+
+<td></td>
+<td></td>
+<td></td>
+
+<td></td>
+
+<td></td>
+<td></td>
+<td></td>
+
+<td></td>
+<td></td>
+<td></td>
+
+<td></td>
+<td></td>
+<td></td>
+
+<td>${rains.reduce((a,b)=>a+b,0).toFixed(1)}</td>
+
+<td>${ets.reduce((a,b)=>a+b,0).toFixed(2)}</td>
+
+<td></td>
+
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+
+<td></td>
+
+<td>${solarEnergies.reduce((a,b)=>a+b,0).toFixed(2)}</td>
+
+<td></td>
+
+<td>${uvDoses.reduce((a,b)=>a+b,0).toFixed(2)}</td>
+
+<td></td>
+<td></td>
+<td></td>
+`;
 }
 
 loadDailyStatistics();
