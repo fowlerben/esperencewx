@@ -469,6 +469,73 @@ const maxRainRate =
   maxValue(
     dailyArchive.map(r => r.rain_rate_hi_mm)
   );
+
+const maxWindSpeed =
+  maxValue(
+    dailyArchive.map(r => r.wind_speed_hi)
+  );
+
+const maxWindRecord =
+  dailyArchive.find(
+    r => r.wind_speed_hi === maxWindSpeed
+  );
+
+let maxWindTime = "";
+
+if (
+  maxWindRecord &&
+  maxWindRecord.wind_speed_hi_at
+) {
+
+  const t =
+    new Date(
+      maxWindRecord.wind_speed_hi_at * 1000
+    );
+
+  maxWindTime =
+    t.toLocaleTimeString(
+      "en-AU",
+      {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }
+    );
+
+}
+
+const avgWindSpeed =
+  average(
+    dailyArchive.map(r => r.wind_speed_avg)
+  );
+
+const prevailingDirections =
+  dailyArchive
+    .map(r => r.wind_dir_of_prevail)
+    .filter(v => v != null);
+
+let avgWindDir = "";
+
+if (prevailingDirections.length) {
+
+  const counts = {};
+
+  prevailingDirections.forEach(dir => {
+
+    counts[dir] =
+      (counts[dir] || 0) + 1;
+
+  });
+
+  avgWindDir =
+    Object.keys(counts)
+      .reduce((a, b) =>
+        counts[a] > counts[b]
+          ? a
+          : b
+      );
+
+}
   
 const tr =
   document.createElement("tr");
@@ -572,10 +639,22 @@ tr.innerHTML = `
       : ""
   }</td>
   <td></td>
-  <td></td>
-  <td></td>
-  <td></td>
-  <td></td>
+  
+  <td>${
+    maxWindSpeed !== ""
+      ? maxWindSpeed.toFixed(1)
+      : ""
+  }</td>
+  
+  <td>${maxWindTime}</td>
+  
+  <td>${avgWindDir}</td>
+  
+  <td>${
+    avgWindSpeed !== ""
+      ? avgWindSpeed.toFixed(1)
+      : ""
+  }</td>
 
   <td></td>
   <td></td>
