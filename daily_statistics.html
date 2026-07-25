@@ -376,6 +376,36 @@ const avgHum =
     dailyArchive.map(r => r.hum_last)
   );
 
+const minDewF =
+  minValue(
+    dailyArchive.map(r => r.dew_point_lo)
+  );
+
+const maxDewF =
+  maxValue(
+    dailyArchive.map(r => r.dew_point_hi)
+  );
+
+const avgDewF =
+  average(
+    dailyArchive.map(r => r.dew_point_last)
+  );
+
+const minDew =
+  minDewF !== ""
+    ? (minDewF - 32) * 5 / 9
+    : "";
+
+const maxDew =
+  maxDewF !== ""
+    ? (maxDewF - 32) * 5 / 9
+    : "";
+
+const avgDew =
+  avgDewF !== ""
+    ? (avgDewF - 32) * 5 / 9
+    : "";
+  
 const tr =
   document.createElement("tr");
 
@@ -424,9 +454,23 @@ tr.innerHTML = `
       : ""
   }</td>
 
-  <td></td>
-  <td></td>
-  <td></td>
+  <td>${
+    minDew !== ""
+      ? minDew.toFixed(1)
+      : ""
+  }</td>
+  
+  <td>${
+    maxDew !== ""
+      ? maxDew.toFixed(1)
+      : ""
+  }</td>
+  
+  <td>${
+    avgDew !== ""
+      ? avgDew.toFixed(1)
+      : ""
+  }</td>
 
   <td></td>
   <td></td>
