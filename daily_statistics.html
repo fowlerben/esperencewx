@@ -436,6 +436,36 @@ const avgMslp =
   avgMslpInHg !== ""
     ? avgMslpInHg * 33.8639
     : "";
+
+const totalRain =
+  dailyArchive
+    .map(r => r.rainfall_mm)
+    .filter(v => v != null)
+    .reduce((a, b) => a + b, 0);
+
+const hourlyEtRecords =
+  dailyArchive.filter(r => {
+
+    const t =
+      new Date(r.time * 1000);
+
+    return (
+      t.getMinutes() === 0 &&
+      t.getSeconds() === 0
+    );
+
+  });
+
+const totalEt =
+  hourlyEtRecords
+    .map(r => r.et)
+    .filter(v => v != null)
+    .reduce((a, b) => a + b, 0);
+
+const maxRainRate =
+  maxValue(
+    dailyArchive.map(r => r.rain_rate_hi_mm)
+  );
   
 const tr =
   document.createElement("tr");
@@ -521,10 +551,23 @@ tr.innerHTML = `
       : ""
   }</td>
 
-  <td></td>
-  <td></td>
-  <td></td>
-
+  <td>${
+    totalRain !== ""
+      ? totalRain.toFixed(1)
+      : ""
+  }</td>
+  
+  <td>${
+    totalEt !== ""
+      ? totalEt.toFixed(2)
+      : ""
+  }</td>
+  
+  <td>${
+    maxRainRate !== ""
+      ? maxRainRate.toFixed(1)
+      : ""
+  }</td>
   <td></td>
   <td></td>
   <td></td>
