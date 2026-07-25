@@ -339,7 +339,8 @@ let avgDews = [];
 let minMslps = [];
 let maxMslps = [];
 let avgMslps = [];
-
+let rains = [];
+let maxRainRates = [];
 let ets = [];
 
 let maxWindSpeeds = [];
@@ -906,7 +907,8 @@ if (avgDew !== "") avgDews.push(avgDew);
 if (minMslp !== "") minMslps.push(minMslp);
 if (maxMslp !== "") maxMslps.push(maxMslp);
 if (avgMslp !== "") avgMslps.push(avgMslp);
-
+if (totalRain !== "") rains.push(totalRain);
+if (maxRainRate !== "") maxRainRates.push(maxRainRate);
 if (totalEt !== "") ets.push(totalEt);
 
 if (maxWindSpeed !== "") maxWindSpeeds.push(maxWindSpeed);
@@ -1031,7 +1033,62 @@ lowRow.innerHTML = `
 `;
 summaryTable.appendChild(meanRow);
 summaryTable.appendChild(lowRow);
+summaryTable.appendChild(highRow);
+  
+const highRow =
+  document.createElement("tr");
 
+highRow.innerHTML = `
+<td><b>Highest</b></td>
+
+<td>${Math.max(...minTemps).toFixed(1)}</td>
+<td>${Math.max(...maxTemps).toFixed(1)}</td>
+<td>${Math.max(...avgTemps).toFixed(1)}</td>
+
+<td>${Math.max(...terrestrialMins).toFixed(1)}</td>
+
+<td>${Math.max(...minHums).toFixed(1)}</td>
+<td>${Math.max(...maxHums).toFixed(1)}</td>
+<td>${Math.max(...avgHums).toFixed(1)}</td>
+
+<td>${Math.max(...minDews).toFixed(1)}</td>
+<td>${Math.max(...maxDews).toFixed(1)}</td>
+<td>${Math.max(...avgDews).toFixed(1)}</td>
+
+<td>${Math.max(...minMslps).toFixed(1)}</td>
+<td>${Math.max(...maxMslps).toFixed(1)}</td>
+<td>${Math.max(...avgMslps).toFixed(1)}</td>
+
+<td>${Math.max(...rains).toFixed(1)}</td>
+
+<td>${Math.max(...ets).toFixed(2)}</td>
+
+<td>${Math.max(...maxRainRates).toFixed(1)}</td>
+
+<td></td>
+
+<td>${Math.max(...maxWindSpeeds).toFixed(1)}</td>
+
+<td></td>
+
+<td></td>
+
+<td>${Math.max(...avgWindSpeeds).toFixed(1)}</td>
+
+<td>${Math.max(...maxSolars).toFixed(0)}</td>
+
+<td>${Math.max(...solarEnergies).toFixed(2)}</td>
+
+<td>${Math.max(...maxUvs).toFixed(1)}</td>
+
+<td>${Math.max(...uvDoses).toFixed(2)}</td>
+
+<td>${Math.max(...maxHeatIndices).toFixed(1)}</td>
+
+<td></td>
+
+<td>${Math.max(...maxThsws).toFixed(1)}</td>
+`;
 }
 
 loadDailyStatistics();
