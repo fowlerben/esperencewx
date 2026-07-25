@@ -481,9 +481,8 @@ const maxWindSpeed =
     : "";
 const maxWindRecord =
   dailyArchive.find(
-    r => r.wind_speed_hi === maxWindSpeed
+    r => r.wind_speed_hi === maxWindSpeedMph
   );
-
 let maxWindTime = "";
 
 if (
