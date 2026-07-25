@@ -568,7 +568,7 @@ const solarEnergy =
   dailyArchive
     .map(r => r.solar_energy)
     .filter(v => v != null)
-    .reduce((a, b) => a + b, 0);
+    .reduce((a, b) => a + b, 0) * 3.6;
 
 const maxUv =
   maxValue(
@@ -708,7 +708,7 @@ tr.innerHTML = `
   
   <td>${
     solarEnergy !== ""
-      ? solarEnergy.toFixed(1)
+      ? solarEnergy.toFixed(2)
       : ""
   }</td>
   
@@ -720,7 +720,7 @@ tr.innerHTML = `
   
   <td>${
     uvMeds !== ""
-      ? uvMeds.toFixed(1)
+      ? uvMeds.toFixed(2)
       : ""
   }</td>
 
