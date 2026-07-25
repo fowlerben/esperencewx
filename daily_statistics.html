@@ -580,6 +580,26 @@ const uvMeds =
     .map(r => r.uv_dose)
     .filter(v => v != null)
     .reduce((a, b) => a + b, 0);
+
+const maxHeatIndexF =
+  maxValue(
+    daytimeArchive.map(r => r.heat_index_hi)
+  );
+
+const maxHeatIndex =
+  maxHeatIndexF !== ""
+    ? (maxHeatIndexF - 32) * 5 / 9
+    : "";
+
+const maxThswF =
+  maxValue(
+    daytimeArchive.map(r => r.thsw_index_hi)
+  );
+
+const maxThsw =
+  maxThswF !== ""
+    ? (maxThswF - 32) * 5 / 9
+    : "";
   
 const tr =
   document.createElement("tr");
@@ -724,9 +744,19 @@ tr.innerHTML = `
       : ""
   }</td>
 
+  <td>${
+    maxHeatIndex !== ""
+      ? maxHeatIndex.toFixed(1)
+      : ""
+  }</td>
+  
   <td></td>
-  <td></td>
-  <td></td>
+  
+  <td>${
+    maxThsw !== ""
+      ? maxThsw.toFixed(1)
+      : ""
+  }</td>
 `;
     table.appendChild(tr);
   }
