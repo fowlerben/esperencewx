@@ -535,13 +535,27 @@ if (prevailingDirections.length) {
 
   });
 
+  const modeDirection =
+    Number(
+      Object.keys(counts)
+        .reduce((a, b) =>
+          counts[a] > counts[b]
+            ? a
+            : b
+        )
+    );
+
+  const compass16 = [
+    "N", "NNE", "NE", "ENE",
+    "E", "ESE", "SE", "SSE",
+    "S", "SSW", "SW", "WSW",
+    "W", "WNW", "NW", "NNW"
+  ];
+
   avgWindDir =
-    Object.keys(counts)
-      .reduce((a, b) =>
-        counts[a] > counts[b]
-          ? a
-          : b
-      );
+    compass16[
+      Math.round(modeDirection / 22.5) % 16
+    ];
 
 }
   
