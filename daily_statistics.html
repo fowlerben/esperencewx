@@ -53,6 +53,7 @@
 <tr>
 
   <th rowspan="2">Date</th>
+  <th rowspan="2">Day</th>
 
   <th colspan="3">Temperature</th>
 
@@ -135,6 +136,7 @@
 <tr>
 
   <th>Statistic</th>
+  <th></th>
 
   <th colspan="3">Temperature</th>
 
@@ -158,6 +160,7 @@
 
 <tr>
 
+  <th></th>
   <th></th>
 
   <th>Min</th>
@@ -349,6 +352,13 @@ let maxHeatIndices = [];
 let maxThsws = [];
   
 for(let day=1; day<=daysInMonth; day++){
+
+  const dayName =
+  new Date(year, month, day)
+    .toLocaleDateString(
+      "en-AU",
+      { weekday: "short" }
+    );
 
     const archiveDay =
       dayRecords(
@@ -723,6 +733,7 @@ const tr =
 
 tr.innerHTML = `
   <td>${day}</td>
+  <td>${dayName}</td>
 
   <td>${
     minTemp !== ""
@@ -913,6 +924,7 @@ const meanRow =
 
 meanRow.innerHTML = `
 <td><b>Mean</b></td>
+<td></td>
 
 <td>${average(minTemps).toFixed(1)}</td>
 <td>${average(maxTemps).toFixed(1)}</td>
