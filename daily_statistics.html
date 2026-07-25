@@ -470,11 +470,15 @@ const maxRainRate =
     dailyArchive.map(r => r.rain_rate_hi_mm)
   );
 
-const maxWindSpeed =
+const maxWindSpeedMph =
   maxValue(
     dailyArchive.map(r => r.wind_speed_hi)
   );
 
+const maxWindSpeed =
+  maxWindSpeedMph !== ""
+    ? maxWindSpeedMph * 1.60934
+    : "";
 const maxWindRecord =
   dailyArchive.find(
     r => r.wind_speed_hi === maxWindSpeed
@@ -504,10 +508,15 @@ if (
 
 }
 
-const avgWindSpeed =
+const avgWindSpeedMph =
   average(
     dailyArchive.map(r => r.wind_speed_avg)
   );
+
+const avgWindSpeed =
+  avgWindSpeedMph !== ""
+    ? avgWindSpeedMph * 1.60934
+    : "";
 
 const prevailingDirections =
   dailyArchive
