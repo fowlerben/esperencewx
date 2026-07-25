@@ -37,6 +37,10 @@
     th{
       background:#ece9d8;
     }
+    .datecol{
+  background:#ece9d8;
+}
+
   </style>
 </head>
 <body>
@@ -730,8 +734,8 @@ const tr =
   document.createElement("tr");
 
 tr.innerHTML = `
-  <td>${day}</td>
-  <td>${dayName}</td>
+  <td class="datecol">${day}</td>
+  <td class="datecol">${dayName}</td>
 
   <td>${
     minTemp !== ""
