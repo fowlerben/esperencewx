@@ -1089,9 +1089,10 @@ highRow.innerHTML = `
 <td>${Math.max(...maxThsws).toFixed(1)}</td>
 `;
 summaryTable.appendChild(highRow);
-summaryTable.appendChild(totalRow);
+
 const totalRow =
   document.createElement("tr");
+
 
 totalRow.innerHTML = `
 <td><b>Total</b></td>
@@ -1138,6 +1139,7 @@ totalRow.innerHTML = `
 <td></td>
 <td></td>
 `;
+summaryTable.appendChild(totalRow);
 }
 
 loadDailyStatistics();
