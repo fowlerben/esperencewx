@@ -568,7 +568,7 @@ const solarEnergy =
   dailyArchive
     .map(r => r.solar_energy)
     .filter(v => v != null)
-    .reduce((a, b) => a + b, 0) * 3.6;
+    .reduce((a, b) => a + b, 0) * 0.036;
 
 const maxUv =
   maxValue(
