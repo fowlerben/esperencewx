@@ -307,6 +307,35 @@ const maxTemp =
     ? (maxTempF - 32) * 5 / 9
     : "";
 
+const dailyArchive =
+  archive.filter(r => {
+
+    const t =
+      new Date(r.time * 1000);
+
+    const start =
+      new Date(year, month, day, 0, 5);
+
+    const end =
+      new Date(year, month, day + 1, 0, 0);
+
+    return (
+      t >= start &&
+      t <= end
+    );
+
+  });
+
+const avgTempF =
+  average(
+    dailyArchive.map(r => r.temp_avg)
+  );
+
+const avgTemp =
+  avgTempF !== ""
+    ? (avgTempF - 32) * 5 / 9
+    : "";
+
 const tr =
   document.createElement("tr");
 
@@ -325,7 +354,11 @@ tr.innerHTML = `
       : ""
   }</td>
   
-  <td></td>
+  <td>${
+    avgTemp !== ""
+      ? avgTemp.toFixed(1)
+      : ""
+  }</td>
   
   <td></td>
 
