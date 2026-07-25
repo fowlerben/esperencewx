@@ -405,6 +405,21 @@ const avgDew =
   avgDewF !== ""
     ? (avgDewF - 32) * 5 / 9
     : "";
+
+const minMslp =
+  minValue(
+    dailyArchive.map(r => r.bar_lo)
+  );
+
+const maxMslp =
+  maxValue(
+    dailyArchive.map(r => r.bar_hi)
+  );
+
+const avgMslp =
+  average(
+    dailyArchive.map(r => r.bar_sea_level)
+  );
   
 const tr =
   document.createElement("tr");
@@ -472,9 +487,23 @@ tr.innerHTML = `
       : ""
   }</td>
 
-  <td></td>
-  <td></td>
-  <td></td>
+  <td>${
+    minMslp !== ""
+      ? minMslp.toFixed(1)
+      : ""
+  }</td>
+  
+  <td>${
+    maxMslp !== ""
+      ? maxMslp.toFixed(1)
+      : ""
+  }</td>
+  
+  <td>${
+    avgMslp !== ""
+      ? avgMslp.toFixed(1)
+      : ""
+  }</td>
 
   <td></td>
   <td></td>
