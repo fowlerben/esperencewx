@@ -1033,7 +1033,6 @@ lowRow.innerHTML = `
 `;
 summaryTable.appendChild(meanRow);
 summaryTable.appendChild(lowRow);
-summaryTable.appendChild(highRow);
   
 const highRow =
   document.createElement("tr");
@@ -1089,6 +1088,7 @@ highRow.innerHTML = `
 
 <td>${Math.max(...maxThsws).toFixed(1)}</td>
 `;
+summaryTable.appendChild(highRow);
 }
 
 loadDailyStatistics();
