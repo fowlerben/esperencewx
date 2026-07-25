@@ -456,11 +456,14 @@ const hourlyEtRecords =
 
   });
 
-const totalEt =
+const totalEtInches =
   hourlyEtRecords
     .map(r => r.et)
     .filter(v => v != null)
     .reduce((a, b) => a + b, 0);
+
+const totalEt =
+  totalEtInches * 25.4;
 
 const maxRainRate =
   maxValue(
