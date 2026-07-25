@@ -1031,60 +1031,7 @@ lowRow.innerHTML = `
 `;
 summaryTable.appendChild(meanRow);
 summaryTable.appendChild(lowRow);
-const lowRow =
-  document.createElement("tr");
 
-lowRow.innerHTML = `
-<td><b>Lowest</b></td>
-
-<td>${Math.min(...minTemps).toFixed(1)}</td>
-<td>${Math.min(...maxTemps).toFixed(1)}</td>
-<td>${Math.min(...avgTemps).toFixed(1)}</td>
-
-<td>${Math.min(...terrestrialMins).toFixed(1)}</td>
-
-<td>${Math.min(...minHums).toFixed(1)}</td>
-<td>${Math.min(...maxHums).toFixed(1)}</td>
-<td>${Math.min(...avgHums).toFixed(1)}</td>
-
-<td>${Math.min(...minDews).toFixed(1)}</td>
-<td>${Math.min(...maxDews).toFixed(1)}</td>
-<td>${Math.min(...avgDews).toFixed(1)}</td>
-
-<td>${Math.min(...minMslps).toFixed(1)}</td>
-<td>${Math.min(...maxMslps).toFixed(1)}</td>
-<td>${Math.min(...avgMslps).toFixed(1)}</td>
-
-<td></td>
-
-<td>${Math.min(...ets).toFixed(2)}</td>
-
-<td></td>
-
-<td></td>
-
-<td>${Math.min(...maxWindSpeeds).toFixed(1)}</td>
-
-<td></td>
-
-<td></td>
-
-<td>${Math.min(...avgWindSpeeds).toFixed(1)}</td>
-
-<td>${Math.min(...maxSolars).toFixed(0)}</td>
-
-<td>${Math.min(...solarEnergies).toFixed(2)}</td>
-
-<td>${Math.min(...maxUvs).toFixed(1)}</td>
-
-<td>${Math.min(...uvDoses).toFixed(2)}</td>
-
-<td>${Math.min(...maxHeatIndices).toFixed(1)}</td>
-
-<td></td>
-
-<td>${Math.min(...maxThsws).toFixed(1)}</td>
-`;
 }
 
 loadDailyStatistics();
