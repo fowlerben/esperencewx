@@ -336,6 +336,31 @@ const avgTemp =
     ? (avgTempF - 32) * 5 / 9
     : "";
 
+const terrestrialValues = [];
+
+overnightArchive.forEach(r => {
+
+  if (r.temp_lo_1 != null)
+    terrestrialValues.push(r.temp_lo_1);
+
+  if (r.temp_lo_2 != null)
+    terrestrialValues.push(r.temp_lo_2);
+
+  if (r.temp_lo_3 != null)
+    terrestrialValues.push(r.temp_lo_3);
+
+});
+
+const terrestrialMinF =
+  terrestrialValues.length
+    ? Math.min(...terrestrialValues)
+    : "";
+
+const terrestrialMin =
+  terrestrialMinF !== ""
+    ? (terrestrialMinF - 32) * 5 / 9
+    : "";
+
 const tr =
   document.createElement("tr");
 
@@ -360,8 +385,12 @@ tr.innerHTML = `
       : ""
   }</td>
   
-  <td></td>
-
+  <td>${
+    terrestrialMin !== ""
+      ? terrestrialMin.toFixed(1)
+      : ""
+  }</td>
+  
   <td></td>
   <td></td>
   <td></td>
