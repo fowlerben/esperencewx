@@ -558,6 +558,28 @@ if (prevailingDirections.length) {
     ];
 
 }
+
+const maxSolar =
+  maxValue(
+    dailyArchive.map(r => r.solar_rad_hi)
+  );
+
+const solarEnergy =
+  dailyArchive
+    .map(r => r.solar_energy)
+    .filter(v => v != null)
+    .reduce((a, b) => a + b, 0);
+
+const maxUv =
+  maxValue(
+    dailyArchive.map(r => r.uv_index_hi)
+  );
+
+const uvMeds =
+  dailyArchive
+    .map(r => r.uv_dose)
+    .filter(v => v != null)
+    .reduce((a, b) => a + b, 0);
   
 const tr =
   document.createElement("tr");
@@ -678,10 +700,29 @@ tr.innerHTML = `
       : ""
   }</td>
 
-  <td></td>
-  <td></td>
-  <td></td>
-  <td></td>
+  <td>${
+    maxSolar !== ""
+      ? maxSolar.toFixed(0)
+      : ""
+  }</td>
+  
+  <td>${
+    solarEnergy !== ""
+      ? solarEnergy.toFixed(1)
+      : ""
+  }</td>
+  
+  <td>${
+    maxUv !== ""
+      ? maxUv.toFixed(1)
+      : ""
+  }</td>
+  
+  <td>${
+    uvMeds !== ""
+      ? uvMeds.toFixed(1)
+      : ""
+  }</td>
 
   <td></td>
   <td></td>
