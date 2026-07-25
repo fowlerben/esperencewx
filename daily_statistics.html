@@ -406,20 +406,35 @@ const avgDew =
     ? (avgDewF - 32) * 5 / 9
     : "";
 
-const minMslp =
+const minMslpInHg =
   minValue(
     dailyArchive.map(r => r.bar_lo)
   );
 
-const maxMslp =
+const maxMslpInHg =
   maxValue(
     dailyArchive.map(r => r.bar_hi)
   );
 
-const avgMslp =
+const avgMslpInHg =
   average(
     dailyArchive.map(r => r.bar_sea_level)
   );
+
+const minMslp =
+  minMslpInHg !== ""
+    ? minMslpInHg * 33.8639
+    : "";
+
+const maxMslp =
+  maxMslpInHg !== ""
+    ? maxMslpInHg * 33.8639
+    : "";
+
+const avgMslp =
+  avgMslpInHg !== ""
+    ? avgMslpInHg * 33.8639
+    : "";
   
 const tr =
   document.createElement("tr");
