@@ -232,6 +232,37 @@ const daysInMonth =
     0
   ).getDate();
 
+let minTemps = [];
+let maxTemps = [];
+let avgTemps = [];
+
+let terrestrialMins = [];
+
+let minHums = [];
+let maxHums = [];
+let avgHums = [];
+
+let minDews = [];
+let maxDews = [];
+let avgDews = [];
+
+let minMslps = [];
+let maxMslps = [];
+let avgMslps = [];
+
+let ets = [];
+
+let maxWindSpeeds = [];
+let avgWindSpeeds = [];
+
+let maxSolars = [];
+let solarEnergies = [];
+let maxUvs = [];
+let uvDoses = [];
+
+let maxHeatIndices = [];
+let maxThsws = [];
+  
 for(let day=1; day<=daysInMonth; day++){
 
     const archiveDay =
@@ -758,10 +789,96 @@ tr.innerHTML = `
       : ""
   }</td>
 `;
+
+if (minTemp !== "") minTemps.push(minTemp);
+if (maxTemp !== "") maxTemps.push(maxTemp);
+if (avgTemp !== "") avgTemps.push(avgTemp);
+
+if (terrestrialMin !== "") terrestrialMins.push(terrestrialMin);
+
+if (minHum !== "") minHums.push(minHum);
+if (maxHum !== "") maxHums.push(maxHum);
+if (avgHum !== "") avgHums.push(avgHum);
+
+if (minDew !== "") minDews.push(minDew);
+if (maxDew !== "") maxDews.push(maxDew);
+if (avgDew !== "") avgDews.push(avgDew);
+
+if (minMslp !== "") minMslps.push(minMslp);
+if (maxMslp !== "") maxMslps.push(maxMslp);
+if (avgMslp !== "") avgMslps.push(avgMslp);
+
+if (totalEt !== "") ets.push(totalEt);
+
+if (maxWindSpeed !== "") maxWindSpeeds.push(maxWindSpeed);
+if (avgWindSpeed !== "") avgWindSpeeds.push(avgWindSpeed);
+
+if (maxSolar !== "") maxSolars.push(maxSolar);
+if (solarEnergy !== "") solarEnergies.push(solarEnergy);
+if (maxUv !== "") maxUvs.push(maxUv);
+if (uvMeds !== "") uvDoses.push(uvMeds);
+
+if (maxHeatIndex !== "") maxHeatIndices.push(maxHeatIndex);
+if (maxThsw !== "") maxThsws.push(maxThsw);
     table.appendChild(tr);
   }
 }
+const meanRow =
+  document.createElement("tr");
 
+meanRow.innerHTML = `
+<td><b>Mean</b></td>
+
+<td>${average(minTemps).toFixed(1)}</td>
+<td>${average(maxTemps).toFixed(1)}</td>
+<td>${average(avgTemps).toFixed(1)}</td>
+
+<td>${average(terrestrialMins).toFixed(1)}</td>
+
+<td>${average(minHums).toFixed(1)}</td>
+<td>${average(maxHums).toFixed(1)}</td>
+<td>${average(avgHums).toFixed(1)}</td>
+
+<td>${average(minDews).toFixed(1)}</td>
+<td>${average(maxDews).toFixed(1)}</td>
+<td>${average(avgDews).toFixed(1)}</td>
+
+<td>${average(minMslps).toFixed(1)}</td>
+<td>${average(maxMslps).toFixed(1)}</td>
+<td>${average(avgMslps).toFixed(1)}</td>
+
+<td></td>
+
+<td>${average(ets).toFixed(2)}</td>
+
+<td></td>
+
+<td></td>
+
+<td>${average(maxWindSpeeds).toFixed(1)}</td>
+
+<td></td>
+
+<td></td>
+
+<td>${average(avgWindSpeeds).toFixed(1)}</td>
+
+<td>${average(maxSolars).toFixed(0)}</td>
+
+<td>${average(solarEnergies).toFixed(2)}</td>
+
+<td>${average(maxUvs).toFixed(1)}</td>
+
+<td>${average(uvDoses).toFixed(2)}</td>
+
+<td>${average(maxHeatIndices).toFixed(1)}</td>
+
+<td></td>
+
+<td>${average(maxThsws).toFixed(1)}</td>
+`;
+
+table.appendChild(meanRow);
 loadDailyStatistics();
 
 </script>
