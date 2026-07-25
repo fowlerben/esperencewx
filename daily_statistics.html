@@ -822,7 +822,6 @@ if (maxHeatIndex !== "") maxHeatIndices.push(maxHeatIndex);
 if (maxThsw !== "") maxThsws.push(maxThsw);
     table.appendChild(tr);
   }
-}
 const meanRow =
   document.createElement("tr");
 
@@ -879,6 +878,9 @@ meanRow.innerHTML = `
 `;
 
 table.appendChild(meanRow);
+
+}
+
 loadDailyStatistics();
 
 </script>
