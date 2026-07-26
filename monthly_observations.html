@@ -976,7 +976,18 @@ document.getElementById(
     selectedYear--;
 
   }
+  if (
+    selectedYear < minYear ||
+    (
+      selectedYear === minYear &&
+      selectedMonth < minMonth
+    )
+  ) {
 
+    selectedYear = minYear;
+    selectedMonth = minMonth;
+
+  }
   refreshMonthSelector();
 
 };
