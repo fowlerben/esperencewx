@@ -490,6 +490,8 @@ const archiveRes =
 const archive =
   await archiveRes.json();
 const now = new Date();
+const year = selectedYear;
+const month = selectedMonth;
 
 document.getElementById("pageTitle").innerText =
   new Date(year, month)
@@ -506,13 +508,15 @@ document.getElementById("statsTitle").innerText =
       month: "long",
       year: "numeric"
     });
-
+document.getElementById("monthLabel").innerText =
+  new Date(year, month)
+    .toLocaleString("en-AU", {
+      month: "long",
+      year: "numeric"
+    });
 document.getElementById("preparedTime").innerText =
   "Prepared at " +
   now.toLocaleString("en-AU");
-
-const year = selectedYear;
-const month = selectedMonth;
 
 const daysInMonth =
   new Date(year, month + 1, 0).getDate();
