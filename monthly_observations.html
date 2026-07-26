@@ -995,6 +995,13 @@ document.getElementById(
   "nextMonth"
 ).onclick = () => {
 
+  if (
+    selectedYear === maxYear &&
+    selectedMonth === maxMonth
+  ) {
+    return;
+  }
+
   selectedMonth++;
 
   if (selectedMonth > 11) {
@@ -1003,19 +1010,10 @@ document.getElementById(
     selectedYear++;
 
   }
-  if (
-    selectedYear > maxYear ||
-    (
-      selectedYear === maxYear &&
-      selectedMonth > maxMonth
-    )
-  ) {
 
-    selectedYear = maxYear;
-    selectedMonth = maxMonth;
-
-  }
   refreshMonthSelector();
+
+};
 
 };
 populateMonthSelector();
