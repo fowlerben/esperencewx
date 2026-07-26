@@ -100,25 +100,28 @@
 </div>
 <div style="margin-bottom:15px;text-align:center;">
 
-  <button id="prevMonth">
-    ◀ Previous Month
-  </button>
+ <button id="prevMonth">
+  ◀
+</button>
 
-  <span
-    id="monthLabel"
-    style="
-      font-weight:bold;
-      margin:0 15px;
-    "
-  >
-  </span>
+<span
+  id="monthLabel"
+  style="
+    font-weight:bold;
+    margin:0 15px;
+    display:inline-block;
+    min-width:140px;
+  "
+>
+</span>
 
-  <button id="nextMonth">
-    Next Month ▶
-  </button>
-  <button id="latestMonth">
-    Latest Month
-  </button>
+<button id="nextMonth">
+  ▶
+</button>
+
+<button id="latestMonth">
+  Latest
+</button>
   <br><br>
 
   Month:
@@ -1017,10 +1020,19 @@ document.getElementById(
 
 };
 
-};
 document.getElementById(
   "latestMonth"
 ).onclick = () => {
+
+  selectedYear = maxYear;
+  selectedMonth = maxMonth;
+
+  refreshMonthSelector();
+
+};
+
+populateMonthSelector();
+loadMonthly();
 
   selectedYear = maxYear;
   selectedMonth = maxMonth;
