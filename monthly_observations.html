@@ -411,7 +411,24 @@ function populateMonthSelector() {
 
   selector.value =
     `${selectedYear}-${selectedMonth}`;
+selector.onchange = () => {
 
+  const parts =
+    selector.value.split("-");
+
+  selectedYear =
+    Number(parts[0]);
+
+  selectedMonth =
+    Number(parts[1]);
+
+  document.getElementById(
+    "dailyRows"
+  ).innerHTML = "";
+
+  loadMonthly();
+
+};
 }
 function degToCompass(deg) {
 
@@ -519,6 +536,9 @@ const daysInMonth =
 
 const tbody =
   document.getElementById("dailyRows");
+
+tbody.innerHTML = "";
+
 let monthlyRain = 0;
 let monthlyEvap = 0;
 let minTemps = [];
