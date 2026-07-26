@@ -39,7 +39,9 @@ jobs:
             echo "Fetching $CURRENT -> $NEXT"
 
             curl -s "$URL" > historic.json
-
+            echo "LSIDs:"
+            jq '.sensors[].lsid' historic.json
+            
             jq '
           [
             (
