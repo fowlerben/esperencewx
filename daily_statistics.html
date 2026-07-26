@@ -308,7 +308,8 @@ function dayRecords(records, year, month, day){
 }
 
 const now = new Date();
-
+const currentHour =
+  now.getHours() + now.getMinutes() / 60;
 const year =
   now.getFullYear();
 
@@ -368,6 +369,16 @@ for(let day=1; day<=lastDay; day++){
       "en-AU",
       { weekday: "short" }
     );
+    const isToday =
+      year === now.getFullYear() &&
+      month === now.getMonth() &&
+      day === now.getDate();
+    
+    const overnightComplete =
+      !isToday || currentHour >= 9;
+    
+    const dailyComplete =
+      !isToday;
 
     const archiveDay =
       dayRecords(
