@@ -1003,7 +1003,18 @@ document.getElementById(
     selectedYear++;
 
   }
+  if (
+    selectedYear > maxYear ||
+    (
+      selectedYear === maxYear &&
+      selectedMonth > maxMonth
+    )
+  ) {
 
+    selectedYear = maxYear;
+    selectedMonth = maxMonth;
+
+  }
   refreshMonthSelector();
 
 };
