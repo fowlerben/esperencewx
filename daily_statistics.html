@@ -888,146 +888,146 @@ tr.innerHTML = `
   }</td>
 
   <td>${
-    displayminDew !== ""
-      ? displayminDew.toFixed(1)
+    displayMinDew !== ""
+      ? displayMinDew.toFixed(1)
       : ""
   }</td>
   
   <td>${
-    displaymaxDew !== ""
-      ? displaymaxDew.toFixed(1)
+    displayMaxDew !== ""
+      ? displayMaxDew.toFixed(1)
       : ""
   }</td>
   
   <td>${
-    displayavgDew !== ""
-      ? displayavgDew.toFixed(1)
+    displayAvgDew !== ""
+      ? displayAvgDew.toFixed(1)
       : ""
   }</td>
 
   <td>${
-    displayminMslp !== ""
-      ? displayminMslp.toFixed(1)
+    displayMinMslp !== ""
+      ? displayMinMslp.toFixed(1)
       : ""
   }</td>
   
   <td>${
-    displaymaxMslp !== ""
-      ? displaymaxMslp.toFixed(1)
+    displayMaxMslp !== ""
+      ? displayMaxMslp.toFixed(1)
       : ""
   }</td>
   
   <td>${
-    displayavgMslp !== ""
-      ? displayavgMslp.toFixed(1)
+    displayAvgMslp !== ""
+      ? displayAvgMslp.toFixed(1)
       : ""
   }</td>
 
   <td>${
-    displaytotalRain !== ""
-      ? displaytotalRain.toFixed(1)
+    displayRain !== ""
+      ? displayRain.toFixed(1)
       : ""
   }</td>
   
   <td>${
-    displaytotalEt !== ""
-      ? displaytotalEt.toFixed(2)
+    displayEt !== ""
+      ? displayEt.toFixed(2)
       : ""
   }</td>
   
   <td>${
-    displaymaxRainRate !== ""
-      ? displaymaxRainRate.toFixed(1)
+    displayMaxRainRate !== ""
+      ? displayMaxRainRate.toFixed(1)
       : ""
   }</td>
   <td></td>
   
   <td>${
-    displaymaxWindSpeed !== ""
-      ? displaymaxWindSpeed.toFixed(1)
+    displayMaxWindSpeed !== ""
+      ? displayMaxWindSpeed.toFixed(1)
       : ""
   }</td>
   
-  <td>${displaymaxWindTime}</td>
+  <td>${displayMaxWindTime}</td>
   
-  <td>${displayavgWindDir}</td>
-  
-  <td>${
-    displayavgWindSpeed !== ""
-      ? displayavgWindSpeed.toFixed(1)
-      : ""
-  }</td>
-
-  <td>${
-    displaymaxSolar !== ""
-      ? displaymaxSolar.toFixed(0)
-      : ""
-  }</td>
+  <td>${displayAvgWindDir}</td>
   
   <td>${
-    displaysolarEnergy !== ""
-      ? displaysolarEnergy.toFixed(2)
-      : ""
-  }</td>
-  
-  <td>${
-    displaymaxUv !== ""
-      ? displaymaxUv.toFixed(1)
-      : ""
-  }</td>
-  
-  <td>${
-    displayuvMeds !== ""
-      ? displayuvMeds.toFixed(2)
+    displayAvgWindSpeed !== ""
+      ? displayAvgWindSpeed.toFixed(1)
       : ""
   }</td>
 
   <td>${
-    displaymaxHeatIndex !== ""
-      ? displaymaxHeatIndex.toFixed(1)
+    displayMaxSolar !== ""
+      ? displayMaxSolar.toFixed(0)
+      : ""
+  }</td>
+  
+  <td>${
+    displaySolarEnergy !== ""
+      ? displaySolarEnergy.toFixed(2)
+      : ""
+  }</td>
+  
+  <td>${
+    displayMaxUv !== ""
+      ? displayMaxUv.toFixed(1)
+      : ""
+  }</td>
+  
+  <td>${
+    displayUvMeds !== ""
+      ? displayUvMeds.toFixed(2)
+      : ""
+  }</td>
+
+  <td>${
+    displayMaxHeatIndex !== ""
+      ? displayMaxHeatIndex.toFixed(1)
       : ""
   }</td>
   
   <td></td>
   
   <td>${
-    displaymaxThsw !== ""
-      ? displaymaxThsw.toFixed(1)
+    displayMaxThsw !== ""
+      ? displayMaxThsw.toFixed(1)
       : ""
   }</td>
 `;
 
-if (displayminTemp !== "") minTemps.push(displayminTemp);
-if (displaymaxTemp !== "") maxTemps.push(displaymaxTemp);
-if (displayavgTemp !== "") avgTemps.push(displayavgTemp);
+if (displayMinTemp !== "") minTemps.push(displayMinTemp);
+if (displayMaxTemp !== "") maxTemps.push(displayMaxTemp);
+if (displayAvgTemp !== "") avgTemps.push(displayAvgTemp);
 
-if (displayterrestrialMin !== "") terrestrialMins.push(displayterrestrialMin);
+if (displayTerrestrialMin !== "") terrestrialMins.push(displayTerrestrialMin);
 
-if (displayminHum !== "") minHums.push(displayminHum);
-if (displaymaxHum !== "") maxHums.push(displaymaxHum);
-if (displayavgHum !== "") avgHums.push(displayavgHum);
+if (displayMinHum !== "") minHums.push(displayMinHum);
+if (displayMaxHum !== "") maxHums.push(displayMaxHum);
+if (displayAvgHum !== "") avgHums.push(displayAvgHum);
 
-if (displayminDew !== "") minDews.push(displayminDew);
-if (displaymaxDew !== "") maxDews.push(displaymaxDew);
-if (displayavgDew !== "") avgDews.push(displayavgDew);
+if (displayMinDew !== "") minDews.push(displayMinDew);
+if (displayMaxDew !== "") maxDews.push(displayMaxDew);
+if (displayAvgDew !== "") avgDews.push(displayAvgDew);
 
-if (displayminMslp !== "") minMslps.push(displayminMslp);
-if (displaymaxMslp !== "") maxMslps.push(displaymaxMslp);
-if (displayavgMslp !== "") avgMslps.push(displayavgMslp);
-if (displaytotalRain !== "") rains.push(displaytotalRain);
-if (displaymaxRainRate !== "") maxRainRates.push(displaymaxRainRate);
-if (displaytotalEt !== "") ets.push(displaytotalEt);
+if (displayMinMslp !== "") minMslps.push(displayMinMslp);
+if (displayMaxMslp !== "") maxMslps.push(displayMaxMslp);
+if (displayAvgMslp !== "") avgMslps.push(displayAvgMslp);
+if (displayRain !== "") rains.push(displayRain);
+if (displayMaxRainRate !== "") maxRainRates.push(displayMaxRainRate);
+if (displayEt !== "") ets.push(displayEt);
 
-if (displaymaxWindSpeed !== "") maxWindSpeeds.push(displaymaxWindSpeed);
-if (displayavgWindSpeed !== "") avgWindSpeeds.push(displayavgWindSpeed);
+if (displayMaxWindSpeed !== "") maxWindSpeeds.push(displayMaxWindSpeed);
+if (displayAvgWindSpeed !== "") avgWindSpeeds.push(displayAvgWindSpeed);
 
-if (displaymaxSolar !== "") maxSolars.push(displaymaxSolar);
-if (displaysolarEnergy !== "") solarEnergies.push(displaysolarEnergy);
-if (displaymaxUv !== "") maxUvs.push(displaymaxUv);
-if (displayuvMeds !== "") uvDoses.push(displayuvMeds);
+if (displayMaxSolar !== "") maxSolars.push(displayMaxSolar);
+if (displaySolarEnergy !== "") solarEnergies.push(displaySolarEnergy);
+if (displayMaxUv !== "") maxUvs.push(displayMaxUv);
+if (displayUvMeds !== "") uvDoses.push(displayUvMeds);
 
-if (displaymaxHeatIndex !== "") maxHeatIndices.push(displaymaxHeatIndex);
-if (displaymaxThsw !== "") maxThsws.push(displaymaxThsw);
+if (displayMaxHeatIndex !== "") maxHeatIndices.push(displayMaxHeatIndex);
+if (displayMaxThsw !== "") maxThsws.push(displayMaxThsw);
     table.appendChild(tr);
   }
 const meanRow =
