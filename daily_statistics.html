@@ -354,7 +354,13 @@ let uvDoses = [];
 let maxHeatIndices = [];
 let maxThsws = [];
   
-for(let day=1; day<=daysInMonth; day++){
+const lastDay =
+  year === now.getFullYear() &&
+  month === now.getMonth()
+    ? now.getDate()
+    : daysInMonth;
+
+for(let day=1; day<=lastDay; day++){
 
   const dayName =
   new Date(year, month, day)
