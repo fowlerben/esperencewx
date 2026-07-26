@@ -358,7 +358,7 @@ let maxThsws = [];
 const lastDay =
   year === now.getFullYear() &&
   month === now.getMonth()
-    ? now.getDate() - 1
+    ? now.getDate()
     : daysInMonth;
 
 for(let day=1; day<=lastDay; day++){
@@ -759,6 +759,83 @@ const maxThsw =
   maxThswF !== ""
     ? (maxThswF - 32) * 5 / 9
     : "";
+const displayMinTemp =
+  overnightComplete ? minTemp : "";
+
+const displayTerrestrialMin =
+  overnightComplete ? terrestrialMin : "";
+
+const displayMaxHum =
+  overnightComplete ? maxHum : "";
+
+const displayMaxTemp =
+  dailyComplete ? maxTemp : "";
+
+const displayAvgTemp =
+  dailyComplete ? avgTemp : "";
+
+const displayMinHum =
+  dailyComplete ? minHum : "";
+
+const displayAvgHum =
+  dailyComplete ? avgHum : "";
+
+const displayMinDew =
+  dailyComplete ? minDew : "";
+
+const displayMaxDew =
+  dailyComplete ? maxDew : "";
+
+const displayAvgDew =
+  dailyComplete ? avgDew : "";
+
+const displayMinMslp =
+  dailyComplete ? minMslp : "";
+
+const displayMaxMslp =
+  dailyComplete ? maxMslp : "";
+
+const displayAvgMslp =
+  dailyComplete ? avgMslp : "";
+
+const displayRain =
+  dailyComplete ? totalRain : "";
+
+const displayEt =
+  dailyComplete ? totalEt : "";
+
+const displayMaxRainRate =
+  dailyComplete ? maxRainRate : "";
+
+const displayMaxWindSpeed =
+  dailyComplete ? maxWindSpeed : "";
+
+const displayAvgWindSpeed =
+  dailyComplete ? avgWindSpeed : "";
+
+const displayAvgWindDir =
+  dailyComplete ? avgWindDir : "";
+
+const displayMaxWindTime =
+  dailyComplete ? maxWindTime : "";
+
+const displayMaxSolar =
+  dailyComplete ? maxSolar : "";
+
+const displaySolarEnergy =
+  dailyComplete ? solarEnergy : "";
+
+const displayMaxUv =
+  dailyComplete ? maxUv : "";
+
+const displayUvMeds =
+  dailyComplete ? uvMeds : "";
+
+const displayMaxHeatIndex =
+  dailyComplete ? maxHeatIndex : "";
+
+const displayMaxThsw =
+  dailyComplete ? maxThsw : "";
 const summaryTable =
   document.getElementById("summaryTable");  
 const tr =
@@ -769,153 +846,153 @@ tr.innerHTML = `
   <td class="datecol">${dayName}</td>
 
   <td>${
-    minTemp !== ""
-      ? minTemp.toFixed(1)
+    displayMinTemp !== ""
+      ? displayMinTemp.toFixed(1)
       : ""
   }</td>
   
   <td>${
-    maxTemp !== ""
-      ? maxTemp.toFixed(1)
+    displayMaxTemp !== ""
+      ? displayMaxTemp.toFixed(1)
       : ""
   }</td>
   
   <td>${
-    avgTemp !== ""
-      ? avgTemp.toFixed(1)
+    displayAvgTemp !== ""
+      ? displayAvgTemp.toFixed(1)
       : ""
   }</td>
   
   <td>${
-    terrestrialMin !== ""
-      ? terrestrialMin.toFixed(1)
+    displayTerrestrialMin !== ""
+      ? displayTerrestrialMin.toFixed(1)
       : ""
   }</td>
   
   <td>${
-    minHum !== ""
-      ? minHum.toFixed(1)
+    displayMinHum !== ""
+      ? displayMinHum.toFixed(1)
       : ""
   }</td>
   
   <td>${
-    maxHum !== ""
-      ? maxHum.toFixed(1)
+    displayMaxHum !== ""
+      ? displayMaxHum.toFixed(1)
       : ""
   }</td>
   
   <td>${
-    avgHum !== ""
-      ? avgHum.toFixed(1)
+    displayAvgHum !== ""
+      ? displayAvgHum.toFixed(1)
       : ""
   }</td>
 
   <td>${
-    minDew !== ""
-      ? minDew.toFixed(1)
+    displayminDew !== ""
+      ? displayminDew.toFixed(1)
       : ""
   }</td>
   
   <td>${
-    maxDew !== ""
-      ? maxDew.toFixed(1)
+    displaymaxDew !== ""
+      ? displaymaxDew.toFixed(1)
       : ""
   }</td>
   
   <td>${
-    avgDew !== ""
-      ? avgDew.toFixed(1)
+    displayavgDew !== ""
+      ? displayavgDew.toFixed(1)
       : ""
   }</td>
 
   <td>${
-    minMslp !== ""
-      ? minMslp.toFixed(1)
+    displayminMslp !== ""
+      ? displayminMslp.toFixed(1)
       : ""
   }</td>
   
   <td>${
-    maxMslp !== ""
-      ? maxMslp.toFixed(1)
+    displaymaxMslp !== ""
+      ? displaymaxMslp.toFixed(1)
       : ""
   }</td>
   
   <td>${
-    avgMslp !== ""
-      ? avgMslp.toFixed(1)
+    displayavgMslp !== ""
+      ? displayavgMslp.toFixed(1)
       : ""
   }</td>
 
   <td>${
-    totalRain !== ""
-      ? totalRain.toFixed(1)
+    displaytotalRain !== ""
+      ? displaytotalRain.toFixed(1)
       : ""
   }</td>
   
   <td>${
-    totalEt !== ""
-      ? totalEt.toFixed(2)
+    displaytotalEt !== ""
+      ? displaytotalEt.toFixed(2)
       : ""
   }</td>
   
   <td>${
-    maxRainRate !== ""
-      ? maxRainRate.toFixed(1)
+    displaymaxRainRate !== ""
+      ? displaymaxRainRate.toFixed(1)
       : ""
   }</td>
   <td></td>
   
   <td>${
-    maxWindSpeed !== ""
-      ? maxWindSpeed.toFixed(1)
+    displaymaxWindSpeed !== ""
+      ? displaymaxWindSpeed.toFixed(1)
       : ""
   }</td>
   
-  <td>${maxWindTime}</td>
+  <td>${displaymaxWindTime}</td>
   
-  <td>${avgWindDir}</td>
-  
-  <td>${
-    avgWindSpeed !== ""
-      ? avgWindSpeed.toFixed(1)
-      : ""
-  }</td>
-
-  <td>${
-    maxSolar !== ""
-      ? maxSolar.toFixed(0)
-      : ""
-  }</td>
+  <td>${displayavgWindDir}</td>
   
   <td>${
-    solarEnergy !== ""
-      ? solarEnergy.toFixed(2)
-      : ""
-  }</td>
-  
-  <td>${
-    maxUv !== ""
-      ? maxUv.toFixed(1)
-      : ""
-  }</td>
-  
-  <td>${
-    uvMeds !== ""
-      ? uvMeds.toFixed(2)
+    displayavgWindSpeed !== ""
+      ? displayavgWindSpeed.toFixed(1)
       : ""
   }</td>
 
   <td>${
-    maxHeatIndex !== ""
-      ? maxHeatIndex.toFixed(1)
+    displaymaxSolar !== ""
+      ? displaymaxSolar.toFixed(0)
+      : ""
+  }</td>
+  
+  <td>${
+    displaysolarEnergy !== ""
+      ? displaysolarEnergy.toFixed(2)
+      : ""
+  }</td>
+  
+  <td>${
+    displaymaxUv !== ""
+      ? displaymaxUv.toFixed(1)
+      : ""
+  }</td>
+  
+  <td>${
+    displayuvMeds !== ""
+      ? displayuvMeds.toFixed(2)
+      : ""
+  }</td>
+
+  <td>${
+    displaymaxHeatIndex !== ""
+      ? displaymaxHeatIndex.toFixed(1)
       : ""
   }</td>
   
   <td></td>
   
   <td>${
-    maxThsw !== ""
-      ? maxThsw.toFixed(1)
+    displaymaxThsw !== ""
+      ? displaymaxThsw.toFixed(1)
       : ""
   }</td>
 `;
