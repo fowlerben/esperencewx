@@ -430,14 +430,22 @@ function populateMonthSelector() {
 }
 function refreshMonthSelector() {
 
-  document.getElementById(
-    "monthSelector"
-  ).value =
+  const selector =
+    document.getElementById(
+      "monthSelector"
+    );
+
+  const value =
     `${selectedYear}-${selectedMonth}`;
 
-  loadMonthly();
+  selector.value = value;
+
+  selector.dispatchEvent(
+    new Event("change")
+  );
 
 }
+
 function degToCompass(deg) {
 
   const dirs = [
