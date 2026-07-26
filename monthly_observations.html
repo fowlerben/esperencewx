@@ -428,6 +428,16 @@ function populateMonthSelector() {
   };
 
 }
+function refreshMonthSelector() {
+
+  document.getElementById(
+    "monthSelector"
+  ).value =
+    `${selectedYear}-${selectedMonth}`;
+
+  loadMonthly();
+
+}
 function degToCompass(deg) {
 
   const dirs = [
@@ -938,6 +948,38 @@ colourColumn(17);  // 3pm RH
 colourColumn(18);  // 3pm Cloud
 colourColumn(20);  // 3pm Speed
 colourColumn(21);  // 3pm MSLP
+document.getElementById(
+  "prevMonth"
+).onclick = () => {
+
+  selectedMonth--;
+
+  if (selectedMonth < 0) {
+
+    selectedMonth = 11;
+    selectedYear--;
+
+  }
+
+  refreshMonthSelector();
+
+};
+document.getElementById(
+  "nextMonth"
+).onclick = () => {
+
+  selectedMonth++;
+
+  if (selectedMonth > 11) {
+
+    selectedMonth = 0;
+    selectedYear++;
+
+  }
+
+  refreshMonthSelector();
+
+};
 populateMonthSelector();
 loadMonthly();
 
