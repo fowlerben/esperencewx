@@ -98,7 +98,33 @@
 <div class="subheading">
   Observations from Esperence Weather Station
 </div>
+<div style="margin-bottom:15px;text-align:center;">
 
+  <button id="prevMonth">
+    ◀ Previous Month
+  </button>
+
+  <span
+    id="monthLabel"
+    style="
+      font-weight:bold;
+      margin:0 15px;
+    "
+  >
+  </span>
+
+  <button id="nextMonth">
+    Next Month ▶
+  </button>
+
+  <br><br>
+
+  Month:
+
+  <select id="monthSelector">
+  </select>
+
+</div>
 <div class="table-wrapper">
 
 <table>
@@ -332,6 +358,13 @@
 </div>
 
 <script>
+const today = new Date();
+
+let selectedYear =
+  today.getFullYear();
+
+let selectedMonth =
+  today.getMonth();
 function degToCompass(deg) {
 
   const dirs = [
@@ -427,8 +460,8 @@ document.getElementById("preparedTime").innerText =
   "Prepared at " +
   now.toLocaleString("en-AU");
 
-const year = now.getFullYear();
-const month = now.getMonth();
+const year = selectedYear;
+const month = selectedMonth;
 
 const daysInMonth =
   new Date(year, month + 1, 0).getDate();
