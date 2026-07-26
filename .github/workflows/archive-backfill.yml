@@ -21,8 +21,8 @@ jobs:
             echo "[]" > archive_history.json
           fi
 
-          CURRENT=1783310400
-          NOW=1783317600
+          CURRENT=1784937600
+          NOW=1785027600
           
           while [ "$CURRENT" -lt "$NOW" ]; do
 
@@ -41,7 +41,8 @@ jobs:
             curl -s "$URL" > historic.json
             echo "LSIDs:"
             jq '.sensors[].lsid' historic.json
-            
+            echo "Sensor record counts:"
+            jq '.sensors[] | {lsid, records:(.data|length)}' historic.json
             jq '
           [
             (
