@@ -116,7 +116,9 @@
   <button id="nextMonth">
     Next Month ▶
   </button>
-
+  <button id="latestMonth">
+    Latest Month
+  </button>
   <br><br>
 
   Month:
@@ -1014,6 +1016,16 @@ document.getElementById(
   refreshMonthSelector();
 
 };
+
+};
+document.getElementById(
+  "latestMonth"
+).onclick = () => {
+
+  selectedYear = maxYear;
+  selectedMonth = maxMonth;
+
+  refreshMonthSelector();
 
 };
 populateMonthSelector();
