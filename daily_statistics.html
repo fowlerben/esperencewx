@@ -566,12 +566,16 @@ const avgMslp =
     ? avgMslpInHg * 33.8639
     : "";
 
-const totalRain =
+const rainValues =
   dailyArchive
     .map(r => r.rainfall_mm)
-    .filter(v => v != null)
-    .reduce((a, b) => a + b, 0);
+    .filter(v => v != null);
 
+const totalRain =
+  rainValues.length
+    ? rainValues.reduce((a,b)=>a+b,0)
+    : "";
+  
 const hourlyEtRecords =
   dailyArchive.filter(r => {
 
@@ -585,14 +589,15 @@ const hourlyEtRecords =
 
   });
 
-const totalEtInches =
+const etValues =
   hourlyEtRecords
     .map(r => r.et)
-    .filter(v => v != null)
-    .reduce((a, b) => a + b, 0);
+    .filter(v => v != null);
 
 const totalEt =
-  totalEtInches * 25.4;
+  etValues.length
+    ? etValues.reduce((a,b)=>a+b,0) * 25.4
+    : "";
 
 const maxRainRate =
   maxValue(
@@ -693,22 +698,30 @@ const maxSolar =
     dailyArchive.map(r => r.solar_rad_hi)
   );
 
-const solarEnergy =
+const solarEnergyValues =
   dailyArchive
     .map(r => r.solar_energy)
-    .filter(v => v != null)
-    .reduce((a, b) => a + b, 0) * 0.036;
+    .filter(v => v != null);
+
+const solarEnergy =
+  solarEnergyValues.length
+    ? solarEnergyValues.reduce((a,b)=>a+b,0) * 0.036
+    : "";
 
 const maxUv =
   maxValue(
     dailyArchive.map(r => r.uv_index_hi)
   );
 
-const uvMeds =
+const uvDoseValues =
   dailyArchive
     .map(r => r.uv_dose)
-    .filter(v => v != null)
-    .reduce((a, b) => a + b, 0);
+    .filter(v => v != null);
+
+const uvMeds =
+  uvDoseValues.length
+    ? uvDoseValues.reduce((a,b)=>a+b,0)
+    : "";
 
 const maxHeatIndexF =
   maxValue(
