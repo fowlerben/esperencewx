@@ -163,7 +163,63 @@ jobs:
                   et
                 }
             ),
+          (
+            .sensors[]
+            | select(.lsid==838746)
+            | .data[]
+            | {
+                time: .ts,
           
+                temp_lo_1,
+                temp_last_1,
+          
+                temp_lo_2,
+                temp_last_2,
+          
+                temp_lo_3,
+                temp_last_3,
+          
+                temp_lo_4,
+                temp_last_4,
+          
+                wet_leaf_hi_1,
+                wet_leaf_last_1,
+                wet_leaf_last_volt_1
+              }
+            ),
+            (
+              .sensors[]
+              | select(.lsid==552869)
+              | .data[]
+              | {
+                  time: .ts,
+            
+                  solar_rad_avg_552869: .solar_rad_avg,
+                  solar_rad_hi_552869: .solar_rad_hi,
+            
+                  uv_index_avg_552869: .uv_index_avg,
+                  uv_index_hi_552869: .uv_index_hi,
+            
+                  solar_energy_552869: .solar_energy
+                }
+              ),
+              (
+                .sensors[]
+                | select(.lsid==551510)
+                | .data[]
+                | {
+                    time: .ts,
+              
+                    temp_in_last,
+                    hum_in_last,
+              
+                    dew_point_in,
+                    heat_index_in,
+              
+                    temp_in_hi,
+                    temp_in_lo
+                  }
+              ),
             (
               .sensors[]
               | select(.lsid==551509)
