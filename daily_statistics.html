@@ -357,7 +357,7 @@ let maxThsws = [];
 const lastDay =
   year === now.getFullYear() &&
   month === now.getMonth()
-    ? now.getDate()
+    ? now.getDate() - 1
     : daysInMonth;
 
 for(let day=1; day<=lastDay; day++){
