@@ -365,6 +365,54 @@ let selectedYear =
 
 let selectedMonth =
   today.getMonth();
+function populateMonthSelector() {
+
+  const selector =
+    document.getElementById(
+      "monthSelector"
+    );
+
+  selector.innerHTML = "";
+
+  const startDate =
+    new Date(2025, 10, 1); // Nov 2025
+
+  const endDate =
+    new Date();
+
+  const d =
+    new Date(startDate);
+
+  while (d <= endDate) {
+
+    const option =
+      document.createElement(
+        "option"
+      );
+
+    option.value =
+      `${d.getFullYear()}-${d.getMonth()}`;
+
+    option.textContent =
+      d.toLocaleString(
+        "en-AU",
+        {
+          month: "long",
+          year: "numeric"
+        }
+      );
+
+    selector.appendChild(option);
+
+    d.setMonth(
+      d.getMonth() + 1
+    );
+  }
+
+  selector.value =
+    `${selectedYear}-${selectedMonth}`;
+
+}
 function degToCompass(deg) {
 
   const dirs = [
@@ -444,17 +492,20 @@ const archive =
 const now = new Date();
 
 document.getElementById("pageTitle").innerText =
-  now.toLocaleString("en-AU", {
-    month: "long",
-    year: "numeric"
-  }) + " Daily Weather Observations";
+  new Date(year, month)
+    .toLocaleString("en-AU", {
+      month: "long",
+      year: "numeric"
+    }) +
+  " Daily Weather Observations";
 
 document.getElementById("statsTitle").innerText =
   "Statistics for " +
-  now.toLocaleString("en-AU", {
-    month: "long",
-    year: "numeric"
-  });
+  new Date(year, month)
+    .toLocaleString("en-AU", {
+      month: "long",
+      year: "numeric"
+    });
 
 document.getElementById("preparedTime").innerText =
   "Prepared at " +
@@ -867,6 +918,7 @@ colourColumn(17);  // 3pm RH
 colourColumn(18);  // 3pm Cloud
 colourColumn(20);  // 3pm Speed
 colourColumn(21);  // 3pm MSLP
+populateMonthSelector();
 loadMonthly();
 
 </script>
