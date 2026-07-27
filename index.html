@@ -267,6 +267,18 @@
 
   </div>
 </div>
+</div>
+
+<div class="section">
+
+  <h2>Equivalent Potential Temperature</h2>
+
+  <div class="card" style="height:250px;">
+    <canvas id="thetaeChart"></canvas>
+  </div>
+
+</div>
+
 <div class="section">
 <div
   style="
@@ -663,6 +675,7 @@ setInterval(updateTime,1000);updateTime();
 
 let tempChart = null;
 let pressureChart = null;
+let thetaeChart = null;
 let terrChart = null;
 
 let selectedWindDate = null;
@@ -1627,6 +1640,23 @@ const chartTemps = todayHistory.map(r => r.temp_c);
 const chartDews = todayHistory.map(r => r.dew_c);
 const chartHumidity = todayHistory.map(r => r.humidity);
 const chartPressure = todayHistory.map(r => r.pressure_hpa);
+const chartThetaE = todayHistory.map(r => {
+
+  if (
+    r.temp_c == null ||
+    r.dew_c == null ||
+    r.pressure_hpa == null
+  ) {
+    return null;
+  }
+
+  return equivalentPotentialTemperature(
+    r.temp_c,
+    r.dew_c,
+    r.pressure_hpa
+  );
+
+});
 const chartTerrDpd = todayHistory.map(r => {
 
   const temps = [
@@ -2660,6 +2690,82 @@ if (!pressureChart) {
   pressureChart.data.labels = chartLabels;
   pressureChart.data.datasets[0].data = chartPressure;
   pressureChart.update();
+
+}
+if (!thetaeChart) {
+
+  thetaeChart = new Chart(
+    document.getElementById("thetaeChart"),
+    {
+
+      type: "line",
+
+      data: {
+        labels: chartLabels,
+
+        datasets: [
+          {
+            label: "θe (K)",
+            data: chartThetaE,
+            borderColor: "#ff66cc",
+            backgroundColor: "rgba(255,102,204,0.15)",
+            fill: true,
+            tension: 0.3,
+            pointRadius: 0
+          }
+        ]
+      },
+
+      options: {
+
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false,
+
+        interaction: {
+          mode: "index",
+          intersect: false,
+          axis: "x"
+        },
+
+        plugins: {
+          legend: {
+            labels: {
+              color: "white"
+            }
+          }
+        },
+
+        scales: {
+
+          x: {
+            ticks: {
+              color: "white"
+            }
+          },
+
+          y: {
+            ticks: {
+              color: "white"
+            }
+          }
+
+        }
+
+      }
+
+    }
+  );
+
+} else {
+
+  thetaeChart.data.labels =
+    chartLabels;
+
+  thetaeChart.data.datasets[0].data =
+    chartThetaE;
+
+  thetaeChart.update();
 
 }
 if (!terrChart) {
