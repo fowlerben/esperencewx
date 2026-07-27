@@ -270,7 +270,32 @@
 
 <div class="section">
 
-  <h2>Equivalent Potential Temperature</h2>
+  <div
+    style="
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:10px;
+    "
+  >
+
+    <h2>
+      Equivalent Potential Temperature
+    </h2>
+
+    <select
+      id="thetaeDateSelector"
+      style="
+        background:#1f3b4d;
+        color:white;
+        border:1px solid #4a6a7d;
+        padding:4px 8px;
+        border-radius:4px;
+      "
+    >
+    </select>
+
+  </div>
 
   <div class="card" style="height:250px;">
     <canvas id="thetaeChart"></canvas>
@@ -679,7 +704,7 @@ let terrChart = null;
 
 let selectedWindDate = null;
 let selectedWindMode = "track";
-
+let selectedThetaEDate = null;
 function drawWindRadar(history) {
 
   const canvas =
@@ -1348,7 +1373,10 @@ const windArchive =
   document.getElementById(
     "windDateSelector"
   );
-
+const thetaeDateSelector =
+  document.getElementById(
+    "thetaeDateSelector"
+  );
 if (
   windDateSelector &&
   windDateSelector.options.length === 0
@@ -1416,7 +1444,62 @@ document
 
   });
 }
+if (
+  thetaeDateSelector &&
+  thetaeDateSelector.options.length === 0
+) {
 
+  const availableDates =
+    [...new Set(
+      history.map(r =>
+        new Date(r.time * 1000)
+          .toLocaleDateString(
+            "en-AU",
+            {
+              timeZone:
+                "Australia/Melbourne"
+            }
+          )
+      )
+    )];
+
+  availableDates.reverse();
+
+  availableDates.forEach(date => {
+
+    const option =
+      document.createElement(
+        "option"
+      );
+
+    option.value = date;
+    option.textContent = date;
+
+    thetaeDateSelector.appendChild(
+      option
+    );
+
+  });
+
+  selectedThetaEDate =
+    availableDates[0];
+
+  thetaeDateSelector.value =
+    selectedThetaEDate;
+
+  thetaeDateSelector.addEventListener(
+    "change",
+    () => {
+
+      selectedThetaEDate =
+        thetaeDateSelector.value;
+
+      loadWeather();
+
+    }
+  );
+
+}
   
 if(data.generated_at){
 document.getElementById("dataTime").innerText =
@@ -1624,6 +1707,53 @@ for (let i = 1; i < rfRecords.length; i++) {
   rainSince9am += increment;
 
 }
+if (!selectedThetaEDate) {
+
+  selectedThetaEDate =
+    new Date()
+      .toLocaleDateString(
+        "en-AU",
+        {
+          timeZone:
+            "Australia/Melbourne"
+        }
+      );
+
+}
+
+const thetaeHistory =
+  history.filter(r => {
+
+    const recordDate =
+      new Date(r.time * 1000)
+        .toLocaleDateString(
+          "en-AU",
+          {
+            timeZone:
+              "Australia/Melbourne"
+          }
+        );
+
+    return (
+      recordDate ===
+      selectedThetaEDate
+    );
+
+  });
+
+const thetaeLabels =
+  thetaeHistory.map(r =>
+    new Date(r.time * 1000)
+      .toLocaleTimeString(
+        "en-AU",
+        {
+          timeZone:
+            "Australia/Melbourne",
+          hour: "2-digit",
+          minute: "2-digit"
+        }
+      )
+  );
 const chartLabels = todayHistory.map(r =>
   new Date(r.time * 1000).toLocaleTimeString(
     "en-AU",
@@ -1639,7 +1769,7 @@ const chartTemps = todayHistory.map(r => r.temp_c);
 const chartDews = todayHistory.map(r => r.dew_c);
 const chartHumidity = todayHistory.map(r => r.humidity);
 const chartPressure = todayHistory.map(r => r.pressure_hpa);
-const chartThetaE = todayHistory.map(r => {
+const chartThetaE = thetaeHistory.map(r => {
 
   if (
     r.temp_c == null ||
@@ -2700,7 +2830,7 @@ if (!thetaeChart) {
       type: "line",
 
       data: {
-        labels: chartLabels,
+        labels: thetaeLabels,
 
         datasets: [
           {
@@ -2759,7 +2889,7 @@ if (!thetaeChart) {
 } else {
 
   thetaeChart.data.labels =
-    chartLabels;
+    thetaeLabels;
 
   thetaeChart.data.datasets[0].data =
     chartThetaE;
