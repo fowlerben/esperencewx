@@ -702,6 +702,9 @@ let pressureChart = null;
 let thetaeChart = null;
 let terrChart = null;
 
+let archiveData = null;
+let windArchiveData = null;
+
 let selectedWindDate = null;
 let selectedWindMode = "track";
 let selectedThetaEDate = null;
@@ -1359,16 +1362,35 @@ const data=await res.json();
 const historyRes = await fetch("/esperencewx/history.json?"+Date.now());
 const history = await historyRes.json();
 
-const archiveRes =
-  await fetch("/esperencewx/archive_history.json?" + Date.now());
+if (!archiveData) {
+
+  const archiveRes =
+    await fetch(
+      "/esperencewx/archive_history.json"
+    );
+
+  archiveData =
+    await archiveRes.json();
+
+}
 
 const archive =
-  await archiveRes.json();
+  archiveData;
+
+if (!windArchiveData) {
+
   const windRes =
-  await fetch("/esperencewx/wind_history.json?" + Date.now());
+    await fetch(
+      "/esperencewx/wind_history.json"
+    );
+
+  windArchiveData =
+    await windRes.json();
+
+}
 
 const windArchive =
-  await windRes.json();
+  windArchiveData;
   const windDateSelector =
   document.getElementById(
     "windDateSelector"
