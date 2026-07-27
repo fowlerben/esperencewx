@@ -1864,7 +1864,7 @@ document.getElementById(
   "thetae"
 ).innerText =
   thetae != null
-    ? thetae.toFixed(0) + " K"
+    ? thetae.toFixed(1) + " K"
     : "N/A";
 pressure.innerText = baro?inHgToHpa(baro.bar_sea_level)+" hPa":"N/A";
   pressureTrend.innerText = pressureTrendText;
