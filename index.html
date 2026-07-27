@@ -2517,7 +2517,8 @@ if (!tempChart) {
           backgroundColor: "rgba(79,195,247,0.2)",
           fill: false,
           tension: 0.3,
-          pointRadius: 0
+          pointRadius: 0,
+          pointHitRadius: 20
         },
         {
           label: "Dew Point °C",
@@ -2526,7 +2527,8 @@ if (!tempChart) {
           backgroundColor: "rgba(123,211,137,0)",
           fill: false,
           tension: 0.3,
-          pointRadius: 0
+          pointRadius: 0,
+          pointHitRadius: 20
         },
         {
           label: "Humidity %",
@@ -2535,6 +2537,7 @@ if (!tempChart) {
           fill: false,
           tension: 0.3,
           pointRadius: 0,
+          pointHitRadius: 20,
           yAxisID: "y1"
         }
       ]
@@ -2544,7 +2547,10 @@ if (!tempChart) {
       responsive: true,
       maintainAspectRatio: false,
       animation: false,
-
+    interaction: {
+      mode: "index",
+      intersect: false
+    },
       plugins: {
         legend: {
           labels: {
