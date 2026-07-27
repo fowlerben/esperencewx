@@ -22,7 +22,7 @@ jobs:
           fi
 
           CURRENT=1780172700
-          NOW=1780172700
+          NOW=1782860400
           
           while [ "$CURRENT" -lt "$NOW" ]; do
 
