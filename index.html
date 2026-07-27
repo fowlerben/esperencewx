@@ -1451,7 +1451,7 @@ if (
 
   const availableDates =
     [...new Set(
-      history.map(r =>
+      archive.map(r =>
         new Date(r.time * 1000)
           .toLocaleDateString(
             "en-AU",
@@ -1722,7 +1722,7 @@ if (!selectedThetaEDate) {
 }
 
 const thetaeHistory =
-  history.filter(r => {
+  archive.filter(r => {
 
     const recordDate =
       new Date(r.time * 1000)
@@ -1772,17 +1772,26 @@ const chartPressure = todayHistory.map(r => r.pressure_hpa);
 const chartThetaE = thetaeHistory.map(r => {
 
   if (
-    r.temp_c == null ||
-    r.dew_c == null ||
-    r.pressure_hpa == null
+    r.temp_last == null ||
+    r.dew_point_last == null ||
+    r.bar_sea_level == null
   ) {
     return null;
   }
 
+  const tempC =
+    (r.temp_last - 32) * 5 / 9;
+
+  const dewC =
+    (r.dew_point_last - 32) * 5 / 9;
+
+  const pressureHpa =
+    r.bar_sea_level * 33.8639;
+
   return equivalentPotentialTemperature(
-    r.temp_c,
-    r.dew_c,
-    r.pressure_hpa
+    tempC,
+    dewC,
+    pressureHpa
   );
 
 });
