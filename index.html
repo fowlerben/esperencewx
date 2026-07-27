@@ -232,6 +232,8 @@
     Wet Bulb <span id="wet"></span>
     |
     Humidity <span id="hum"></span>
+    |
+    θe <span id="thetae"></span>
   </div>
 
 </div>
@@ -466,7 +468,62 @@ function toC(f){ if(f==null) return null; return ((f-32)*5/9); }
 function mphToKmh(v){return (v!=null)?(v*1.60934).toFixed(1)+" km/h":"N/A";}
 function safeDeg(v){return (v!=null)?v+"°":"N/A";}
 function inHgToHpa(p){return (p*33.8639).toFixed(1);}
+function equivalentPotentialTemperature(
+  tempC,
+  dewC,
+  pressureHpa
+) {
 
+  if (
+    tempC == null ||
+    dewC == null ||
+    pressureHpa == null
+  ) {
+    return null;
+  }
+
+  const T =
+    tempC + 273.15;
+
+  const Td =
+    dewC + 273.15;
+
+  const e =
+    6.112 *
+    Math.exp(
+      (17.67 * dewC) /
+      (dewC + 243.5)
+    );
+
+  const w =
+    0.622 * e /
+    (pressureHpa - e);
+
+  const tl =
+    1 /
+    (
+      (1 / (Td - 56)) +
+      Math.log(T / Td) / 800
+    ) + 56;
+
+  const theta =
+    T *
+    Math.pow(
+      1000 / pressureHpa,
+      0.2854 * (1 - 0.28 * w)
+    );
+
+  const thetae =
+    theta *
+    Math.exp(
+      ((3376 / tl) - 2.54) *
+      w *
+      (1 + 0.81 * w)
+    );
+
+  return thetae;
+
+}
 function getSunInfo() {
 
   const lat = -38.16330;
@@ -1787,6 +1844,28 @@ temp.innerText = tempC!=null ? tempC.toFixed(1)+" °C":"N/A";
 dew.innerText  = dewC!=null ? dewC.toFixed(1)+" °C":"N/A";
 wet.innerText  = iss.wet_bulb!=null ? toC(iss.wet_bulb).toFixed(1)+" °C":"N/A";
 hum.innerText  = iss.hum+" %";
+const pressureHpa =
+  baro
+    ? Number(
+        inHgToHpa(
+          baro.bar_sea_level
+        )
+      )
+    : null;
+
+const thetae =
+  equivalentPotentialTemperature(
+    tempC,
+    dewC,
+    pressureHpa
+  );
+
+document.getElementById(
+  "thetae"
+).innerText =
+  thetae != null
+    ? thetae.toFixed(0) + " K"
+    : "N/A";
 pressure.innerText = baro?inHgToHpa(baro.bar_sea_level)+" hPa":"N/A";
   pressureTrend.innerText = pressureTrendText;
 
