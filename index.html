@@ -2822,6 +2822,7 @@ if (!pressureChart) {
           fill: false,
           tension: 0.3,
           pointRadius: 0
+          pointHitRadius: 20
         }]
       },
 
@@ -2829,6 +2830,11 @@ if (!pressureChart) {
         responsive: true,
         maintainAspectRatio: false,
         animation: false,
+        interaction: {
+          mode: "nearest",
+          axis: "x",
+          intersect: false
+        },
 
         plugins: {
           legend: {
