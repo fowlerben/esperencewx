@@ -39,6 +39,14 @@ jobs:
             echo "Fetching $CURRENT -> $NEXT"
 
             curl -s "$URL" > historic.json
+            echo "=== ALL ISS FIELDS ==="
+
+            jq '
+            .sensors[]
+            | select(.lsid==553786)
+            | .data[0]
+            | keys[]
+            ' historic.json | sort
             echo "LSIDs:"
             jq '.sensors[].lsid' historic.json
             echo "Sensor record counts:"
