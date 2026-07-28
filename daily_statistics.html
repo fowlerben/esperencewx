@@ -635,8 +635,9 @@ const maxWindRecord =
   dailyArchive.find(
     r => r.wind_speed_hi === maxWindSpeedMph
   );
-let maxWindTime = "";
 
+let maxWindTime = "";
+let maxWindDir = "";
 if (
   maxWindRecord &&
   maxWindRecord.wind_speed_hi_at
@@ -658,7 +659,27 @@ if (
     );
 
 }
+if (
+  maxWindRecord &&
+  maxWindRecord.wind_speed_hi_dir != null
+) {
 
+  const compass16 = [
+    "N","NNE","NE","ENE",
+    "E","ESE","SE","SSE",
+    "S","SSW","SW","WSW",
+    "W","WNW","NW","NNW"
+  ];
+
+  maxWindDir =
+    compass16[
+      Math.round(
+        maxWindRecord.wind_speed_hi_dir
+        / 22.5
+      ) % 16
+    ];
+
+}
 const avgWindSpeedMph =
   average(
     dailyArchive.map(r => r.wind_speed_avg)
@@ -829,7 +850,8 @@ const displayAvgWindDir =
 
 const displayMaxWindTime =
   dailyComplete ? maxWindTime : "";
-
+const displayMaxWindDir =
+  dailyComplete ? maxWindDir : "";
 const displayMaxSolar =
   dailyComplete ? maxSolar : "";
 
@@ -954,15 +976,15 @@ tr.innerHTML = `
       ? displayMaxRainRate.toFixed(1)
       : ""
   }</td>
-  <td></td>
-  
-  <td>${
-    displayMaxWindSpeed !== ""
-      ? displayMaxWindSpeed.toFixed(1)
-      : ""
-  }</td>
-  
-  <td>${displayMaxWindTime}</td>
+<td>${displayMaxWindDir}</td>
+
+<td>${
+  displayMaxWindSpeed !== ""
+    ? displayMaxWindSpeed.toFixed(1)
+    : ""
+}</td>
+
+<td>${displayMaxWindTime}</td>
   
   <td>${displayAvgWindDir}</td>
   
