@@ -1573,7 +1573,13 @@ const todayArchive = archive.filter(r => {
   return recordDate === todayMelbourne;
 
 });
+const latestArchive =
+  todayArchive.length
+    ? todayArchive[todayArchive.length - 1]
+    : null;
 
+const rainRate =
+  latestArchive?.rain_rate_hi_mm ?? 0;
 const latestHistory =
   todayHistory[todayHistory.length - 1];
 
@@ -2535,19 +2541,33 @@ document.getElementById("surfaceState").innerText =
 
 let rainCode = "";
 
-if (dewText === "Drizzle") {
+if (
+  rainLast30Min > 0 &&
+  rainRate <= 0
+) {
 
   rainCode = "DZ";
 
 }
-else if (dewText === "Rain") {
+else if (
+  rainRate >= 10
+) {
 
-  rainCode =
-    rain10Min < 0.5
-      ? "-RA"
-      : rain10Min <= 1.6
-        ? "RA"
-        : "+RA";
+  rainCode = "+RA";
+
+}
+else if (
+  rainRate >= 1
+) {
+
+  rainCode = "RA";
+
+}
+else if (
+  rainRate > 0
+) {
+
+  rainCode = "-RA";
 
 }
 
