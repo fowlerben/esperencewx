@@ -715,6 +715,13 @@ const maxGustTime =
           hour12: false
         })
     : "";
+  const maxGustDir =
+  gustComplete &&
+  maxGustRecord?.wind_speed_hi_dir != null
+    ? degToCompass(
+        Number(maxGustRecord.wind_speed_hi_dir)
+      )
+    : "";
   const target9 =
   new Date(year, month, day, 9, 0, 0).getTime() / 1000;
 
@@ -797,10 +804,15 @@ if (manual?.cloud15 != null && manual.cloud15 !== "") {
     <td>${evapTotal != null ? evapTotal.toFixed(2) : (manual?.evap ?? "")}</td>
     <td></td>
 
-    <td></td>
-    <td>${maxGustSpeed != null ? maxGustSpeed.toFixed(0) : (manual?.gustSpeed ?? "")}</td>
+    <td>${maxGustDir}</td>
+    
+    <td>${
+      maxGustSpeed != null
+        ? maxGustSpeed.toFixed(0)
+        : (manual?.gustSpeed ?? "")
+    }</td>
+    
     <td>${maxGustTime || manual?.gustTime || ""}</td>
-
     <td>${archive9Valid ? ((archive9.temp_last - 32) * 5 / 9).toFixed(1) : (manual?.temp9 ?? "")}</td>
     <td>${archive9Valid ? Number(archive9.hum_last).toFixed(0) : (manual?.rh9 ?? "")}</td>
     <td>${manual?.cloud9 || ""}</td>
