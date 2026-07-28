@@ -79,14 +79,10 @@ jobs:
                   wet_bulb_last,
           
                   heat_index_hi,
-                  heat_index_lo,
                   heat_index_hi_at,
-                  heat_index_lo_at,
                   heat_index_last,
                   
-                  wind_chill_hi,
                   wind_chill_lo,
-                  wind_chill_hi_at,
                   wind_chill_lo_at,
                   wind_chill_last,
                             
