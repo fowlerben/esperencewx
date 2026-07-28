@@ -1573,13 +1573,7 @@ const todayArchive = archive.filter(r => {
   return recordDate === todayMelbourne;
 
 });
-const latestArchive =
-  todayArchive.length
-    ? todayArchive[todayArchive.length - 1]
-    : null;
 
-const rainRate =
-  latestArchive?.rain_rate_hi_mm ?? 0;
 const latestHistory =
   todayHistory[todayHistory.length - 1];
 
@@ -1996,7 +1990,8 @@ if(s.lsid===838746) extra=s.data[0];
 });
 
 if(!iss)return;
-
+const rainRate =
+  iss.rain_rate_last_mm ?? 0;
 const sun = getSunInfo();
 
 document.getElementById("sunrise").innerText =
