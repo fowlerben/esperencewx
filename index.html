@@ -2266,7 +2266,13 @@ if (temps.length > 0 && dewC != null) {
 
 const wetNow =
   (leafValue ?? 0) > 5;
-
+const rainLast30Min =
+  (iss.rainfall_last_15_min_mm ?? 0) +
+  Math.max(
+    0,
+    (iss.rainfall_last_60_min_mm ?? 0) -
+    (iss.rainfall_last_15_min_mm ?? 0)
+  ) / 3;
 const wetRecordsOver5 =
   todayHistory.filter(
     r => (r.leaf ?? 0) > 5
@@ -2409,14 +2415,6 @@ if (
   wetNow &&
   !terrDpdBelowZeroLast4h
 ) {
-
-const rainLast30Min =
-  (iss.rainfall_last_15_min_mm ?? 0) +
-  Math.max(
-    0,
-    (iss.rainfall_last_60_min_mm ?? 0) -
-    (iss.rainfall_last_15_min_mm ?? 0)
-  ) / 3;
 
 if (rainLast30Min >= 0.2) {
 
