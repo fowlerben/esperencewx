@@ -353,6 +353,7 @@ let maxUvs = [];
 let uvDoses = [];
 
 let maxHeatIndices = [];
+let minWindChills = [];
 let maxThsws = [];
   
 const lastDay =
@@ -403,7 +404,7 @@ const overnightArchive =
       new Date(r.time * 1000);
 
     const start =
-      new Date(year, month, day - 1, 18, 0);
+      new Date(year, month, day - 1, 18, 5);
 
     const end =
       new Date(year, month, day, 9, 0);
@@ -749,7 +750,17 @@ const maxHeatIndex =
   maxHeatIndexF !== ""
     ? (maxHeatIndexF - 32) * 5 / 9
     : "";
+const minWindChillF =
+  minValue(
+    overnightArchive.map(
+      r => r.wind_chill_lo
+    )
+  );
 
+const minWindChill =
+  minWindChillF !== ""
+    ? (minWindChillF - 32) * 5 / 9
+    : "";
 const maxThswF =
   maxValue(
     daytimeArchive.map(r => r.thsw_index_hi)
@@ -833,6 +844,9 @@ const displayUvMeds =
 
 const displayMaxHeatIndex =
   dailyComplete ? maxHeatIndex : "";
+
+const displayMinWindChill =
+  overnightComplete ? minWindChill : "";
 
 const displayMaxThsw =
   dailyComplete ? maxThsw : "";
@@ -982,19 +996,23 @@ tr.innerHTML = `
       : ""
   }</td>
 
-  <td>${
-    displayMaxHeatIndex !== ""
-      ? displayMaxHeatIndex.toFixed(1)
-      : ""
-  }</td>
-  
-  <td></td>
-  
-  <td>${
-    displayMaxThsw !== ""
-      ? displayMaxThsw.toFixed(1)
-      : ""
-  }</td>
+<td>${
+  displayMaxHeatIndex !== ""
+    ? displayMaxHeatIndex.toFixed(1)
+    : ""
+}</td>
+
+<td>${
+  displayMinWindChill !== ""
+    ? displayMinWindChill.toFixed(1)
+    : ""
+}</td>
+
+<td>${
+  displayMaxThsw !== ""
+    ? displayMaxThsw.toFixed(1)
+    : ""
+}</td>
 `;
 
 if (displayMinTemp !== "") minTemps.push(displayMinTemp);
@@ -1027,6 +1045,10 @@ if (displayMaxUv !== "") maxUvs.push(displayMaxUv);
 if (displayUvMeds !== "") uvDoses.push(displayUvMeds);
 
 if (displayMaxHeatIndex !== "") maxHeatIndices.push(displayMaxHeatIndex);
+
+if (displayMinWindChill !== "")
+  minWindChills.push(displayMinWindChill);
+
 if (displayMaxThsw !== "") maxThsws.push(displayMaxThsw);
     table.appendChild(tr);
   }
@@ -1080,7 +1102,11 @@ meanRow.innerHTML = `
 
 <td>${average(maxHeatIndices).toFixed(1)}</td>
 
-<td></td>
+<td>${
+  minWindChills.length
+    ? average(minWindChills).toFixed(1)
+    : ""
+}</td>
 
 <td>${average(maxThsws).toFixed(1)}</td>
 `;
@@ -1134,7 +1160,11 @@ lowRow.innerHTML = `
 
 <td>${Math.min(...maxHeatIndices).toFixed(1)}</td>
 
-<td></td>
+<td>${
+  minWindChills.length
+    ? Math.min(...minWindChills).toFixed(1)
+    : ""
+}</td>
 
 <td>${Math.min(...maxThsws).toFixed(1)}</td>
 `;
@@ -1191,7 +1221,11 @@ highRow.innerHTML = `
 
 <td>${Math.max(...maxHeatIndices).toFixed(1)}</td>
 
-<td></td>
+<td>${
+  minWindChills.length
+    ? Math.max(...minWindChills).toFixed(1)
+    : ""
+}</td>
 
 <td>${Math.max(...maxThsws).toFixed(1)}</td>
 `;
