@@ -48,10 +48,16 @@ jobs:
           
       - name: Update archive history
         run: |
-          if [ ! -f archive_history.json ]; then
-            echo "[]" > archive_history.json
+          YEAR=$(date +%Y)
+          MONTH=$(date +%m)
+          
+          mkdir -p archives/$YEAR
+          
+          ARCHIVE_FILE="archives/$YEAR/$MONTH.json"
+          
+          if [ ! -f "$ARCHIVE_FILE" ]; then
+            echo "[]" > "$ARCHIVE_FILE"
           fi
-
           TIMESTAMP=$(date +%s)
 
           END_TS=$(date +%s)
@@ -246,9 +252,9 @@ jobs:
             add
             | unique_by(.time)
             | sort_by(.time)
-          ' archive_history.json archive_records.json > archive_tmp.json
+          ' "$ARCHIVE_FILE" archive_records.json > archive_tmp.json
 
-          mv archive_tmp.json archive_history.json
+          mv archive_tmp.json "$ARCHIVE_FILE"
       - name: Update history
         run: |
           if [ ! -f history.json ]; then
@@ -416,6 +422,6 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add weather.json history.json archive_history.json wind_history.json
+          git add weather.json history.json wind_history.json archives/
           git commit -m "update weather" || echo "no changes"
           git push
