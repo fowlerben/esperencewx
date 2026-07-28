@@ -108,6 +108,7 @@ jobs:
           
                   wind_speed_hi,
                   wind_speed_hi_at,
+                  wind_speed_hi_dir,
                   wind_speed_avg,
                   wind_dir_of_prevail,
           
