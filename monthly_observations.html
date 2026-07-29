@@ -531,7 +531,9 @@ const manualRes =
 const manualObs =
   await manualRes.json();
 const archiveRes =
-  await fetch("archive_history.json?" + Date.now());
+  await fetch(
+    `archives/${year}/${String(month + 1).padStart(2,"0")}.json?${Date.now()}`
+  );
 
 const archive =
   await archiveRes.json();
