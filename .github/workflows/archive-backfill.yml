@@ -17,14 +17,14 @@ jobs:
       - name: Backfill archive
         run: |
 
-          ARCHIVE_FILE="archives/2026/05.json"
+          ARCHIVE_FILE="archives/2026/06.json"
           
           if [ ! -f "$ARCHIVE_FILE" ]; then
             echo "[]" > "$ARCHIVE_FILE"
           fi
           
-          CURRENT=1777961100
-          NOW=1780552800
+          CURRENT=1780553100
+          NOW=1783144800
           
           while [ "$CURRENT" -lt "$NOW" ]; do
 
@@ -243,6 +243,6 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add archives/2026/05.json
+          git add archives/2026/06.json
           git commit -m "archive backfill" || echo "no changes"
           git push
