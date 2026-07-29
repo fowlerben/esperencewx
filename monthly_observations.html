@@ -530,6 +530,11 @@ const manualRes =
 
 const manualObs =
   await manualRes.json();
+
+const now = new Date();
+const year = selectedYear;
+const month = selectedMonth;
+
 const archiveRes =
   await fetch(
     `archives/${year}/${String(month + 1).padStart(2,"0")}.json?${Date.now()}`
@@ -537,9 +542,6 @@ const archiveRes =
 
 const archive =
   await archiveRes.json();
-const now = new Date();
-const year = selectedYear;
-const month = selectedMonth;
 
 document.getElementById("pageTitle").innerText =
   new Date(year, month)
