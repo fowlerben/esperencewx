@@ -17,12 +17,14 @@ jobs:
       - name: Backfill archive
         run: |
 
-          if [ ! -f archive_history.json ]; then
-            echo "[]" > archive_history.json
+          ARCHIVE_FILE="archives/2025/11.json"
+          
+          if [ ! -f "$ARCHIVE_FILE" ]; then
+            echo "[]" > "$ARCHIVE_FILE"
           fi
-
           CURRENT=1761861900
           NOW=1764507600
+          ARCHIVE_FILE="archives/2025/11.json"
           
           while [ "$CURRENT" -lt "$NOW" ]; do
 
@@ -229,9 +231,9 @@ jobs:
             | sort_by(.time)
             | group_by(.time)
             | map(add)
-          ' archive_history.json archive_records.json > archive_tmp.json
+          ' "$ARCHIVE_FILE" archive_records.json > archive_tmp.json
 
-            mv archive_tmp.json archive_history.json
+            mv archive_tmp.json "$ARCHIVE_FILE"
 
             CURRENT=$NEXT
 
@@ -241,6 +243,6 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add archive_history.json
+          git add "$ARCHIVE_FILE"
           git commit -m "archive backfill" || echo "no changes"
           git push
