@@ -138,13 +138,13 @@
       "data": [
         {
           "rx_state": 0,
-          "wind_speed_hi_last_2_min": 12,
+          "wind_speed_hi_last_2_min": 11,
           "hum": null,
           "wind_dir_at_hi_speed_last_10_min": 273,
           "wind_chill": null,
           "rain_rate_hi_last_15_min_clicks": 0,
           "thw_index": null,
-          "wind_dir_scalar_avg_last_10_min": 265,
+          "wind_dir_scalar_avg_last_10_min": 263,
           "rain_size": 1,
           "uv_index": null,
           "tz_offset": 36000,
@@ -152,10 +152,10 @@
           "rainfall_last_60_min_clicks": 0,
           "wet_bulb": null,
           "rainfall_monthly_clicks": 0,
-          "wind_speed_avg_last_10_min": 5.75,
-          "wind_dir_at_hi_speed_last_2_min": 270,
+          "wind_speed_avg_last_10_min": 6.18,
+          "wind_dir_at_hi_speed_last_2_min": 224,
           "rainfall_daily_in": 0,
-          "wind_dir_last": 271,
+          "wind_dir_last": 258,
           "rainfall_daily_mm": 0,
           "rain_storm_last_clicks": null,
           "tx_id": 3,
@@ -172,7 +172,7 @@
           "rain_storm_in": null,
           "rain_storm_last_end_at": null,
           "rain_storm_mm": null,
-          "wind_dir_scalar_avg_last_2_min": 258,
+          "wind_dir_scalar_avg_last_2_min": 253,
           "heat_index": null,
           "rainfall_last_24_hr_in": 0,
           "rainfall_last_60_min_mm": 0,
@@ -184,13 +184,13 @@
           "wind_speed_hi_last_10_min": 12,
           "rainfall_last_15_min_clicks": 0,
           "rainfall_year_mm": 0,
-          "wind_dir_scalar_avg_last_1_min": 257,
+          "wind_dir_scalar_avg_last_1_min": 251,
           "temp": null,
-          "wind_speed_avg_last_2_min": 6,
-          "solar_rad": 123,
+          "wind_speed_avg_last_2_min": 6.12,
+          "solar_rad": 107,
           "rainfall_monthly_mm": 0,
           "rain_storm_last_mm": null,
-          "wind_speed_avg_last_1_min": 5.87,
+          "wind_speed_avg_last_1_min": 6.18,
           "thsw_index": null,
           "rainfall_monthly_in": 0,
           "rain_rate_last_mm": 0,
@@ -200,7 +200,7 @@
           "rain_rate_last_in": 0,
           "rain_rate_hi_last_15_min_mm": 0,
           "rain_rate_hi_last_15_min_in": 0,
-          "ts": 1785391553
+          "ts": 1785391853
         }
       ],
       "sensor_type": 55,
@@ -315,6 +315,6 @@
       "data_structure_type": 18
     }
   ],
-  "generated_at": 1785391559,
+  "generated_at": 1785391855,
   "station_id": 144429
 }
