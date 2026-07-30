@@ -702,7 +702,6 @@ let pressureChart = null;
 let thetaeChart = null;
 let terrChart = null;
 
-let archiveData = null;
 let windArchiveData = null;
 
 let selectedWindDate = null;
@@ -1362,21 +1361,28 @@ const data=await res.json();
 const historyRes = await fetch("/esperencewx/history.json?"+Date.now());
 const history = await historyRes.json();
 
-if (!archiveData) {
+let archive = [];
 
-  const archiveRes =
-    await fetch(
-      "/esperencewx/archive_history.json"
-    );
+const thetaeDate =
+  selectedThetaEDate
+    ? selectedThetaEDate
+    : new Date().toLocaleDateString(
+        "en-AU",
+        {
+          timeZone: "Australia/Melbourne"
+        }
+      );
 
-  archiveData =
-    await archiveRes.json();
+const [day, month, year] =
+  thetaeDate.split("/");
 
-}
+const archiveRes =
+  await fetch(
+    `/esperencewx/archives/${year}/${month}.json?${Date.now()}`
+  );
 
-const archive =
-  archiveData;
-
+archive =
+  await archiveRes.json();
 if (!windArchiveData) {
 
   const windRes =
@@ -1473,7 +1479,7 @@ if (
 
   const availableDates =
     [...new Set(
-      archive.map(r =>
+      windArchive.map(r =>
         new Date(r.time * 1000)
           .toLocaleDateString(
             "en-AU",
@@ -1503,8 +1509,24 @@ if (
 
   });
 
+selectedThetaEDate =
+  new Date()
+    .toLocaleDateString(
+      "en-AU",
+      {
+        timeZone:
+          "Australia/Melbourne"
+      }
+    );
+
+if (
+  !availableDates.includes(
+    selectedThetaEDate
+  )
+) {
   selectedThetaEDate =
     availableDates[0];
+}
 
   thetaeDateSelector.value =
     selectedThetaEDate;
