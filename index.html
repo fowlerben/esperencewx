@@ -2305,6 +2305,29 @@ const meanKmh =
     return gustKmh / meanKmh;
 
   });
+const chartGustFactorTrend =
+  chartGustFactor.map((_, i) => {
+
+    const values =
+      chartGustFactor
+        .slice(
+          Math.max(0, i - 11),
+          i + 1
+        )
+        .filter(v => v != null);
+
+    if (values.length === 0) {
+      return null;
+    }
+
+    return (
+      values.reduce(
+        (a, b) => a + b,
+        0
+      ) / values.length
+    );
+
+  });
 const button =
   document.getElementById(
     "windModeBtn"
@@ -2399,6 +2422,26 @@ if (!gustFactorChart) {
 
               pointRadius: 0,
 
+              yAxisID: "y1"
+            }
+            ,
+            {
+              label:
+                "GF Trend (1h)",
+            
+              data:
+                chartGustFactorTrend,
+            
+              borderColor:
+                "#ffffff",
+            
+              borderDash:
+                [6, 6],
+            
+              tension: 0.3,
+            
+              pointRadius: 0,
+            
               yAxisID: "y1"
             }
 
@@ -2499,6 +2542,8 @@ if (!gustFactorChart) {
 
   gustFactorChart.data.datasets[2].data =
     chartGustFactor;
+  gustFactorChart.data.datasets[3].data =
+  chartGustFactorTrend;
 
   gustFactorChart.update();
 
