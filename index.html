@@ -1538,6 +1538,15 @@ const archiveRes =
 
 archive =
   await archiveRes.json();
+const availableDates =
+  [...new Set(
+    archive.map(r =>
+      new Date(r.time * 1000)
+        .toLocaleDateString("en-AU", {
+          timeZone: "Australia/Melbourne"
+        })
+    )
+  )];
 
   const windDateSelector =
   document.getElementById(
