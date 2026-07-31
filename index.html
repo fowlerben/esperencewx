@@ -464,7 +464,32 @@
 </div>
 <div class="section">
 
-  <h2>Terrestrial DPD & Leaf Wetness</h2>
+  <div
+    style="
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:10px;
+    "
+  >
+
+    <h2>
+      Terrestrial DPD & Leaf Wetness
+    </h2>
+
+    <select
+      id="terrDateSelector"
+      style="
+        background:#1f3b4d;
+        color:white;
+        border:1px solid #4a6a7d;
+        padding:4px 8px;
+        border-radius:4px;
+      "
+    >
+    </select>
+
+  </div>
 
   <div class="card" style="height:250px;">
     <canvas id="terrChart"></canvas>
@@ -827,6 +852,7 @@ let windArchiveData = null;
 let selectedWindDate = null;
 let selectedWindMode = "track";
 let selectedThetaEDate = null;
+let selectedTerrDate = null;
 function drawWindRadar(history) {
 
   const canvas =
@@ -1525,6 +1551,10 @@ const thetaeDateSelector =
   document.getElementById(
     "thetaeDateSelector"
   );
+const terrDateSelector =
+  document.getElementById(
+    "terrDateSelector"
+  );
 if (
   windDateSelector &&
   windDateSelector.options.length === 0
@@ -1657,6 +1687,78 @@ if (
 
       selectedThetaEDate =
         thetaeDateSelector.value;
+
+      loadWeather();
+
+    }
+  );
+
+}
+if (
+  terrDateSelector &&
+  terrDateSelector.options.length === 0
+) {
+
+  const availableDates =
+    [...new Set(
+      windArchive.map(r =>
+        new Date(r.time * 1000)
+          .toLocaleDateString(
+            "en-AU",
+            {
+              timeZone:
+                "Australia/Melbourne"
+            }
+          )
+      )
+    )];
+
+  availableDates.reverse();
+
+  availableDates.forEach(date => {
+
+    const option =
+      document.createElement(
+        "option"
+      );
+
+    option.value = date;
+    option.textContent = date;
+
+    terrDateSelector.appendChild(
+      option
+    );
+
+  });
+
+  selectedTerrDate =
+    new Date()
+      .toLocaleDateString(
+        "en-AU",
+        {
+          timeZone:
+            "Australia/Melbourne"
+        }
+      );
+
+  if (
+    !availableDates.includes(
+      selectedTerrDate
+    )
+  ) {
+    selectedTerrDate =
+      availableDates[0];
+  }
+
+  terrDateSelector.value =
+    selectedTerrDate;
+
+  terrDateSelector.addEventListener(
+    "change",
+    () => {
+
+      selectedTerrDate =
+        terrDateSelector.value;
 
       loadWeather();
 
@@ -1904,9 +2006,54 @@ const thetaeHistory =
     );
 
   });
+if (!selectedTerrDate) {
 
+  selectedTerrDate =
+    new Date()
+      .toLocaleDateString(
+        "en-AU",
+        {
+          timeZone:
+            "Australia/Melbourne"
+        }
+      );
+
+}
+
+const terrHistory =
+  archive.filter(r => {
+
+    const recordDate =
+      new Date(r.time * 1000)
+        .toLocaleDateString(
+          "en-AU",
+          {
+            timeZone:
+              "Australia/Melbourne"
+          }
+        );
+
+    return (
+      recordDate ===
+      selectedTerrDate
+    );
+
+  });
 const thetaeLabels =
   thetaeHistory.map(r =>
+    new Date(r.time * 1000)
+      .toLocaleTimeString(
+        "en-AU",
+        {
+          timeZone:
+            "Australia/Melbourne",
+          hour: "2-digit",
+          minute: "2-digit"
+        }
+      )
+  );
+const terrLabels =
+  terrHistory.map(r =>
     new Date(r.time * 1000)
       .toLocaleTimeString(
         "en-AU",
@@ -1959,7 +2106,7 @@ const chartThetaE = thetaeHistory.map(r => {
   );
 
 });
-const chartTerrDpd = todayHistory.map(r => {
+const chartTerrDpd = terrHistory.map(r => {
 
   const temps = [
     r.temp1_c,
@@ -1979,11 +2126,11 @@ const chartTerrDpd = todayHistory.map(r => {
 });
 
 const chartLeaf =
-  todayHistory.map(
+  terrHistory.map(
     r => r.leaf ?? null
   );
 const chartFogDeficit =
-  todayHistory.map(r => {
+  terrHistory.map(r => {
 
     if (
       r.temp_c == null ||
@@ -3183,7 +3330,7 @@ if (!terrChart) {
       type: "line",
 
       data: {
-        labels: chartLabels,
+        labels: terrLabels,
 
         datasets: [
 
@@ -3293,7 +3440,7 @@ if (!terrChart) {
 } else {
 
   terrChart.data.labels =
-    chartLabels;
+    terrLabels;
 
   terrChart.data.datasets[0].data =
     chartTerrDpd;
