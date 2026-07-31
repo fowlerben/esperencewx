@@ -2691,7 +2691,7 @@ wet.innerText =
     : "N/A";
 hum.innerText =
   latestArchive?.hum_last != null
-    ? latestArchive.hum_last.toFixed(0) + " %"
+    ? latestArchive.hum_last.toFixed(1) + " %"
     : "N/A";
 const pressureHpa =
   latestArchive?.bar_sea_level != null
