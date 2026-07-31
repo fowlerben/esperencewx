@@ -525,17 +525,25 @@ function colourColumn(colIndex, includeLow = true) {
 }
 async function loadMonthly() {
 
-const manualRes =
-  await fetch(
-    `manual_obs/${year}/${String(month + 1).padStart(2,"0")}.json?${Date.now()}`
-  );
-
-const manualObs =
-  await manualRes.json();
-
 const now = new Date();
+
 const year = selectedYear;
 const month = selectedMonth;
+
+let manualObs = [];
+
+try {
+
+  const manualRes =
+    await fetch(
+      `manual_obs/${year}/${String(month + 1).padStart(2,"0")}.json?${Date.now()}`
+    );
+
+  if (manualRes.ok) {
+    manualObs = await manualRes.json();
+  }
+
+} catch {}
 
 const archiveRes =
   await fetch(
