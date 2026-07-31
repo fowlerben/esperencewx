@@ -1259,15 +1259,15 @@ history.forEach(r => {
 
 });
 
-const maxCount =
-  Math.max(
-    1,
-    ...sectors.map(
-      s => s.reduce(
+const totalCount =
+  sectors.reduce(
+    (sum, sector) =>
+      sum +
+      sector.reduce(
         (a, b) => a + b,
         0
-      )
-    )
+      ),
+    0
   );
 
 const colours = [
@@ -1305,14 +1305,14 @@ for (
 
     const inner =
       cumulative /
-      maxCount *
+      totalCount *
       maxRadius;
 
     cumulative += value;
 
     const outer =
       cumulative /
-      maxCount *
+      totalCount *
       maxRadius;
 
     if (outer <= inner)
@@ -1392,10 +1392,11 @@ for (
 
   ctx.stroke();
 
-  const pct =
-    Math.round(
-      (r / maxRadius) * 100
-    );
+const pct =
+  (
+    (r / maxRadius) *
+    100
+  ).toFixed(0);
 
   ctx.fillStyle =
     "#888";
