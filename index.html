@@ -2232,9 +2232,27 @@ const windHistory =
     );
 
   });
+const gustHistory =
+  archive.filter(r => {
 
+    const recordDate =
+      new Date(r.time * 1000)
+        .toLocaleDateString(
+          "en-AU",
+          {
+            timeZone:
+              "Australia/Melbourne"
+          }
+        );
+
+    return (
+      recordDate ===
+      selectedWindDate
+    );
+
+  });
 const gustFactorLabels =
-  windHistory.map(r =>
+  gustHistory.map(r =>
     new Date(r.time * 1000)
       .toLocaleTimeString(
         "en-AU",
@@ -2248,33 +2266,46 @@ const gustFactorLabels =
   );
 
 const chartWindMean =
-  windHistory.map(r =>
-    r.wind10_kmh ?? null
+  gustHistory.map(r =>
+
+    r.wind_speed_avg_last_10_min != null
+      ? r.wind_speed_avg_last_10_min * 1.60934
+      : null
+
   );
 
 const chartWindGust =
-  windHistory.map(r =>
-    r.gust10_kmh ?? null
-  );
+  gustHistory.map(r =>
 
+    r.wind_speed_hi_last_10_min != null
+      ? r.wind_speed_hi_last_10_min * 1.60934
+      : null
+
+  );
 const chartGustFactor =
-  windHistory.map(r => {
+  gustHistory.map(r => {
+
+    const meanKmh =
+      r.wind_speed_avg_last_10_min != null
+        ? r.wind_speed_avg_last_10_min * 1.60934
+        : null;
+
+    const gustKmh =
+      r.wind_speed_hi_last_10_min != null
+        ? r.wind_speed_hi_last_10_min * 1.60934
+        : null;
 
     if (
-      r.wind10_kmh == null ||
-      r.gust10_kmh == null ||
-      r.wind10_kmh < 10
+      meanKmh == null ||
+      gustKmh == null ||
+      meanKmh < 10
     ) {
       return null;
     }
 
-    return (
-      r.gust10_kmh /
-      r.wind10_kmh
-    );
+    return gustKmh / meanKmh;
 
   });
-
 const button =
   document.getElementById(
     "windModeBtn"
