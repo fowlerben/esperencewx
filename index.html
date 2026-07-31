@@ -3246,41 +3246,33 @@ if (!terrChart) {
           }
         },
 
-            scales: {
-            
-              x: {
-                ticks: {
-                  color: "white"
-                }
-              },
-            
-              y: {
-                position: "left",
-            
-                ticks: {
-                  color: "white"
-                }
-              },
-            
-              y1: {
-            
-                position: "right",
-            
-                min: 0,
-                max: 15,
-            
-                grid: {
-                  drawOnChartArea: false
-                },
-            
-                ticks: {
-                  color: "#7bd389"
-                }
-            
-              }
-            
+        scales: {
+
+          x: {
+            ticks: {
+              color: "white"
             }
-          
+          },
+
+          y: {
+            position: "left",
+            ticks: {
+              color: "white"
+            }
+          },
+
+          y1: {
+            position: "right",
+            min: 0,
+            max: 15,
+
+            grid: {
+              drawOnChartArea: false
+            },
+
+            ticks: {
+              color: "#7bd389"
+            }
           }
 
         }
@@ -3290,7 +3282,6 @@ if (!terrChart) {
     }
 
   );
-
 } else {
 
   terrChart.data.labels =
