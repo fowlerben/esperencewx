@@ -2279,7 +2279,10 @@ const button =
   document.getElementById(
     "windModeBtn"
   );
-
+if (!button) {
+  console.error("windModeBtn not found");
+  return;
+}
 if (
   selectedWindMode === "rose"
 ) {
@@ -2528,7 +2531,7 @@ if (
   archiveMaxTemps.length > 0 &&
   archiveMinTemps.length > 0
 ) {
-  tempStats.innerText =
+  document.getElementById("tempStats").innerText =
     "Max " +
     Math.max(...archiveMaxTemps).toFixed(1) +
     "°C | Min " +
@@ -2537,7 +2540,7 @@ if (
 }
 
 if (gustsToday.length > 0) {
-  windStats.innerText =
+  document.getElementById("windStats").innerText =
     "Max Gust " +
     Math.max(...gustsToday).toFixed(1) +
     " km/h";
