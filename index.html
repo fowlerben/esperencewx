@@ -2843,11 +2843,13 @@ w2.innerText =
   ")";
 
 w10.innerText =
-  mphToKmh(iss.wind_speed_avg_last_10_min) +
+  (latestArchive.wind_speed_avg != null
+    ? (latestArchive.wind_speed_avg * 1.60934).toFixed(1) + " km/h"
+    : "N/A") +
   " (" +
-  safeDeg(iss.wind_dir_scalar_avg_last_10_min) +
+  safeDeg(latestArchive.wind_dir_of_prevail) +
   ")";
-
+  
 g2.innerText =
   mphToKmh(iss.wind_speed_hi_last_2_min) +
   " (" +
@@ -2855,9 +2857,11 @@ g2.innerText =
   ")";
 
 g10.innerText =
-  mphToKmh(iss.wind_speed_hi) +
+  (latestArchive.wind_speed_hi != null
+    ? (latestArchive.wind_speed_hi * 1.60934).toFixed(1) + " km/h"
+    : "N/A") +
   " (" +
-  safeDeg(iss.wind_dir_at_hi_speed_last_10_min) +
+  safeDeg(latestArchive.wind_speed_hi_dir) +
   ")";
 
 // SOLAR
@@ -3407,8 +3411,8 @@ windAlert.classList.remove("warning");
 windAlert.style.display = "none";
 
 const wind10Kmh =
-  iss.wind_speed_avg_last_10_min != null
-    ? iss.wind_speed_avg_last_10_min * 1.60934
+  latestArchive.wind_speed_avg != null
+    ? latestArchive.wind_speed_avg * 1.60934
     : 0;
 
 if (wind10Kmh >= 50){
@@ -3440,13 +3444,13 @@ gustAlert.classList.remove("warning");
 gustAlert.style.display = "none";
 
 const gustAvgKmh =
-  iss.wind_speed_avg_last_10_min != null
-    ? iss.wind_speed_avg_last_10_min * 1.60934
+  latestArchive.wind_speed_avg != null
+    ? latestArchive.wind_speed_avg * 1.60934
     : null;
 
 const gustPeakKmh =
-  iss.wind_speed_hi != null
-    ? iss.wind_speed_hi * 1.60934
+  latestArchive.wind_speed_hi != null
+    ? latestArchive.wind_speed_hi * 1.60934
     : null;
 
 if (
