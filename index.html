@@ -343,10 +343,9 @@
   "
 >
 
-  <h2 id="windModeHeading">
-    Wind Track
-  </h2>
-
+<h2>
+  Wind
+</h2>
   <div
     style="
       display:flex;
@@ -385,7 +384,14 @@
 
 </div>
 
-  <div class="card">
+<div
+  style="
+    display:flex;
+    gap:10px;
+  "
+>
+
+  <div class="card" style="flex:1;">
     <canvas
       id="windRadarChart"
       width="500"
@@ -397,6 +403,12 @@
       ">
     </canvas>
   </div>
+
+  <div class="card" style="flex:1;height:500px;">
+    <canvas id="gustFactorChart"></canvas>
+  </div>
+
+</div>
 </div>  
 <!-- COMFORT -->
 <div class="section">
@@ -846,6 +858,7 @@ let tempChart = null;
 let pressureChart = null;
 let thetaeChart = null;
 let terrChart = null;
+let gustFactorChart = null;
 
 let windArchiveData = null;
 
@@ -2202,7 +2215,47 @@ const gustsToday = todayHistory
   .filter(v => v != null);
 const windHistory =
   windArchive.filter(r => {
+const gustFactorLabels =
+  windHistory.map(r =>
+    new Date(r.time * 1000)
+      .toLocaleTimeString(
+        "en-AU",
+        {
+          timeZone:
+            "Australia/Melbourne",
+          hour: "2-digit",
+          minute: "2-digit"
+        }
+      )
+  );
 
+const chartWindMean =
+  windHistory.map(r =>
+    r.wind10_kmh ?? null
+  );
+
+const chartWindGust =
+  windHistory.map(r =>
+    r.gust10_kmh ?? null
+  );
+
+const chartGustFactor =
+  windHistory.map(r => {
+
+    if (
+      r.wind10_kmh == null ||
+      r.gust10_kmh == null ||
+      r.wind10_kmh < 10
+    ) {
+      return null;
+    }
+
+    return (
+      r.gust10_kmh /
+      r.wind10_kmh
+    );
+
+  });
     const recordDate =
       new Date(r.time * 1000)
         .toLocaleDateString(
@@ -2234,9 +2287,6 @@ if (
   selectedWindMode === "rose"
 ) {
 
-  heading.innerText =
-    "Wind Rose";
-
   button.innerText =
     "Wind Track";
 
@@ -2247,15 +2297,180 @@ if (
 }
 else {
 
-  heading.innerText =
-    "Wind Track";
-
   button.innerText =
     "Wind Rose";
 
   drawWindRadar(
     windHistory
   );
+
+}
+if (!gustFactorChart) {
+
+  gustFactorChart =
+    new Chart(
+      document.getElementById(
+        "gustFactorChart"
+      ),
+      {
+
+        type: "line",
+
+        data: {
+          labels: gustFactorLabels,
+
+          datasets: [
+
+            {
+              label:
+                "Mean Wind (km/h)",
+
+              data:
+                chartWindMean,
+
+              borderColor:
+                "#4fc3f7",
+
+              tension: 0.3,
+
+              pointRadius: 0,
+
+              yAxisID: "y"
+            },
+
+            {
+              label:
+                "Gust (km/h)",
+
+              data:
+                chartWindGust,
+
+              borderColor:
+                "#ffd166",
+
+              tension: 0.3,
+
+              pointRadius: 0,
+
+              yAxisID: "y"
+            },
+
+            {
+              label:
+                "Gust Factor",
+
+              data:
+                chartGustFactor,
+
+              borderColor:
+                "#ef5350",
+
+              tension: 0.3,
+
+              pointRadius: 0,
+
+              yAxisID: "y1"
+            }
+
+          ]
+        },
+
+        options: {
+
+          responsive: true,
+
+          maintainAspectRatio: false,
+
+          animation: false,
+
+          interaction: {
+            mode: "index",
+            intersect: false
+          },
+
+          plugins: {
+            legend: {
+              labels: {
+                color: "white"
+              }
+            }
+          },
+
+          scales: {
+
+            x: {
+              ticks: {
+                color: "white"
+              }
+            },
+
+            y: {
+              position: "left",
+
+              beginAtZero: true,
+
+              title: {
+                display: true,
+                text:
+                  "Wind Speed (km/h)",
+                color:
+                  "#4fc3f7"
+              },
+
+              ticks: {
+                color:
+                  "#4fc3f7"
+              }
+            },
+
+            y1: {
+              position: "right",
+
+              min: 1,
+
+              max: 3,
+
+              title: {
+                display: true,
+                text:
+                  "Gust Factor",
+                color:
+                  "#ef5350"
+              },
+
+              ticks: {
+                color:
+                  "#ef5350"
+              },
+
+              grid: {
+                drawOnChartArea:
+                  false
+              }
+            }
+
+          }
+
+        }
+
+      }
+    );
+
+} else {
+
+  gustFactorChart.data.labels =
+    gustFactorLabels;
+
+  gustFactorChart.data.datasets[0].data =
+    chartWindMean;
+
+  gustFactorChart.data.datasets[1].data =
+    chartWindGust;
+
+  gustFactorChart.data.datasets[2].data =
+    chartGustFactor;
+
+  gustFactorChart.update();
 
 }
 let pressureTrendText = "";
