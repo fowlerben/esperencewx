@@ -23,8 +23,8 @@ jobs:
             echo "[]" > "$ARCHIVE_FILE"
           fi
           
-          CURRENT=1777557900
-          NOW=1778012400
+          CURRENT=1785506700
+          NOW=1785534000
           
           while [ "$CURRENT" -lt "$NOW" ]; do
 
