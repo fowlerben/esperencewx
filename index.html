@@ -2296,12 +2296,11 @@ const chartGustFactor =
         : null;
 
     if (
-      meanKmh == null ||
-      gustKmh == null ||
-      meanKmh < 10
-    ) {
-      return null;
-    }
+  meanKmh == null ||
+  gustKmh == null
+) {
+  return null;
+}
 
     return gustKmh / meanKmh;
 
