@@ -2661,14 +2661,20 @@ const dewC =
 const utc = new Date(data.generated_at * 1000);
   
 const avgWindKt =
-  Math.round(
-    iss.wind_speed_avg_last_10_min * 0.868976
-  );
+  latestArchive?.wind_speed_avg != null
+    ? Math.round(
+        latestArchive.wind_speed_avg *
+        0.868976
+      )
+    : 0;
 
 const gustWindKt =
-  Math.round(
-    iss.wind_speed_hi * 0.868976
-  );
+  latestArchive?.wind_speed_hi != null
+    ? Math.round(
+        latestArchive.wind_speed_hi *
+        0.868976
+      )
+    : avgWindKt;
 
 const reportType =
   avgWindKt >= 15 &&
@@ -3337,7 +3343,7 @@ const metarText =
   "Z AUTO " +
   String(
     Math.round(
-      iss.wind_dir_scalar_avg_last_10_min / 10
+      latestArchive.wind_dir_of_prevail / 10
     ) * 10
   ).padStart(3, "0") +
   String(avgWindKt).padStart(2, "0") +
