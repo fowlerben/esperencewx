@@ -2407,27 +2407,6 @@ if (!gustFactorChart) {
 
               yAxisID: "y"
             },
-
-            {
-              label:
-                "Gust Factor",
-            
-              data:
-                chartGustFactor,
-            
-              borderColor:
-                "#ef5350",
-            
-              tension: 0.3,
-            
-              pointRadius: 0,
-            
-              yAxisID: "y1",
-
-              order: 100
-
-            }
-            ,
             {
               label:
                 "GF Trend (1h)",
@@ -2446,10 +2425,25 @@ if (!gustFactorChart) {
             
               yAxisID: "y1",
 
-              order: 0
+            }
+            {
+              label:
+                "Gust Factor",
+            
+              data:
+                chartGustFactor,
+            
+              borderColor:
+                "#ef5350",
+            
+              tension: 0.3,
+            
+              pointRadius: 0,
+            
+              yAxisID: "y1",
 
             }
-
+            ,
 
           ]
         },
@@ -2547,9 +2541,10 @@ if (!gustFactorChart) {
     chartWindGust;
 
   gustFactorChart.data.datasets[2].data =
-    chartGustFactor;
+    chartGustFactorTrend;
+  
   gustFactorChart.data.datasets[3].data =
-  chartGustFactorTrend;
+    chartGustFactor;
 
   gustFactorChart.update();
 
