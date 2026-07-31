@@ -3208,6 +3208,7 @@ if (!terrChart) {
             fill: false,
             tension: 0.3,
             pointRadius: 0,
+            pointHitRadius: 20,
             yAxisID: "y"
           },
           {
@@ -3217,6 +3218,7 @@ if (!terrChart) {
             fill: false,
             tension: 0.3,
             pointRadius: 0,
+            pointHitRadius: 20,
             yAxisID: "y1"
           },
           {
@@ -3226,6 +3228,7 @@ if (!terrChart) {
             fill: false,
             tension: 0,
             pointRadius: 0,
+            pointHitRadius: 20,
             yAxisID: "y1"
           }
 
@@ -3233,11 +3236,16 @@ if (!terrChart) {
       },
 
       options: {
-
+      
         responsive: true,
         maintainAspectRatio: false,
         animation: false,
-
+      
+        interaction: {
+          mode: "index",
+          intersect: false
+        },
+      
         plugins: {
           legend: {
             labels: {
