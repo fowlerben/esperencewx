@@ -2268,8 +2268,8 @@ const gustFactorLabels =
 const chartWindMean =
   gustHistory.map(r =>
 
-    r.wind_speed_avg_last_10_min != null
-      ? r.wind_speed_avg_last_10_min * 1.60934
+    r.wind_speed_avg != null
+      ? r.wind_speed_avg * 1.60934
       : null
 
   );
@@ -2285,10 +2285,10 @@ const chartWindGust =
 const chartGustFactor =
   gustHistory.map(r => {
 
-    const meanKmh =
-      r.wind_speed_avg_last_10_min != null
-        ? r.wind_speed_avg_last_10_min * 1.60934
-        : null;
+const meanKmh =
+  r.wind_speed_avg != null
+    ? r.wind_speed_avg * 1.60934
+    : null;
 
     const gustKmh =
       r.wind_speed_hi != null
