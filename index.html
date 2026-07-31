@@ -859,9 +859,6 @@ let pressureChart = null;
 let thetaeChart = null;
 let terrChart = null;
 let gustFactorChart = null;
-
-let windArchiveData = null;
-
 let selectedWindDate = null;
 let selectedWindMode = "track";
 let selectedThetaEDate = null;
@@ -1543,20 +1540,7 @@ const archiveRes =
 
 archive =
   await archiveRes.json();
-if (!windArchiveData) {
 
-  const windRes =
-    await fetch(
-      "/esperencewx/wind_history.json"
-    );
-
-  windArchiveData =
-    await windRes.json();
-
-}
-
-const windArchive =
-  windArchiveData;
   const windDateSelector =
   document.getElementById(
     "windDateSelector"
@@ -2215,24 +2199,39 @@ const gustsToday = todayHistory
   .map(r => r.gust10_kmh)
   .filter(v => v != null);
 const windHistory =
-  windArchive.filter(r => {
+  archive
+    .filter(r => {
 
-    const recordDate =
-      new Date(r.time * 1000)
-        .toLocaleDateString(
-          "en-AU",
-          {
-            timeZone:
-              "Australia/Melbourne"
-          }
-        );
+      const recordDate =
+        new Date(r.time * 1000)
+          .toLocaleDateString(
+            "en-AU",
+            {
+              timeZone:
+                "Australia/Melbourne"
+            }
+          );
 
-    return (
-      recordDate ===
-      selectedWindDate
-    );
+      return (
+        recordDate ===
+        selectedWindDate
+      );
 
-  });
+    })
+    .map(r => ({
+
+      time:
+        r.time,
+
+      wind10_dir:
+        r.wind_dir_scalar_avg,
+
+      wind10_kmh:
+        r.wind_speed_avg != null
+          ? r.wind_speed_avg * 1.60934
+          : null
+
+    }));
 const gustHistory =
   archive.filter(r => {
 
