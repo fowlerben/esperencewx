@@ -2277,8 +2277,8 @@ const chartWindMean =
 const chartWindGust =
   gustHistory.map(r =>
 
-    r.wind_speed_hi_last_10_min != null
-      ? r.wind_speed_hi_last_10_min * 1.60934
+    r.wind_speed_hi != null
+      ? r.wind_speed_hi * 1.60934
       : null
 
   );
@@ -2291,8 +2291,8 @@ const chartGustFactor =
         : null;
 
     const gustKmh =
-      r.wind_speed_hi_last_10_min != null
-        ? r.wind_speed_hi_last_10_min * 1.60934
+      r.wind_speed_hi != null
+        ? r.wind_speed_hi * 1.60934
         : null;
 
     if (
@@ -2622,7 +2622,7 @@ const avgWindKt =
 
 const gustWindKt =
   Math.round(
-    iss.wind_speed_hi_last_10_min * 0.868976
+    iss.wind_speed_hi * 0.868976
   );
 
 const reportType =
@@ -2804,7 +2804,7 @@ g2.innerText =
   ")";
 
 g10.innerText =
-  mphToKmh(iss.wind_speed_hi_last_10_min) +
+  mphToKmh(iss.wind_speed_hi) +
   " (" +
   safeDeg(iss.wind_dir_at_hi_speed_last_10_min) +
   ")";
@@ -3394,8 +3394,8 @@ const gustAvgKmh =
     : null;
 
 const gustPeakKmh =
-  iss.wind_speed_hi_last_10_min != null
-    ? iss.wind_speed_hi_last_10_min * 1.60934
+  iss.wind_speed_hi != null
+    ? iss.wind_speed_hi * 1.60934
     : null;
 
 if (
