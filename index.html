@@ -2215,6 +2215,24 @@ const gustsToday = todayHistory
   .filter(v => v != null);
 const windHistory =
   windArchive.filter(r => {
+
+    const recordDate =
+      new Date(r.time * 1000)
+        .toLocaleDateString(
+          "en-AU",
+          {
+            timeZone:
+              "Australia/Melbourne"
+          }
+        );
+
+    return (
+      recordDate ===
+      selectedWindDate
+    );
+
+  });
+
 const gustFactorLabels =
   windHistory.map(r =>
     new Date(r.time * 1000)
@@ -2256,27 +2274,6 @@ const chartGustFactor =
     );
 
   });
-    const recordDate =
-      new Date(r.time * 1000)
-        .toLocaleDateString(
-          "en-AU",
-          {
-            timeZone:
-              "Australia/Melbourne"
-          }
-        );
-
-    return (
-      recordDate ===
-      selectedWindDate
-    );
-
-  });
-
-const heading =
-  document.getElementById(
-    "windModeHeading"
-  );
 
 const button =
   document.getElementById(
