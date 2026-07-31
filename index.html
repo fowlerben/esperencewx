@@ -2767,12 +2767,14 @@ document.getElementById(
 
 let fogClass = "";
 
-if (fogDeficit <= 1.5)
+if (fogDeficit <= 1)
   fogClass = "Very Likely";
-else if (fogDeficit <= 3)
+else if (fogDeficit <= 2)
   fogClass = "Possible";
-else
+else if (fogDeficit <= 5)
   fogClass = "Unlikely";
+else
+  fogClass = "Very Unlikely";
 
 document.getElementById(
   "fogDeficit"
