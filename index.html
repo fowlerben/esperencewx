@@ -1982,6 +1982,24 @@ const chartLeaf =
   todayHistory.map(
     r => r.leaf ?? null
   );
+const chartFogDeficit =
+  todayHistory.map(r => {
+
+    if (
+      r.temp_c == null ||
+      r.dew_c == null ||
+      r.pressure_hpa == null
+    ) {
+      return null;
+    }
+
+    return fogEnergyDeficit(
+      r.temp_c,
+      r.dew_c,
+      r.pressure_hpa
+    );
+
+  });
 const archiveMaxTemps = todayArchive
   .map(r => r.temp_hi)
   .filter(v => v != null)
@@ -3192,7 +3210,15 @@ if (!terrChart) {
             pointRadius: 0,
             yAxisID: "y"
           },
-
+          {
+            label: "Condensation Deficit",
+            data: chartFogDeficit,
+            borderColor: "#7bd389",
+            fill: false,
+            tension: 0.3,
+            pointRadius: 0,
+            yAxisID: "y1"
+          },
           {
             label: "Leaf Wetness",
             data: chartLeaf,
@@ -3237,11 +3263,21 @@ if (!terrChart) {
           },
 
           y1: {
-
+          
             position: "right",
-
+          
             min: 0,
             max: 15,
+          
+            grid: {
+              drawOnChartArea: false
+            },
+          
+            ticks: {
+              color: "#7bd389"
+            }
+          
+          },
 
             grid: {
               drawOnChartArea: false
