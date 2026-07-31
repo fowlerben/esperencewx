@@ -526,7 +526,9 @@ function colourColumn(colIndex, includeLow = true) {
 async function loadMonthly() {
 
 const manualRes =
-  await fetch("manual_obs.json?" + Date.now());
+  await fetch(
+    `manual_obs/${year}/${String(month + 1).padStart(2,"0")}.json?${Date.now()}`
+  );
 
 const manualObs =
   await manualRes.json();
