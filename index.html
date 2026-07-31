@@ -310,7 +310,7 @@
   >
 
     <h2>
-      Equivalent Potential Temperature
+      Atmospheric Thermodynamics
     </h2>
 
     <select
@@ -2107,6 +2107,32 @@ const chartThetaE = thetaeHistory.map(r => {
   );
 
 });
+const chartEnthalpy = thetaeHistory.map(r => {
+
+  if (
+    r.temp_last == null ||
+    r.dew_point_last == null ||
+    r.bar_sea_level == null
+  ) {
+    return null;
+  }
+
+  const tempC =
+    (r.temp_last - 32) * 5 / 9;
+
+  const dewC =
+    (r.dew_point_last - 32) * 5 / 9;
+
+  const pressureHpa =
+    r.bar_sea_level * 33.8639;
+
+  return moistEnthalpy(
+    tempC,
+    dewC,
+    pressureHpa
+  );
+
+});
 const chartTerrDpd = terrHistory.map(r => {
 
   const temps = [
@@ -3331,6 +3357,7 @@ if (!thetaeChart) {
         labels: thetaeLabels,
 
         datasets: [
+        
           {
             label: "θe (K)",
             data: chartThetaE,
@@ -3338,8 +3365,21 @@ if (!thetaeChart) {
             backgroundColor: "rgba(255,102,204,0.15)",
             fill: true,
             tension: 0.3,
-            pointRadius: 0
+            pointRadius: 0,
+            yAxisID: "y"
+          },
+        
+          {
+            label: "Moist Enthalpy (kJ/kg)",
+            data: chartEnthalpy,
+            borderColor: "#4fc3f7",
+            backgroundColor: "rgba(79,195,247,0)",
+            fill: false,
+            tension: 0.3,
+            pointRadius: 0,
+            yAxisID: "y1"
           }
+        
         ]
       },
 
@@ -3364,19 +3404,49 @@ if (!thetaeChart) {
         },
 
         scales: {
-
+        
           x: {
             ticks: {
               color: "white"
             }
           },
-
+        
           y: {
+            position: "left",
+          
+            beginAtZero: false,
+          
+            title: {
+              display: true,
+              text: "Equivalent Potential Temperature (K)",
+              color: "#ff66cc"
+            },
+          
             ticks: {
-              color: "white"
+              color: "#ff66cc"
+            }
+          },
+        
+          y1: {
+            position: "right",
+          
+            beginAtZero: false,
+          
+            title: {
+              display: true,
+              text: "Moist Enthalpy (kJ/kg)",
+              color: "#4fc3f7"
+            },
+          
+            ticks: {
+              color: "#4fc3f7"
+            },
+          
+            grid: {
+              drawOnChartArea: false
             }
           }
-
+        
         }
 
       }
@@ -3386,13 +3456,16 @@ if (!thetaeChart) {
 
 } else {
 
-  thetaeChart.data.labels =
-    thetaeLabels;
+thetaeChart.data.labels =
+  thetaeLabels;
 
-  thetaeChart.data.datasets[0].data =
-    chartThetaE;
+thetaeChart.data.datasets[0].data =
+  chartThetaE;
 
-  thetaeChart.update();
+thetaeChart.data.datasets[1].data =
+  chartEnthalpy;
+
+thetaeChart.update();
 
 }
 if (!terrChart) {
