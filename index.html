@@ -2109,41 +2109,55 @@ const chartThetaE = thetaeHistory.map(r => {
 const chartTerrDpd = terrHistory.map(r => {
 
   const temps = [
-    r.temp1_c,
-    r.temp2_c,
-    r.temp3_c
-  ].filter(v => v != null);
+    r.temp_last_1,
+    r.temp_last_2,
+    r.temp_last_3
+  ]
+    .filter(v => v != null)
+    .map(v => (v - 32) * 5 / 9);
 
   if (
     temps.length === 0 ||
-    r.dew_c == null
+    r.dew_point_last == null
   ) {
     return null;
   }
 
-  return Math.min(...temps) - r.dew_c;
+  const dewC =
+    (r.dew_point_last - 32) * 5 / 9;
+
+  return Math.min(...temps) - dewC;
 
 });
 
 const chartLeaf =
   terrHistory.map(
-    r => r.leaf ?? null
+    r => r.wet_leaf_last_1 ?? null
   );
 const chartFogDeficit =
   terrHistory.map(r => {
 
     if (
-      r.temp_c == null ||
-      r.dew_c == null ||
-      r.pressure_hpa == null
+      r.temp_last == null ||
+      r.dew_point_last == null ||
+      r.bar_sea_level == null
     ) {
       return null;
     }
 
+    const tempC =
+      (r.temp_last - 32) * 5 / 9;
+
+    const dewC =
+      (r.dew_point_last - 32) * 5 / 9;
+
+    const pressureHpa =
+      r.bar_sea_level * 33.8639;
+
     return fogEnergyDeficit(
-      r.temp_c,
-      r.dew_c,
-      r.pressure_hpa
+      tempC,
+      dewC,
+      pressureHpa
     );
 
   });
