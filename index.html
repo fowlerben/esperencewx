@@ -1562,7 +1562,7 @@ if (
 
 const availableDates =
   [...new Set(
-    windArchive.map(r =>
+    archive.map(r =>
       new Date(r.time * 1000)
         .toLocaleDateString(
           "en-AU",
@@ -1629,7 +1629,7 @@ if (
 
   const availableDates =
     [...new Set(
-      windArchive.map(r =>
+      archive.map(r =>
         new Date(r.time * 1000)
           .toLocaleDateString(
             "en-AU",
@@ -1701,7 +1701,7 @@ if (
 
   const availableDates =
     [...new Set(
-      windArchive.map(r =>
+      archive.map(r =>
         new Date(r.time * 1000)
           .toLocaleDateString(
             "en-AU",
@@ -1817,7 +1817,8 @@ const todayArchive = archive.filter(r => {
   return recordDate === todayMelbourne;
 
 });
-
+const latestArchive =
+  todayArchive[todayArchive.length - 1];
 const latestHistory =
   todayHistory[todayHistory.length - 1];
 
@@ -2310,7 +2311,7 @@ if(s.lsid===551509) baro=s.data[0];
 if(s.lsid===838746) extra=s.data[0];
 });
 
-if(!iss)return;
+if (!latestArchive) return;
 const rainRate =
   iss.rain_rate_last_mm ?? 0;
 const sun = getSunInfo();
@@ -2330,8 +2331,15 @@ document.getElementById("daylength").innerText =
   dayHrs + "h " + dayMin + "m";
 
 // CORE
-const tempC = toC(iss.temp);
-const dewC  = toC(iss.dew_point);
+const tempC =
+  latestArchive?.temp_last != null
+    ? toC(latestArchive.temp_last)
+    : null;
+
+const dewC =
+  latestArchive?.dew_point_last != null
+    ? toC(latestArchive.dew_point_last)
+    : null;
 
 const utc = new Date(data.generated_at * 1000);
   
@@ -2354,13 +2362,21 @@ const reportType =
 temp.innerText = tempC!=null ? tempC.toFixed(1)+" °C":"N/A";
   tempTrend.innerText = tempTrendText;
 dew.innerText  = dewC!=null ? dewC.toFixed(1)+" °C":"N/A";
-wet.innerText  = iss.wet_bulb!=null ? toC(iss.wet_bulb).toFixed(1)+" °C":"N/A";
-hum.innerText  = iss.hum+" %";
+wet.innerText =
+  latestArchive?.wet_bulb_last != null
+    ? toC(
+        latestArchive.wet_bulb_last
+      ).toFixed(1) + " °C"
+    : "N/A";
+hum.innerText =
+  latestArchive?.hum_last != null
+    ? latestArchive.hum_last.toFixed(0) + " %"
+    : "N/A";
 const pressureHpa =
-  baro
+  latestArchive?.bar_sea_level != null
     ? Number(
         inHgToHpa(
-          baro.bar_sea_level
+          latestArchive.bar_sea_level
         )
       )
     : null;
@@ -2446,14 +2462,43 @@ document.getElementById(
       fogClass +
       ")"
     : "N/A";
-pressure.innerText = baro?inHgToHpa(baro.bar_sea_level)+" hPa":"N/A";
+pressure.innerText =
+  latestArchive?.bar_sea_level != null
+    ? inHgToHpa(
+        latestArchive.bar_sea_level
+      ) + " hPa"
+    : "N/A";
   pressureTrend.innerText = pressureTrendText;
 
 // COMFORT
-heat.innerText = iss.heat_index!=null?toC(iss.heat_index).toFixed(1)+" °C":"N/A";
-chill.innerText= iss.wind_chill!=null?toC(iss.wind_chill).toFixed(1)+" °C":"N/A";
-thw.innerText  = iss.thw_index!=null?toC(iss.thw_index).toFixed(1)+" °C":"N/A";
-thsw.innerText = iss.thsw_index!=null?toC(iss.thsw_index).toFixed(1)+" °C":"N/A";
+
+heat.innerText =
+  latestArchive?.heat_index_last != null
+    ? toC(
+        latestArchive.heat_index_last
+      ).toFixed(1) + " °C"
+    : "N/A";
+
+chill.innerText =
+  latestArchive?.wind_chill_last != null
+    ? toC(
+        latestArchive.wind_chill_last
+      ).toFixed(1) + " °C"
+    : "N/A";
+
+thw.innerText =
+  latestArchive?.thw_index_last != null
+    ? toC(
+        latestArchive.thw_index_last
+      ).toFixed(1) + " °C"
+    : "N/A";
+
+thsw.innerText =
+  latestArchive?.thsw_index_last != null
+    ? toC(
+        latestArchive.thsw_index_last
+      ).toFixed(1) + " °C"
+    : "N/A";
 
 // WIND
 wind.innerText =
@@ -2493,9 +2538,11 @@ g10.innerText =
   ")";
 
 // SOLAR
-solar.innerText=iss.solar_rad??"N/A";
-uv.innerText=iss.uv_index??"N/A";
+solar.innerText =
+  latestArchive?.solar_rad_avg ?? "N/A";
 
+uv.innerText =
+  latestArchive?.uv_index_avg ?? "N/A";
 // RAIN
 rain_rate.innerText=iss.rain_rate_last_mm;
 rain15.innerText=iss.rainfall_last_15_min_mm;
@@ -2512,7 +2559,8 @@ storm_start.innerText=formatTime(iss.rain_storm_last_start_at);
 storm_end.innerText=formatTime(iss.rain_storm_last_end_at);
 
 // EXTRAS
-const leafValue = extra?.wet_leaf_1;
+const leafValue =
+  latestArchive?.wet_leaf_last_1;
 
 leaf.innerText =
   leafValue != null
@@ -2610,9 +2658,20 @@ if (lastWetTime != null) {
 
 }
 
-const t1C = extra?.temp_1!=null ? toC(extra.temp_1) : null;
-const t2C = extra?.temp_2!=null ? toC(extra.temp_2) : null;
-const t3C = extra?.temp_3!=null ? toC(extra.temp_3) : null;
+const t1C =
+  latestArchive?.temp_last_1 != null
+    ? toC(latestArchive.temp_last_1)
+    : null;
+
+const t2C =
+  latestArchive?.temp_last_2 != null
+    ? toC(latestArchive.temp_last_2)
+    : null;
+
+const t3C =
+  latestArchive?.temp_last_3 != null
+    ? toC(latestArchive.temp_last_3)
+    : null;
 
 t1.innerText = t1C!=null ? t1C.toFixed(1)+" °C":"N/A";
 t2.innerText = t2C!=null ? t2C.toFixed(1)+" °C":"N/A";
@@ -2997,12 +3056,12 @@ const windKmh =
 
 if (
   tempC != null &&
-  iss.hum != null
+  latestArchive?.hum_last != null
 ){
 
   if (
     tempC >= 35 &&
-    iss.hum <= 20 &&
+    latestArchive.hum_last <= 20 &&
     windKmh >= 30
   ){
     fireAlert.innerText = "High Fire Danger";
@@ -3011,7 +3070,7 @@ if (
 
   } else if (
     tempC >= 30 &&
-    iss.hum <= 30 &&
+    latestArchive.hum_last <= 30 &&
     windKmh >= 25
   ){
     fireAlert.innerText = "Elevated Fire Danger";
