@@ -48,8 +48,8 @@ jobs:
           
       - name: Update archive history
         run: |
-          YEAR=$(date +%Y)
-          MONTH=$(date +%m)
+          YEAR=$(TZ=Australia/Melbourne date +%Y)
+          MONTH=$(TZ=Australia/Melbourne date +%m)
           
           mkdir -p archives/$YEAR
           
