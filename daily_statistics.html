@@ -499,7 +499,7 @@ let ets = [];
 let maxWindSpeeds = [];
 let maxWindDirs = [];
 let maxWindTimes = [];
-
+let avgWindDirs = [];
 let avgWindSpeeds = [];
 
 let maxSolars = [];
@@ -1229,11 +1229,17 @@ if (displayMaxWindSpeed !== "") {
 
 }
 
-if (displayAvgWindSpeed !== "")
+if (displayAvgWindSpeed !== "") {
+
   avgWindSpeeds.push(
     displayAvgWindSpeed
   );
 
+  avgWindDirs.push(
+    displayAvgWindDir
+  );
+
+}
 if (displayMaxSolar !== "") maxSolars.push(displayMaxSolar);
 if (displaySolarEnergy !== "") solarEnergies.push(displaySolarEnergy);
 if (displayMaxUv !== "") maxUvs.push(displayMaxUv);
@@ -1287,6 +1293,29 @@ const monthlyLowestWindTime =
   maxWindTimes[
     monthlyLowestWindIndex
   ];
+
+let monthlyAvgWindDir = "";
+
+if (avgWindDirs.length) {
+
+  const counts = {};
+
+  avgWindDirs.forEach(dir => {
+
+    counts[dir] =
+      (counts[dir] || 0) + 1;
+
+  });
+
+  monthlyAvgWindDir =
+    Object.keys(counts)
+      .reduce((a, b) =>
+        counts[a] > counts[b]
+          ? a
+          : b
+      );
+
+}
 const meanRow =
   document.createElement("tr");
 
@@ -1323,7 +1352,7 @@ meanRow.innerHTML = `
 
 <td></td>
 
-<td></td>
+<td>${monthlyAvgWindDir}</td>
 
 <td>${average(avgWindSpeeds).toFixed(1)}</td>
 
