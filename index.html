@@ -440,12 +440,83 @@
 </div>
 
 <!-- SOLAR -->
+
 <div class="section">
-<h2>Solar</h2>
+
+<h2>Solar & UV</h2>
+
 <div class="grid">
-<div class="card">Radiation<div class="value" id="solar"></div></div>
-<div class="card">UV<div class="value" id="uv"></div></div>
+
+  <div class="card">
+
+    Solar Radiation
+
+    <div class="value" id="solar"></div>
+
+    <div
+      id="solarHi"
+      style="
+        font-size:12px;
+        opacity:0.8;
+        margin-top:4px;
+      ">
+    </div>
+
+  </div>
+
+  <div class="card">
+
+    UV Index
+
+    <div class="value" id="uv"></div>
+
+    <div
+      id="uvHi"
+      style="
+        font-size:12px;
+        opacity:0.8;
+        margin-top:4px;
+      ">
+    </div>
+
+  </div>
+
+  <div class="card">
+
+    Daily Solar Energy
+
+    <div
+      class="value"
+      id="solarEnergyDay">
+    </div>
+
+  </div>
+
+  <div class="card">
+
+    Daily UV Exposure
+
+    <div
+      class="value"
+      id="uvDoseDay">
+    </div>
+
+  </div>
+
 </div>
+
+<div
+  class="card"
+  style="
+    margin-top:10px;
+    height:250px;
+  "
+>
+
+  <canvas id="solarChart"></canvas>
+
+</div>
+
 </div>
 
 <!-- RAIN -->
@@ -875,6 +946,7 @@ let pressureChart = null;
 let thetaeChart = null;
 let terrChart = null;
 let gustFactorChart = null;
+let solarChart = null;
 let selectedWindDate = null;
 let selectedWindMode = "track";
 let selectedThetaEDate = null;
@@ -2104,6 +2176,27 @@ const chartTemps = todayHistory.map(r => r.temp_c);
 const chartDews = todayHistory.map(r => r.dew_c);
 const chartHumidity = todayHistory.map(r => r.humidity);
 const chartPressure = todayHistory.map(r => r.pressure_hpa);
+const solarLabels =
+  todayArchive.map(r =>
+    new Date(r.time * 1000)
+      .toLocaleTimeString(
+        "en-AU",
+        {
+          hour: "2-digit",
+          minute: "2-digit"
+        }
+      )
+  );
+
+const chartSolar =
+  todayArchive.map(
+    r => r.solar_rad_avg ?? null
+  );
+
+const chartUV =
+  todayArchive.map(
+    r => r.uv_index_avg ?? null
+  );
 const chartThetaE = thetaeHistory.map(r => {
 
   if (
@@ -2887,13 +2980,123 @@ g10.innerText =
   " (" +
   safeDeg(latestArchive.wind_speed_hi_dir) +
   ")";
+const solarEnergyToday =
+  todayArchive
+    .map(r => r.solar_energy)
+    .filter(v => v != null)
+    .reduce(
+      (a, b) => a + b,
+      0
+    ) * 0.036;
 
+const uvDoseToday =
+  todayArchive
+    .map(r => r.uv_dose)
+    .filter(v => v != null)
+    .reduce(
+      (a, b) => a + b,
+      0
+    );
+
+const solarPeak =
+  Math.max(
+    ...todayArchive
+      .map(r => r.solar_rad_hi)
+      .filter(v => v != null)
+  );
+
+const uvPeak =
+  Math.max(
+    ...todayArchive
+      .map(r => r.uv_index_hi)
+      .filter(v => v != null)
+  );
+
+const solarPeakRecord =
+  todayArchive.find(
+    r =>
+      r.solar_rad_hi ===
+      solarPeak
+  );
+
+const uvPeakRecord =
+  todayArchive.find(
+    r =>
+      r.uv_index_hi ===
+      uvPeak
+  );
+
+const solarPeakTime =
+  solarPeakRecord &&
+  solarPeakRecord.solar_rad_hi_at
+    ? new Date(
+        solarPeakRecord.solar_rad_hi_at *
+        1000
+      ).toLocaleTimeString(
+        "en-AU",
+        {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false
+        }
+      )
+    : "";
+
+const uvPeakTime =
+  uvPeakRecord &&
+  uvPeakRecord.uv_index_hi_at
+    ? new Date(
+        uvPeakRecord.uv_index_hi_at *
+        1000
+      ).toLocaleTimeString(
+        "en-AU",
+        {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false
+        }
+      )
+    : "";
 // SOLAR
+
 solar.innerText =
-  latestArchive?.solar_rad_avg ?? "N/A";
+  latestArchive?.solar_rad_avg != null
+    ? latestArchive.solar_rad_avg.toFixed(0) +
+      " W/m²"
+    : "N/A";
 
 uv.innerText =
-  latestArchive?.uv_index_avg ?? "N/A";
+  latestArchive?.uv_index_avg != null
+    ? latestArchive.uv_index_avg.toFixed(1)
+    : "N/A";
+
+document.getElementById(
+  "solarEnergyDay"
+).innerText =
+  solarEnergyToday.toFixed(2) +
+  " MJ/m²";
+
+document.getElementById(
+  "uvDoseDay"
+).innerText =
+  uvDoseToday.toFixed(2) +
+  " MED";
+
+document.getElementById(
+  "solarHi"
+).innerText =
+  "Max " +
+  solarPeak.toFixed(0) +
+  " W/m² @ " +
+  solarPeakTime;
+
+document.getElementById(
+  "uvHi"
+).innerText =
+  "Max UV " +
+  uvPeak.toFixed(1) +
+  " @ " +
+  uvPeakTime;
 // RAIN
 rain_rate.innerText=iss.rain_rate_last_mm;
 rain15.innerText=iss.rainfall_last_15_min_mm;
@@ -3670,6 +3873,152 @@ if (!pressureChart) {
   pressureChart.update();
 
 }
+
+if (!solarChart) {
+
+  solarChart =
+    new Chart(
+      document.getElementById(
+        "solarChart"
+      ),
+      {
+
+        data: {
+
+          labels:
+            solarLabels,
+
+          datasets: [
+
+            {
+              type: "bar",
+
+              label:
+                "Solar Radiation",
+
+              data:
+                chartSolar,
+
+              backgroundColor:
+                "#ffd166",
+
+              yAxisID:
+                "y"
+            },
+
+            {
+              type: "line",
+
+              label:
+                "UV Index",
+
+              data:
+                chartUV,
+
+              borderColor:
+                "#cc66ff",
+
+              tension: 0.3,
+
+              pointRadius: 0,
+
+              yAxisID:
+                "y1"
+            }
+
+          ]
+
+        },
+
+        options: {
+
+          responsive: true,
+
+          maintainAspectRatio: false,
+
+          animation: false,
+
+          interaction: {
+            mode: "index",
+            intersect: false
+          },
+
+          plugins: {
+            legend: {
+              labels: {
+                color: "white"
+              }
+            }
+          },
+
+          scales: {
+
+            x: {
+              ticks: {
+                color: "white"
+              }
+            },
+
+            y: {
+
+              position:
+                "left",
+
+              title: {
+                display: true,
+                text: "W/m²",
+                color: "#ffd166"
+              },
+
+              ticks: {
+                color: "#ffd166"
+              }
+
+            },
+
+            y1: {
+
+              position:
+                "right",
+
+              title: {
+                display: true,
+                text: "UV Index",
+                color: "#cc66ff"
+              },
+
+              ticks: {
+                color: "#cc66ff"
+              },
+
+              grid: {
+                drawOnChartArea: false
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+    );
+
+} else {
+
+  solarChart.data.labels =
+    solarLabels;
+
+  solarChart.data.datasets[0].data =
+    chartSolar;
+
+  solarChart.data.datasets[1].data =
+    chartUV;
+
+  solarChart.update();
+
+}
+  
 if (!thetaeChart) {
 
   thetaeChart = new Chart(
