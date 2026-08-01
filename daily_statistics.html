@@ -1286,7 +1286,8 @@ meanRow.innerHTML = `
 `;
 const lowRow =
   document.createElement("tr");
-
+lowRow.style.color = "#4fc3f7";
+lowRow.style.fontWeight = "bold";
 lowRow.innerHTML = `
 <td><b>Lowest</b></td>
 
@@ -1347,7 +1348,8 @@ summaryTable.appendChild(lowRow);
   
 const highRow =
   document.createElement("tr");
-
+highRow.style.color = "#ef5350";
+highRow.style.fontWeight = "bold";
 highRow.innerHTML = `
 <td><b>Highest</b></td>
 
