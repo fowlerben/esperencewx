@@ -456,7 +456,8 @@
     Solar & UV
   </h2>
 
-  <select
+  <input
+    type="date"
     id="solarDateSelector"
     style="
       background:#1f3b4d;
@@ -466,7 +467,6 @@
       border-radius:4px;
     "
   >
-  </select>
 
 </div>
 
@@ -1681,6 +1681,67 @@ const solarDateSelector =
     "solarDateSelector"
   );
 if (
+  solarDateSelector &&
+  !solarDateSelector.dataset.initialized
+) {
+
+  solarDateSelector.min =
+    "2025-11-01";
+
+  const today =
+    new Date();
+
+  solarDateSelector.max =
+    today.toISOString()
+      .split("T")[0];
+
+  if (!selectedSolarDate) {
+
+    const now =
+      new Date();
+
+    selectedSolarDate =
+      now.toLocaleDateString(
+        "en-AU",
+        {
+          timeZone:
+            "Australia/Melbourne"
+        }
+      );
+
+    const [d,m,y] =
+      selectedSolarDate.split("/");
+
+    solarDateSelector.value =
+      `${y}-${m}-${d}`;
+
+  }
+
+  solarDateSelector.addEventListener(
+    "change",
+    () => {
+
+      const [
+        year,
+        month,
+        day
+      ] =
+        solarDateSelector.value
+          .split("-");
+
+      selectedSolarDate =
+        `${day}/${month}/${year}`;
+
+      loadWeather();
+
+    }
+  );
+
+  solarDateSelector.dataset.initialized =
+    "true";
+
+}
+if (
   windDateSelector &&
   windDateSelector.options.length === 0
 ) {
@@ -1891,78 +1952,7 @@ if (
   );
 
 }
-if (
-  solarDateSelector &&
-  solarDateSelector.options.length === 0
-) {
 
-  const availableDates =
-    [...new Set(
-      archive.map(r =>
-        new Date(r.time * 1000)
-          .toLocaleDateString(
-            "en-AU",
-            {
-              timeZone:
-                "Australia/Melbourne"
-            }
-          )
-      )
-    )];
-
-  availableDates.reverse();
-
-  availableDates.forEach(date => {
-
-    const option =
-      document.createElement(
-        "option"
-      );
-
-    option.value = date;
-    option.textContent = date;
-
-    solarDateSelector.appendChild(
-      option
-    );
-
-  });
-
-  selectedSolarDate =
-    new Date()
-      .toLocaleDateString(
-        "en-AU",
-        {
-          timeZone:
-            "Australia/Melbourne"
-        }
-      );
-
-  if (
-    !availableDates.includes(
-      selectedSolarDate
-    )
-  ) {
-    selectedSolarDate =
-      availableDates[0];
-  }
-
-  solarDateSelector.value =
-    selectedSolarDate;
-
-  solarDateSelector.addEventListener(
-    "change",
-    () => {
-
-      selectedSolarDate =
-        solarDateSelector.value;
-
-      loadWeather();
-
-    }
-  );
-
-}  
 if(data.generated_at){
 document.getElementById("dataTime").innerText =
   "Data timestamp: " +
@@ -2251,8 +2241,21 @@ if (!selectedSolarDate) {
 
 }
 
+const [solarDay,
+       solarMonth,
+       solarYear] =
+  selectedSolarDate.split("/");
+
+const solarArchiveRes =
+  await fetch(
+    `/esperencewx/archives/${solarYear}/${solarMonth}.json?${Date.now()}`
+  );
+
+const solarArchive =
+  await solarArchiveRes.json();
+
 const solarHistory =
-  archive.filter(r => {
+  solarArchive.filter(r => {
 
     const recordDate =
       new Date(r.time * 1000)
@@ -2270,6 +2273,11 @@ const solarHistory =
     );
 
   });
+const [d,m,y] =
+  selectedSolarDate.split("/");
+
+solarDateSelector.value =
+  `${y}-${m}-${d}`;
 const thetaeLabels =
   thetaeHistory.map(r =>
     new Date(r.time * 1000)
