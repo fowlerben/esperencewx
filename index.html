@@ -1653,15 +1653,6 @@ const archiveRes =
 
 archive =
   await archiveRes.json();
-const availableDates =
-  [...new Set(
-    archive.map(r =>
-      new Date(r.time * 1000)
-        .toLocaleDateString("en-AU", {
-          timeZone: "Australia/Melbourne"
-        })
-    )
-  )];
 
   const windDateSelector =
   document.getElementById(
@@ -2511,20 +2502,7 @@ const windHistory =
           : null
 
     }));
-    .map(r => ({
 
-      time:
-        r.time,
-
-      wind10_dir:
-        r.wind_dir_of_prevail,
-
-      wind10_kmh:
-        r.wind_speed_avg != null
-          ? r.wind_speed_avg * 1.60934
-          : null
-
-    }));
   {
   const [d,m,y] =
     selectedWindDate.split("/");
