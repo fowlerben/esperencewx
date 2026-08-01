@@ -278,7 +278,7 @@
 
   <div class="card">
     Virtual Temperature
-    <div class="value" id="specHum"></div>
+    <div class="value" id="virtualTemp"></div>
   </div>
 
   <div class="card">
@@ -621,7 +621,12 @@ function equivalentPotentialTemperature(
       w *
       (1 + 0.81 * w)
     );
-
+const virtualTemp =
+  virtualTemperature(
+    tempC,
+    dewC,
+    pressureHpa
+  );
   return thetae;
 
 }
@@ -675,12 +680,11 @@ function moistEnthalpy(
   pressureHpa
 ){
 
-const virtualTemp =
-  virtualTemperature(
-    tempC,
-    dewC,
-    pressureHpa
-  );
+  const q =
+    specificHumidity(
+      tdC,
+      pressureHpa
+    );
 
   return (
     1.006 * tempC +
@@ -2733,11 +2737,6 @@ const pressureHpa =
 const thetae =
   equivalentPotentialTemperature(
     tempC,
-    dewC,
-    pressureHpa
-  );
-const q =
-  specificHumidity(
     dewC,
     pressureHpa
   );
