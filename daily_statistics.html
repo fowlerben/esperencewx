@@ -50,6 +50,33 @@
 <h1>Esperence Weather Station</h1>
 <h2>Daily Statistics</h2>
 
+ <div style="margin-bottom:15px;text-align:center;">
+
+  <button id="prevMonth">◀</button>
+
+  <span
+    id="monthLabel"
+    style="
+      font-weight:bold;
+      margin:0 15px;
+      display:inline-block;
+      min-width:140px;
+    ">
+  </span>
+
+  <button id="nextMonth">▶</button>
+
+  <button id="latestMonth">Latest</button>
+
+  <br><br>
+
+  Month:
+  <select id="monthSelector">
+  </select>
+
+</div> 
+
+  
 <table>
 
 <thead>
@@ -211,8 +238,25 @@
 </tbody>
 
 </table>
-
+  
 <script>
+
+const today = new Date();
+
+let selectedYear =
+  today.getFullYear();
+
+let selectedMonth =
+  today.getMonth();
+
+const minYear = 2025;
+const minMonth = 10; // Nov 2025
+
+const maxYear =
+  today.getFullYear();
+
+const maxMonth =
+  today.getMonth();
 
 function average(values){
 
@@ -271,13 +315,117 @@ function getPeriods(year, month, day){
   };
 }
 
+function populateMonthSelector() {
+
+  const selector =
+    document.getElementById(
+      "monthSelector"
+    );
+
+  selector.innerHTML = "";
+
+  const startDate =
+    new Date(2025, 10, 1);
+
+  const endDate =
+    new Date();
+
+  const d =
+    new Date(startDate);
+
+  while (d <= endDate) {
+
+    const option =
+      document.createElement(
+        "option"
+      );
+
+    option.value =
+      `${d.getFullYear()}-${d.getMonth()}`;
+
+    option.textContent =
+      d.toLocaleString(
+        "en-AU",
+        {
+          month: "long",
+          year: "numeric"
+        }
+      );
+
+    selector.appendChild(
+      option
+    );
+
+    d.setMonth(
+      d.getMonth() + 1
+    );
+
+  }
+
+  selector.value =
+    `${selectedYear}-${selectedMonth}`;
+
+  selector.onchange = () => {
+
+    const parts =
+      selector.value.split("-");
+
+    selectedYear =
+      Number(parts[0]);
+
+    selectedMonth =
+      Number(parts[1]);
+
+    loadDailyStatistics();
+
+  };
+
+}
+
+function refreshMonthSelector() {
+
+  document.getElementById(
+    "monthSelector"
+  ).value =
+    `${selectedYear}-${selectedMonth}`;
+
+}
+  
 async function loadDailyStatistics(){
 
 const table =
   document.getElementById("statsTable");
 
 table.innerHTML = "";
+document.getElementById(
+  "summaryTable"
+).innerHTML = "";
+document.getElementById(
+  "monthLabel"
+).innerText =
+  new Date(
+    selectedYear,
+    selectedMonth
+  ).toLocaleString(
+    "en-AU",
+    {
+      month: "long",
+      year: "numeric"
+    }
+  );
 
+document.querySelector("h2").innerText =
+  new Date(
+    selectedYear,
+    selectedMonth
+  ).toLocaleString(
+    "en-AU",
+    {
+      month: "long",
+      year: "numeric"
+    }
+  ) +
+  " Daily Statistics";
 const historyRes =
   await fetch("/esperencewx/history.json?" + Date.now());
 
@@ -285,7 +433,9 @@ const history =
   await historyRes.json();
 
 const archiveRes =
-  await fetch("/esperencewx/archive_history.json?" + Date.now());
+  await fetch(
+    `/esperencewx/archives/${selectedYear}/${String(selectedMonth + 1).padStart(2,"0")}.json?${Date.now()}`
+  );
 
 const archive =
   await archiveRes.json();
@@ -308,13 +458,15 @@ function dayRecords(records, year, month, day){
 }
 
 const now = new Date();
+
 const currentHour =
   now.getHours() + now.getMinutes() / 60;
+
 const year =
-  now.getFullYear();
+  selectedYear;
 
 const month =
-  now.getMonth();
+  selectedMonth;
 
 const daysInMonth =
   new Date(
@@ -1305,6 +1457,76 @@ totalRow.innerHTML = `
 summaryTable.appendChild(totalRow);
 }
 
+document.getElementById(
+  "prevMonth"
+).onclick = () => {
+
+  selectedMonth--;
+
+  if (selectedMonth < 0) {
+
+    selectedMonth = 11;
+    selectedYear--;
+
+  }
+
+  if (
+    selectedYear < minYear ||
+    (
+      selectedYear === minYear &&
+      selectedMonth < minMonth
+    )
+  ) {
+
+    selectedYear = minYear;
+    selectedMonth = minMonth;
+
+  }
+
+  refreshMonthSelector();
+  loadDailyStatistics();
+
+};
+
+document.getElementById(
+  "nextMonth"
+).onclick = () => {
+
+  if (
+    selectedYear === maxYear &&
+    selectedMonth === maxMonth
+  ) {
+    return;
+  }
+
+  selectedMonth++;
+
+  if (selectedMonth > 11) {
+
+    selectedMonth = 0;
+    selectedYear++;
+
+  }
+
+  refreshMonthSelector();
+  loadDailyStatistics();
+
+};
+
+document.getElementById(
+  "latestMonth"
+).onclick = () => {
+
+  selectedYear = maxYear;
+  selectedMonth = maxMonth;
+
+  refreshMonthSelector();
+  loadDailyStatistics();
+
+};
+
+populateMonthSelector();
+refreshMonthSelector();  
 loadDailyStatistics();
 
 </script>
