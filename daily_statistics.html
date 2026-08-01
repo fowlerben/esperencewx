@@ -497,6 +497,9 @@ let maxRainRates = [];
 let ets = [];
 
 let maxWindSpeeds = [];
+let maxWindDirs = [];
+let maxWindTimes = [];
+
 let avgWindSpeeds = [];
 
 let maxSolars = [];
@@ -1210,8 +1213,26 @@ if (displayRain !== "") rains.push(displayRain);
 if (displayMaxRainRate !== "") maxRainRates.push(displayMaxRainRate);
 if (displayEt !== "") ets.push(displayEt);
 
-if (displayMaxWindSpeed !== "") maxWindSpeeds.push(displayMaxWindSpeed);
-if (displayAvgWindSpeed !== "") avgWindSpeeds.push(displayAvgWindSpeed);
+if (displayMaxWindSpeed !== "") {
+
+  maxWindSpeeds.push(
+    displayMaxWindSpeed
+  );
+
+  maxWindDirs.push(
+    displayMaxWindDir
+  );
+
+  maxWindTimes.push(
+    displayMaxWindTime
+  );
+
+}
+
+if (displayAvgWindSpeed !== "")
+  avgWindSpeeds.push(
+    displayAvgWindSpeed
+  );
 
 if (displayMaxSolar !== "") maxSolars.push(displayMaxSolar);
 if (displaySolarEnergy !== "") solarEnergies.push(displaySolarEnergy);
@@ -1226,6 +1247,46 @@ if (displayMinWindChill !== "")
 if (displayMaxThsw !== "") maxThsws.push(displayMaxThsw);
     table.appendChild(tr);
   }
+
+const monthlyHighestWind =
+  Math.max(
+    ...maxWindSpeeds
+  );
+
+const monthlyHighestWindIndex =
+  maxWindSpeeds.indexOf(
+    monthlyHighestWind
+  );
+
+const monthlyHighestWindDir =
+  maxWindDirs[
+    monthlyHighestWindIndex
+  ];
+
+const monthlyHighestWindTime =
+  maxWindTimes[
+    monthlyHighestWindIndex
+  ];
+
+const monthlyLowestWind =
+  Math.min(
+    ...maxWindSpeeds
+  );
+
+const monthlyLowestWindIndex =
+  maxWindSpeeds.indexOf(
+    monthlyLowestWind
+  );
+
+const monthlyLowestWindDir =
+  maxWindDirs[
+    monthlyLowestWindIndex
+  ];
+
+const monthlyLowestWindTime =
+  maxWindTimes[
+    monthlyLowestWindIndex
+  ];
 const meanRow =
   document.createElement("tr");
 
@@ -1315,11 +1376,11 @@ lowRow.innerHTML = `
 
 <td></td>
 
-<td></td>
+<td>${monthlyLowestWindDir}</td>
 
-<td>${Math.min(...maxWindSpeeds).toFixed(1)}</td>
+<td>${monthlyLowestWind.toFixed(1)}</td>
 
-<td></td>
+<td>${monthlyLowestWindTime}</td>
 
 <td></td>
 
@@ -1377,11 +1438,11 @@ highRow.innerHTML = `
 
 <td>${Math.max(...maxRainRates).toFixed(1)}</td>
 
-<td></td>
+<td>${monthlyHighestWindDir}</td>
 
-<td>${Math.max(...maxWindSpeeds).toFixed(1)}</td>
+<td>${monthlyHighestWind.toFixed(1)}</td>
 
-<td></td>
+<td>${monthlyHighestWindTime}</td>
 
 <td></td>
 
