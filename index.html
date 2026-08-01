@@ -890,7 +890,124 @@ function getSunInfo() {
     daylight: sunset - sunrise
   };
 }
+function clearSkySolar(
+  timestamp,
+  elevationM = 130
+) {
 
+  const lat =
+    -38.16330;
+
+  const date =
+    new Date(timestamp * 1000);
+
+  const start =
+    new Date(
+      date.getFullYear(),
+      0,
+      0
+    );
+
+  const day =
+    Math.floor(
+      (date - start) /
+      86400000
+    );
+
+  const gamma =
+    (2 * Math.PI / 365) *
+    (day - 1);
+
+  const decl =
+    0.006918 -
+    0.399912 * Math.cos(gamma) +
+    0.070257 * Math.sin(gamma) -
+    0.006758 * Math.cos(2 * gamma) +
+    0.000907 * Math.sin(2 * gamma) -
+    0.002697 * Math.cos(3 * gamma) +
+    0.00148 * Math.sin(3 * gamma);
+
+  const localHour =
+    date.getHours() +
+    date.getMinutes() / 60 +
+    date.getSeconds() / 3600;
+
+  const hourAngle =
+    (localHour - 12) *
+    15 *
+    Math.PI / 180;
+
+  const latRad =
+    lat *
+    Math.PI / 180;
+
+  const solarElevation =
+    Math.asin(
+
+      Math.sin(latRad) *
+      Math.sin(decl)
+
+      +
+
+      Math.cos(latRad) *
+      Math.cos(decl) *
+      Math.cos(hourAngle)
+
+    );
+
+  if (
+    solarElevation <= 0
+  ) {
+    return 0;
+  }
+
+  const solarElevationDeg =
+    solarElevation *
+    180 /
+    Math.PI;
+
+  const airMass =
+    1 /
+    (
+      Math.sin(solarElevation)
+      +
+      0.50572 *
+      Math.pow(
+        solarElevationDeg +
+        6.07995,
+        -1.6364
+      )
+    );
+
+  const pressureFactor =
+    Math.exp(
+      -elevationM /
+      8434.5
+    );
+
+  const adjustedAirMass =
+    airMass *
+    pressureFactor;
+
+  const irradiance =
+    1361 *
+    Math.sin(
+      solarElevation
+    ) *
+    Math.pow(
+      0.7,
+      Math.pow(
+        adjustedAirMass,
+        0.678
+      )
+    );
+
+  return Math.max(
+    0,
+    irradiance
+  );
+
+}
 function formatHour(hour) {
 
   let h = Math.floor(hour);
@@ -2328,6 +2445,15 @@ const solarLabels =
 const chartSolar =
   solarHistory.map(
     r => r.solar_rad_avg ?? null
+  );
+
+const chartPotentialSolar =
+  solarHistory.map(
+    r =>
+      clearSkySolar(
+        r.time,
+        110
+      )
   );
 
 const chartUV =
@@ -4077,6 +4203,33 @@ if (!solarChart) {
 
             {
               type: "line",
+            
+              label:
+                "Potential Solar",
+            
+              data:
+                chartPotentialSolar,
+            
+              borderColor:
+                "#ffffff",
+            
+              borderWidth: 2,
+            
+              borderDash:
+                [8,4],
+            
+              fill: false,
+            
+              tension: 0.2,
+            
+              pointRadius: 0,
+            
+              yAxisID:
+                "y"
+            },
+
+            {
+              type: "line",
 
               label:
                 "UV Index",
@@ -4180,11 +4333,13 @@ if (!solarChart) {
 
   solarChart.data.datasets[0].data =
     chartSolar;
-
+  
   solarChart.data.datasets[1].data =
+    chartPotentialSolar;
+  
+  solarChart.data.datasets[2].data =
     chartUV;
-
-  solarChart.update();
+    solarChart.update();
 
 }
   
