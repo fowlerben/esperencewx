@@ -277,7 +277,7 @@
   </div>
 
   <div class="card">
-    Specific Humidity
+    Virtual Temperature
     <div class="value" id="specHum"></div>
   </div>
 
@@ -675,11 +675,12 @@ function moistEnthalpy(
   pressureHpa
 ){
 
-  const q =
-    specificHumidity(
-      tdC,
-      pressureHpa
-    );
+const virtualTemp =
+  virtualTemperature(
+    tempC,
+    dewC,
+    pressureHpa
+  );
 
   return (
     1.006 * tempC +
@@ -691,7 +692,25 @@ function moistEnthalpy(
   );
 
 }
+function virtualTemperature(
+  tempC,
+  tdC,
+  pressureHpa
+){
 
+  const q =
+    specificHumidity(
+      tdC,
+      pressureHpa
+    );
+
+  const Tv =
+    (tempC + 273.15) *
+    (1 + 0.61 * q);
+
+  return Tv - 273.15;
+
+}
 function fogEnergyDeficit(
   tempC,
   tdC,
@@ -2749,11 +2768,10 @@ document.getElementById(
     ? thetae.toFixed(1) + " K"
     : "N/A";
 document.getElementById(
-  "specHum"
+  "virtualTemp"
 ).innerText =
-  q != null
-    ? (q * 1000).toFixed(1) +
-      " g/kg"
+  virtualTemp != null
+    ? virtualTemp.toFixed(1) + " °C"
     : "N/A";
 
 document.getElementById(
