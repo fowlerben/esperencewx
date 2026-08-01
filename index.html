@@ -443,7 +443,32 @@
 
 <div class="section">
 
-<h2>Solar & UV</h2>
+<div
+  style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+  "
+>
+
+  <h2>
+    Solar & UV
+  </h2>
+
+  <select
+    id="solarDateSelector"
+    style="
+      background:#1f3b4d;
+      color:white;
+      border:1px solid #4a6a7d;
+      padding:4px 8px;
+      border-radius:4px;
+    "
+  >
+  </select>
+
+</div>
 
 <div class="grid">
 
@@ -951,6 +976,7 @@ let selectedWindDate = null;
 let selectedWindMode = "track";
 let selectedThetaEDate = null;
 let selectedTerrDate = null;
+let selectedSolarDate = null;
 function drawWindRadar(history) {
 
   const canvas =
@@ -1650,6 +1676,10 @@ const terrDateSelector =
   document.getElementById(
     "terrDateSelector"
   );
+const solarDateSelector =
+  document.getElementById(
+    "solarDateSelector"
+  );
 if (
   windDateSelector &&
   windDateSelector.options.length === 0
@@ -1861,7 +1891,78 @@ if (
   );
 
 }
-  
+if (
+  solarDateSelector &&
+  solarDateSelector.options.length === 0
+) {
+
+  const availableDates =
+    [...new Set(
+      archive.map(r =>
+        new Date(r.time * 1000)
+          .toLocaleDateString(
+            "en-AU",
+            {
+              timeZone:
+                "Australia/Melbourne"
+            }
+          )
+      )
+    )];
+
+  availableDates.reverse();
+
+  availableDates.forEach(date => {
+
+    const option =
+      document.createElement(
+        "option"
+      );
+
+    option.value = date;
+    option.textContent = date;
+
+    solarDateSelector.appendChild(
+      option
+    );
+
+  });
+
+  selectedSolarDate =
+    new Date()
+      .toLocaleDateString(
+        "en-AU",
+        {
+          timeZone:
+            "Australia/Melbourne"
+        }
+      );
+
+  if (
+    !availableDates.includes(
+      selectedSolarDate
+    )
+  ) {
+    selectedSolarDate =
+      availableDates[0];
+  }
+
+  solarDateSelector.value =
+    selectedSolarDate;
+
+  solarDateSelector.addEventListener(
+    "change",
+    () => {
+
+      selectedSolarDate =
+        solarDateSelector.value;
+
+      loadWeather();
+
+    }
+  );
+
+}  
 if(data.generated_at){
 document.getElementById("dataTime").innerText =
   "Data timestamp: " +
@@ -2135,6 +2236,40 @@ const terrHistory =
     );
 
   });
+
+if (!selectedSolarDate) {
+
+  selectedSolarDate =
+    new Date()
+      .toLocaleDateString(
+        "en-AU",
+        {
+          timeZone:
+            "Australia/Melbourne"
+        }
+      );
+
+}
+
+const solarHistory =
+  archive.filter(r => {
+
+    const recordDate =
+      new Date(r.time * 1000)
+        .toLocaleDateString(
+          "en-AU",
+          {
+            timeZone:
+              "Australia/Melbourne"
+          }
+        );
+
+    return (
+      recordDate ===
+      selectedSolarDate
+    );
+
+  });
 const thetaeLabels =
   thetaeHistory.map(r =>
     new Date(r.time * 1000)
@@ -2177,7 +2312,7 @@ const chartDews = todayHistory.map(r => r.dew_c);
 const chartHumidity = todayHistory.map(r => r.humidity);
 const chartPressure = todayHistory.map(r => r.pressure_hpa);
 const solarLabels =
-  todayArchive.map(r =>
+  solarHistory.map(r =>
     new Date(r.time * 1000)
       .toLocaleTimeString(
         "en-AU",
@@ -2189,12 +2324,12 @@ const solarLabels =
   );
 
 const chartSolar =
-  todayArchive.map(
+  solarHistory.map(
     r => r.solar_rad_avg ?? null
   );
 
 const chartUV =
-  todayArchive.map(
+  solarHistory.map(
     r => r.uv_index_avg ?? null
   );
 const chartThetaE = thetaeHistory.map(r => {
@@ -2981,7 +3116,7 @@ g10.innerText =
   safeDeg(latestArchive.wind_speed_hi_dir) +
   ")";
 const solarEnergyToday =
-  todayArchive
+  solarHistory
     .map(r => r.solar_energy)
     .filter(v => v != null)
     .reduce(
@@ -2990,7 +3125,7 @@ const solarEnergyToday =
     ) * 0.036;
 
 const uvDoseToday =
-  todayArchive
+  solarHistory
     .map(r => r.uv_dose)
     .filter(v => v != null)
     .reduce(
@@ -3000,27 +3135,27 @@ const uvDoseToday =
 
 const solarPeak =
   Math.max(
-    ...todayArchive
+    ...solarHistory
       .map(r => r.solar_rad_hi)
       .filter(v => v != null)
   );
 
 const uvPeak =
   Math.max(
-    ...todayArchive
+    ...solarHistory
       .map(r => r.uv_index_hi)
       .filter(v => v != null)
   );
 
 const solarPeakRecord =
-  todayArchive.find(
+  solarHistory.find(
     r =>
       r.solar_rad_hi ===
       solarPeak
   );
 
 const uvPeakRecord =
-  todayArchive.find(
+  solarHistory.find(
     r =>
       r.uv_index_hi ===
       uvPeak
