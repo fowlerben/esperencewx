@@ -914,9 +914,25 @@ function clearSkySolar(
       86400000
     );
 
-  const gamma =
-    (2 * Math.PI / 365) *
-    (day - 1);
+const gamma =
+  (2 * Math.PI / 365) *
+  (day - 1);
+
+const earthSunFactor =
+  1.00011 +
+  0.034221 * Math.cos(gamma) +
+  0.00128 * Math.sin(gamma) +
+  0.000719 * Math.cos(2 * gamma) +
+  0.000077 * Math.sin(2 * gamma);
+
+const decl =
+  0.006918 -
+  0.399912 * Math.cos(gamma) +
+  0.070257 * Math.sin(gamma) -
+  0.006758 * Math.cos(2 * gamma) +
+  0.000907 * Math.sin(2 * gamma) -
+  0.002697 * Math.cos(3 * gamma) +
+  0.00148 * Math.sin(3 * gamma);
 
   const decl =
     0.006918 -
@@ -1005,15 +1021,16 @@ function clearSkySolar(
     airMass *
     pressureFactor;
 
-  const irradiance =
-    1361 *
-    Math.sin(
-      solarElevation
-    ) *
-    Math.pow(
-      0.84,
-      adjustedAirMass
-    );
+const irradiance =
+  1361 *
+  earthSunFactor *
+  Math.sin(
+    solarElevation
+  ) *
+  Math.pow(
+    0.86,
+    adjustedAirMass
+  );
 
   return Math.max(
     0,
