@@ -313,7 +313,8 @@
       Atmospheric Thermodynamics
     </h2>
 
-    <select
+    <input
+      type="date"
       id="thetaeDateSelector"
       style="
         background:#1f3b4d;
@@ -323,7 +324,6 @@
         border-radius:4px;
       "
     >
-    </select>
 
   </div>
 
@@ -387,7 +387,8 @@
       Wind Rose
     </button>
 
-    <select
+    <input
+      type="date"
       id="windDateSelector"
       style="
         background:#1f3b4d;
@@ -397,8 +398,6 @@
         border-radius:4px;
       "
     >
-    </select>
-
   </div>
 
 </div>
@@ -583,7 +582,8 @@
       Terrestrial DPD & Leaf Wetness
     </h2>
 
-    <select
+    <input
+      type="date"
       id="terrDateSelector"
       style="
         background:#1f3b4d;
@@ -593,7 +593,6 @@
         border-radius:4px;
       "
     >
-    </select>
 
   </div>
 
@@ -1668,14 +1667,185 @@ const availableDates =
   document.getElementById(
     "windDateSelector"
   );
+if (
+  windDateSelector &&
+  !windDateSelector.dataset.initialized
+) {
+
+  windDateSelector.min =
+    "2025-11-01";
+
+  windDateSelector.max =
+    new Date()
+      .toISOString()
+      .split("T")[0];
+
+  if (!selectedWindDate) {
+
+    selectedWindDate =
+      new Date()
+        .toLocaleDateString(
+          "en-AU",
+          {
+            timeZone:
+              "Australia/Melbourne"
+          }
+        );
+
+  }
+
+  const [d,m,y] =
+    selectedWindDate.split("/");
+
+  windDateSelector.value =
+    `${y}-${m}-${d}`;
+
+  windDateSelector.addEventListener(
+    "change",
+    () => {
+
+      const [
+        year,
+        month,
+        day
+      ] =
+        windDateSelector.value
+          .split("-");
+
+      selectedWindDate =
+        `${day}/${month}/${year}`;
+
+      loadWeather();
+
+    }
+  );
+
+  windDateSelector.dataset.initialized =
+    "true";
+
+}
 const thetaeDateSelector =
   document.getElementById(
     "thetaeDateSelector"
   );
+if (
+  thetaeDateSelector &&
+  !thetaeDateSelector.dataset.initialized
+) {
+
+  thetaeDateSelector.min =
+    "2025-11-01";
+
+  thetaeDateSelector.max =
+    new Date()
+      .toISOString()
+      .split("T")[0];
+
+  if (!selectedThetaEDate) {
+
+    selectedThetaEDate =
+      new Date()
+        .toLocaleDateString(
+          "en-AU",
+          {
+            timeZone:
+              "Australia/Melbourne"
+          }
+        );
+
+  }
+
+  const [d,m,y] =
+    selectedThetaEDate.split("/");
+
+  thetaeDateSelector.value =
+    `${y}-${m}-${d}`;
+
+  thetaeDateSelector.addEventListener(
+    "change",
+    () => {
+
+      const [
+        year,
+        month,
+        day
+      ] =
+        thetaeDateSelector.value
+          .split("-");
+
+      selectedThetaEDate =
+        `${day}/${month}/${year}`;
+
+      loadWeather();
+
+    }
+  );
+
+  thetaeDateSelector.dataset.initialized =
+    "true";
+
+}
 const terrDateSelector =
   document.getElementById(
     "terrDateSelector"
   );
+if (
+  terrDateSelector &&
+  !terrDateSelector.dataset.initialized
+) {
+
+  terrDateSelector.min =
+    "2025-11-01";
+
+  terrDateSelector.max =
+    new Date()
+      .toISOString()
+      .split("T")[0];
+
+  if (!selectedTerrDate) {
+
+    selectedTerrDate =
+      new Date()
+        .toLocaleDateString(
+          "en-AU",
+          {
+            timeZone:
+              "Australia/Melbourne"
+          }
+        );
+
+  }
+
+  const [d,m,y] =
+    selectedTerrDate.split("/");
+
+  terrDateSelector.value =
+    `${y}-${m}-${d}`;
+
+  terrDateSelector.addEventListener(
+    "change",
+    () => {
+
+      const [
+        year,
+        month,
+        day
+      ] =
+        terrDateSelector.value
+          .split("-");
+
+      selectedTerrDate =
+        `${day}/${month}/${year}`;
+
+      loadWeather();
+
+    }
+  );
+
+  terrDateSelector.dataset.initialized =
+    "true";
+
+}
 const solarDateSelector =
   document.getElementById(
     "solarDateSelector"
@@ -1739,217 +1909,6 @@ if (
 
   solarDateSelector.dataset.initialized =
     "true";
-
-}
-if (
-  windDateSelector &&
-  windDateSelector.options.length === 0
-) {
-
-const availableDates =
-  [...new Set(
-    archive.map(r =>
-      new Date(r.time * 1000)
-        .toLocaleDateString(
-          "en-AU",
-          {
-            timeZone: "Australia/Melbourne"
-          }
-        )
-    )
-  )];
-
-
-  availableDates.reverse();
-
-  availableDates.forEach(date => {
-
-    const option =
-      document.createElement(
-        "option"
-      );
-
-    option.value = date;
-    option.textContent = date;
-
-    windDateSelector.appendChild(
-      option
-    );
-
-  });
-
-  selectedWindDate =
-    availableDates[0];
-
-  windDateSelector.value =
-    selectedWindDate;
-
-  windDateSelector.addEventListener(
-    "change",
-    () => {
-
-      selectedWindDate =
-        windDateSelector.value;
-
-      loadWeather();
-
-    }
-  );
-document
-  .getElementById("windModeBtn")
-  .addEventListener("click", () => {
-
-    selectedWindMode =
-      selectedWindMode === "track"
-        ? "rose"
-        : "track";
-
-    loadWeather();
-
-  });
-}
-if (
-  thetaeDateSelector &&
-  thetaeDateSelector.options.length === 0
-) {
-
-  const availableDates =
-    [...new Set(
-      archive.map(r =>
-        new Date(r.time * 1000)
-          .toLocaleDateString(
-            "en-AU",
-            {
-              timeZone:
-                "Australia/Melbourne"
-            }
-          )
-      )
-    )];
-
-  availableDates.reverse();
-
-  availableDates.forEach(date => {
-
-    const option =
-      document.createElement(
-        "option"
-      );
-
-    option.value = date;
-    option.textContent = date;
-
-    thetaeDateSelector.appendChild(
-      option
-    );
-
-  });
-
-selectedThetaEDate =
-  new Date()
-    .toLocaleDateString(
-      "en-AU",
-      {
-        timeZone:
-          "Australia/Melbourne"
-      }
-    );
-
-if (
-  !availableDates.includes(
-    selectedThetaEDate
-  )
-) {
-  selectedThetaEDate =
-    availableDates[0];
-}
-
-  thetaeDateSelector.value =
-    selectedThetaEDate;
-
-  thetaeDateSelector.addEventListener(
-    "change",
-    () => {
-
-      selectedThetaEDate =
-        thetaeDateSelector.value;
-
-      loadWeather();
-
-    }
-  );
-
-}
-if (
-  terrDateSelector &&
-  terrDateSelector.options.length === 0
-) {
-
-  const availableDates =
-    [...new Set(
-      archive.map(r =>
-        new Date(r.time * 1000)
-          .toLocaleDateString(
-            "en-AU",
-            {
-              timeZone:
-                "Australia/Melbourne"
-            }
-          )
-      )
-    )];
-
-  availableDates.reverse();
-
-  availableDates.forEach(date => {
-
-    const option =
-      document.createElement(
-        "option"
-      );
-
-    option.value = date;
-    option.textContent = date;
-
-    terrDateSelector.appendChild(
-      option
-    );
-
-  });
-
-  selectedTerrDate =
-    new Date()
-      .toLocaleDateString(
-        "en-AU",
-        {
-          timeZone:
-            "Australia/Melbourne"
-        }
-      );
-
-  if (
-    !availableDates.includes(
-      selectedTerrDate
-    )
-  ) {
-    selectedTerrDate =
-      availableDates[0];
-  }
-
-  terrDateSelector.value =
-    selectedTerrDate;
-
-  terrDateSelector.addEventListener(
-    "change",
-    () => {
-
-      selectedTerrDate =
-        terrDateSelector.value;
-
-      loadWeather();
-
-    }
-  );
 
 }
 
@@ -2174,8 +2133,23 @@ if (!selectedThetaEDate) {
 
 }
 
+const [
+  thetaeDay,
+  thetaeMonth,
+  thetaeYear
+] =
+  selectedThetaEDate.split("/");
+
+const thetaeArchiveRes =
+  await fetch(
+    `/esperencewx/archives/${thetaeYear}/${thetaeMonth}.json?${Date.now()}`
+  );
+
+const thetaeArchive =
+  await thetaeArchiveRes.json();
+
 const thetaeHistory =
-  archive.filter(r => {
+  thetaeArchive.filter(r => {
 
     const recordDate =
       new Date(r.time * 1000)
@@ -2193,6 +2167,13 @@ const thetaeHistory =
     );
 
   });
+  {
+    const [d,m,y] =
+      selectedThetaEDate.split("/");
+  
+    thetaeDateSelector.value =
+      `${y}-${m}-${d}`;
+  }
 if (!selectedTerrDate) {
 
   selectedTerrDate =
@@ -2207,8 +2188,23 @@ if (!selectedTerrDate) {
 
 }
 
+const [
+  terrDay,
+  terrMonth,
+  terrYear
+] =
+  selectedTerrDate.split("/");
+
+const terrArchiveRes =
+  await fetch(
+    `/esperencewx/archives/${terrYear}/${terrMonth}.json?${Date.now()}`
+  );
+
+const terrArchive =
+  await terrArchiveRes.json();
+
 const terrHistory =
-  archive.filter(r => {
+  terrArchive.filter(r => {
 
     const recordDate =
       new Date(r.time * 1000)
@@ -2226,6 +2222,13 @@ const terrHistory =
     );
 
   });
+  {
+  const [d,m,y] =
+    selectedTerrDate.split("/");
+
+  terrDateSelector.value =
+    `${y}-${m}-${d}`;
+}
 
 if (!selectedSolarDate) {
 
@@ -2459,8 +2462,23 @@ const archiveMinTemps = todayArchive
 const gustsToday = todayHistory
   .map(r => r.gust10_kmh)
   .filter(v => v != null);
+const [
+  windDay,
+  windMonth,
+  windYear
+] =
+  selectedWindDate.split("/");
+
+const windArchiveRes =
+  await fetch(
+    `/esperencewx/archives/${windYear}/${windMonth}.json?${Date.now()}`
+  );
+
+const windArchive =
+  await windArchiveRes.json();
+
 const windHistory =
-  archive
+  windArchive
     .filter(r => {
 
       const recordDate =
@@ -2493,8 +2511,29 @@ const windHistory =
           : null
 
     }));
+    .map(r => ({
+
+      time:
+        r.time,
+
+      wind10_dir:
+        r.wind_dir_of_prevail,
+
+      wind10_kmh:
+        r.wind_speed_avg != null
+          ? r.wind_speed_avg * 1.60934
+          : null
+
+    }));
+  {
+  const [d,m,y] =
+    selectedWindDate.split("/");
+
+  windDateSelector.value =
+    `${y}-${m}-${d}`;
+}
 const gustHistory =
-  archive.filter(r => {
+  windArchive.filter(r => {
 
     const recordDate =
       new Date(r.time * 1000)
