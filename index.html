@@ -621,12 +621,7 @@ function equivalentPotentialTemperature(
       w *
       (1 + 0.81 * w)
     );
-const virtualTemp =
-  virtualTemperature(
-    tempC,
-    dewC,
-    pressureHpa
-  );
+
   return thetae;
 
 }
@@ -2740,7 +2735,12 @@ const thetae =
     dewC,
     pressureHpa
   );
-
+const virtualTemp =
+  virtualTemperature(
+    tempC,
+    dewC,
+    pressureHpa
+  );
 const w =
   mixingRatio(
     dewC,
