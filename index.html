@@ -3891,17 +3891,26 @@ if (!solarChart) {
           datasets: [
 
             {
-              type: "bar",
-
+              type: "line",
+            
               label:
                 "Solar Radiation",
-
+            
               data:
                 chartSolar,
-
-              backgroundColor:
+            
+              borderColor:
                 "#ffd166",
-
+            
+              backgroundColor:
+                "rgba(255,209,102,0.15)",
+            
+              fill: true,
+            
+              tension: 0.3,
+            
+              pointRadius: 0,
+            
               yAxisID:
                 "y"
             },
