@@ -927,14 +927,30 @@ function clearSkySolar(
     0.002697 * Math.cos(3 * gamma) +
     0.00148 * Math.sin(3 * gamma);
 
-  const localHour =
-    date.getHours() +
-    date.getMinutes() / 60 +
-    date.getSeconds() / 3600;
-
+   const eqTime =
+    229.18 * (
+      0.000075 +
+      0.001868 * Math.cos(gamma) -
+      0.032077 * Math.sin(gamma) -
+      0.014615 * Math.cos(2 * gamma) -
+      0.040849 * Math.sin(2 * gamma)
+    );
+  
+  const timezoneOffset =
+    -date.getTimezoneOffset() / 60;
+  
+  const minutes =
+    date.getHours() * 60 +
+    date.getMinutes() +
+    date.getSeconds() / 60;
+  
+  const solarTime =
+    minutes +
+    eqTime +
+    4 * (144.30763 - 15 * timezoneOffset);
+  
   const hourAngle =
-    (localHour - 12) *
-    15 *
+    (solarTime / 4 - 180) *
     Math.PI / 180;
 
   const latRad =
@@ -995,11 +1011,8 @@ function clearSkySolar(
       solarElevation
     ) *
     Math.pow(
-      0.7,
-      Math.pow(
-        adjustedAirMass,
-        0.678
-      )
+      0.78,
+      adjustedAirMass
     );
 
   return Math.max(
