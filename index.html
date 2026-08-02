@@ -3273,12 +3273,34 @@ if (!latestArchive) return;
 const rainRate =
   iss.rain_rate_last_mm ?? 0;
 
-const cloudAnalysis =
-  analyseClouds(
-    chartSolar,
-    chartPotentialSolar,
-    rainRate
-  );
+let cloudAnalysis;
+
+const now = new Date();
+const currentHour =
+  now.getHours() +
+  now.getMinutes() / 60;
+
+if (
+  currentHour < sun.sunrise ||
+  currentHour > sun.sunset
+) {
+
+  cloudAnalysis = {
+    sky: "Unknown",
+    coverage: "Unknown",
+    type: "Unknown"
+  };
+
+} else {
+
+  cloudAnalysis =
+    analyseClouds(
+      chartSolar,
+      chartPotentialSolar,
+      rainRate
+    );
+
+}
 
 const sun = getSunInfo();
 
