@@ -527,6 +527,26 @@
 
   </div>
 
+  <div class="card">
+
+  Sky Condition
+
+  <div
+    class="value"
+    id="skyCondition">
+  </div>
+
+  <div
+    id="skyStats"
+    style="
+      font-size:12px;
+      opacity:0.8;
+      margin-top:4px;
+    ">
+  </div>
+
+</div>
+
 </div>
 
 <div
@@ -1044,6 +1064,199 @@ function formatHour(hour) {
     ":" +
     String(m).padStart(2, "0")
   );
+}
+
+function analyseClouds(
+  observed,
+  potential,
+  rainRate = 0
+){
+
+  const ratios = [];
+
+  for(let i=0;i<observed.length;i++){
+
+    const obs = observed[i];
+    const pot = potential[i];
+
+    if(
+      obs == null ||
+      pot == null ||
+      pot < 150
+    ){
+      continue;
+    }
+
+    ratios.push(
+      Math.min(
+        1.05,
+        Math.max(
+          0,
+          obs / pot
+        )
+      )
+    );
+
+  }
+
+  if(ratios.length < 10){
+
+    return {
+      sky:"Unknown",
+      coverage:"Unknown",
+      type:"Unknown"
+    };
+
+  }
+
+  const mean =
+    ratios.reduce(
+      (a,b)=>a+b,
+      0
+    ) / ratios.length;
+
+  const variability =
+    Math.sqrt(
+      ratios.reduce(
+        (a,b)=>
+          a +
+          Math.pow(
+            b - mean,
+            2
+          ),
+        0
+      ) / ratios.length
+    );
+
+  const cloudyFraction =
+    ratios.filter(
+      r => r < 0.95
+    ).length /
+    ratios.length;
+
+  let durations = [];
+  let current = 0;
+
+  for(const r of ratios){
+
+    if(r < 0.95){
+
+      current += 5;
+
+    } else {
+
+      if(current > 0){
+        durations.push(current);
+      }
+
+      current = 0;
+    }
+  }
+
+  if(current > 0){
+    durations.push(current);
+  }
+
+  const avgEventDuration =
+    durations.length
+      ? durations.reduce(
+          (a,b)=>a+b,
+          0
+        ) / durations.length
+      : 0;
+
+  let coverage;
+
+  if(cloudyFraction < 0.10)
+    coverage = "Few";
+  else if(cloudyFraction < 0.40)
+    coverage = "Scattered";
+  else if(cloudyFraction < 0.80)
+    coverage = "Broken";
+  else
+    coverage = "Overcast";
+
+  let type = "Cloud";
+
+  if(
+    mean > 0.98 &&
+    variability < 0.015 &&
+    cloudyFraction < 0.05
+  ){
+    return {
+      coverage:"",
+      type:"Clear",
+      sky:"Clear",
+      mean,
+      variability,
+      avgEventDuration
+    };
+  }
+
+  if(
+    mean > 0.90 &&
+    variability < 0.05
+  ){
+    type = "Cirrus";
+  }
+  else if(
+    mean > 0.80 &&
+    variability < 0.03
+  ){
+    type = "Cirrostratus";
+  }
+  else if(
+    mean >= 0.50 &&
+    mean <= 0.80 &&
+    variability < 0.12 &&
+    avgEventDuration >= 20
+  ){
+    type = "Altocumulus";
+  }
+  else if(
+    mean > 0.30 &&
+    variability < 0.03
+  ){
+    type = "Altostratus";
+  }
+  else if(
+    avgEventDuration < 20
+  ){
+    type = "Cumulus";
+  }
+  else{
+    type = "Stratocumulus";
+  }
+
+  if(
+    mean < 0.40 &&
+    variability < 0.03
+  ){
+    type =
+      rainRate > 0
+        ? "Nimbostratus"
+        : "Stratus";
+  }
+
+  if(
+    type === "Cirrostratus" &&
+    (
+      coverage === "Few" ||
+      coverage === "Scattered"
+    )
+  ){
+    type = "Cirrus";
+  }
+
+  return {
+    mean,
+    variability,
+    coverage,
+    type,
+    avgEventDuration,
+    sky:`${coverage} ${type}`
+  };
+
 }
 
 function refreshSynopticImage(){
@@ -2481,6 +2694,7 @@ const chartUV =
   solarHistory.map(
     r => r.uv_index_avg ?? null
   );
+  
 const chartThetaE = thetaeHistory.map(r => {
 
   if (
@@ -3053,9 +3267,19 @@ if(s.lsid===551509) baro=s.data[0];
 if(s.lsid===838746) extra=s.data[0];
 });
 
+// after rainRate has been defined
+
 if (!latestArchive) return;
 const rainRate =
   iss.rain_rate_last_mm ?? 0;
+
+const cloudAnalysis =
+  analyseClouds(
+    chartSolar,
+    chartPotentialSolar,
+    rainRate
+  );
+
 const sun = getSunInfo();
 
 document.getElementById("sunrise").innerText =
@@ -3305,20 +3529,25 @@ const uvDoseToday =
       0
     );
 
+const solarValues =
+  solarHistory
+    .map(r => r.solar_rad_hi)
+    .filter(v => v != null);
+
 const solarPeak =
-  Math.max(
-    ...solarHistory
-      .map(r => r.solar_rad_hi)
-      .filter(v => v != null)
-  );
+  solarValues.length > 0
+    ? Math.max(...solarValues)
+    : 0;
+
+const uvValues =
+  solarHistory
+    .map(r => r.uv_index_hi)
+    .filter(v => v != null);
 
 const uvPeak =
-  Math.max(
-    ...solarHistory
-      .map(r => r.uv_index_hi)
-      .filter(v => v != null)
-  );
-
+  uvValues.length > 0
+    ? Math.max(...uvValues)
+    : 0;
 const solarPeakRecord =
   solarHistory.find(
     r =>
@@ -3404,6 +3633,26 @@ document.getElementById(
   uvPeak.toFixed(1) +
   " @ " +
   uvPeakTime;
+
+document.getElementById(
+  "skyCondition"
+).innerText =
+  cloudAnalysis.sky;
+
+document.getElementById(
+  "skyStats"
+).innerText =
+  "Tx " +
+  (
+  cloudAnalysis.mean
+    ? cloudAnalysis.mean * 100
+    : 0
+).toFixed(0) +
+  "% | Var " +
+  (
+  cloudAnalysis.variability ?? 0
+).toFixed(2);
+  
 // RAIN
 rain_rate.innerText=iss.rain_rate_last_mm;
 rain15.innerText=iss.rainfall_last_15_min_mm;
