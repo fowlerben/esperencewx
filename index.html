@@ -1094,9 +1094,9 @@ function formatHour(hour) {
 function analyseClouds(
   observed,
   potential,
-  rainRate = 0
+  rainRate = 0,
+  pulseEvents = 0
 ){
-
   const ratios = [];
 
   for(let i=0;i<observed.length;i++){
@@ -1198,13 +1198,16 @@ const minTransmission =
 
   let coverage;
 
+let coverage;
+
 if(cloudyFraction < 0.10)
   coverage = "Few";
 else if(cloudyFraction < 0.40)
   coverage = "Scattered";
 else if(
   cloudyFraction < 0.80 ||
-  peakTransmission > 0.50
+  peakTransmission > 0.50 ||
+  pulseEvents > 0
 )
   coverage = "Broken";
 else
@@ -1215,7 +1218,8 @@ else
   if(
     mean > 0.98 &&
     variability < 0.015 &&
-    cloudyFraction < 0.05
+    cloudyFraction < 0.05 &&
+    pulseEvents === 0
   ){
     return {
       coverage:"",
@@ -2763,12 +2767,35 @@ for(let i = 0; i < solarHistory.length; i++){
   const start =
     Math.max(0, i - 5);
 
-  const c =
-    analyseClouds(
-      chartSolar.slice(start, i + 1),
-      chartPotentialSolar.slice(start, i + 1),
-      0
-    );
+const pulseEvents =
+  solarHistory
+    .slice(start, i + 1)
+    .filter(r => {
+
+      if(
+        r.solar_rad_hi == null ||
+        r.solar_rad_avg == null ||
+        r.solar_rad_hi <= 0
+      ){
+        return false;
+      }
+
+      const pulseRatio =
+        (r.solar_rad_hi - r.solar_rad_avg)
+        / r.solar_rad_hi;
+
+      return pulseRatio > 0.05;
+
+    }).length;
+
+const c =
+  analyseClouds(
+    chartSolar.slice(start, i + 1),
+    chartPotentialSolar.slice(start, i + 1),
+    0,
+    pulseEvents
+  );
+
 
   cloudHistory.push({
 
@@ -3429,13 +3456,35 @@ if (
   };
 
 } else {
+  const recentSolar =
+  solarHistory.slice(-6);
 
-  cloudAnalysis =
-    analyseClouds(
-      chartSolar.slice(-6),
-      chartPotentialSolar.slice(-6),
-      rainRate
-    );
+const pulseEvents =
+  recentSolar.filter(r => {
+
+    if(
+      r.solar_rad_hi == null ||
+      r.solar_rad_avg == null ||
+      r.solar_rad_hi <= 0
+    ){
+      return false;
+    }
+
+    const pulseRatio =
+      (r.solar_rad_hi - r.solar_rad_avg)
+      / r.solar_rad_hi;
+
+    return pulseRatio > 0.05;
+
+  }).length;
+
+cloudAnalysis =
+  analyseClouds(
+    chartSolar.slice(-6),
+    chartPotentialSolar.slice(-6),
+    rainRate,
+    pulseEvents
+  );
 
 }
 
