@@ -1159,6 +1159,9 @@ function analyseClouds(
     ).length /
     ratios.length;
 
+  const peakTransmission =
+  Math.max(...ratios);
+
   let durations = [];
   let current = 0;
 
@@ -1192,14 +1195,17 @@ function analyseClouds(
 
   let coverage;
 
-  if(cloudyFraction < 0.10)
-    coverage = "Few";
-  else if(cloudyFraction < 0.40)
-    coverage = "Scattered";
-  else if(cloudyFraction < 0.80)
-    coverage = "Broken";
-  else
-    coverage = "Overcast";
+if(cloudyFraction < 0.10)
+  coverage = "Few";
+else if(cloudyFraction < 0.40)
+  coverage = "Scattered";
+else if(
+  cloudyFraction < 0.80 ||
+  peakTransmission > 0.50
+)
+  coverage = "Broken";
+else
+  coverage = "Overcast";
 
   let type = "Cloud";
 
