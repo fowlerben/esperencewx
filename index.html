@@ -3665,18 +3665,21 @@ const solarEnergyToday =
       0
     ) * 0.036;
 
-const potentialSolarEnergyToday =
-  chartPotentialSolar.reduce(
-    (a, b) => a + (b ?? 0),
-    0
-  ) * 0.018;
+const potentialSolarEnergyToNow =
+  chartPotentialSolar
+    .filter(v => v != null)
+    .reduce(
+      (a, b) => a + b,
+      0
+    ) * 0.036;
 
 const solarPercentPossible =
-  potentialSolarEnergyToday > 0
+  potentialSolarEnergyToNow > 0
     ? Math.min(
         100,
-        (solarEnergyToday /
-         potentialSolarEnergyToday) * 100
+        100 *
+        solarEnergyToday /
+        potentialSolarEnergyToNow
       )
     : 0;
 
