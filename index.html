@@ -1250,14 +1250,17 @@ else
   ){
     type = "Altostratus";
   }
-  else if(
-    avgEventDuration < 20
-  ){
-    type = "Cumulus";
-  }
-  else{
-    type = "Stratocumulus";
-  }
+else if(
+  avgEventDuration < 20
+){
+  type = "Cumulus";
+}
+else{
+  type =
+    rainRate > 0
+      ? "Cumulus"
+      : "Stratocumulus";
+}
 
   if(
     mean < 0.40 &&
