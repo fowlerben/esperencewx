@@ -1162,6 +1162,9 @@ function analyseClouds(
   const peakTransmission =
   Math.max(...ratios);
 
+const minTransmission =
+  Math.min(...ratios);
+
   let durations = [];
   let current = 0;
 
@@ -1251,15 +1254,15 @@ else
     type = "Altostratus";
   }
 else if(
-  avgEventDuration < 20
+  rainRate > 0 ||
+  avgEventDuration < 20 ||
+  mean > 0.40 ||
+  minTransmission < 0.15
 ){
   type = "Cumulus";
 }
 else{
-  type =
-    rainRate > 0
-      ? "Cumulus"
-      : "Stratocumulus";
+  type = "Stratocumulus";
 }
 
   if(
