@@ -573,6 +573,23 @@
 
 </div>
 
+<div
+  class="card"
+  style="
+    margin-top:10px;
+    overflow-x:auto;
+  "
+>
+
+  <div
+    id="cloudTypeTimeline"
+    style="
+      min-width:1200px;
+    "
+  ></div>
+
+</div>
+
 </div>
 
 <!-- RAIN -->
@@ -2786,6 +2803,24 @@ const cloudOkta =
   cloudHistory.map(
     r => r.okta
   );
+
+const cloudTypeColours = {
+
+  Clear:         "#22c55e",
+
+  Cirrus:        "#d8b4fe",
+  Cirrostratus:  "#a78bfa",
+
+  Altocumulus:   "#facc15",
+  Altostratus:   "#fb923c",
+
+  Cumulus:       "#93c5fd",
+  Stratocumulus: "#38bdf8",
+
+  Stratus:       "#2563eb",
+  Nimbostratus:  "#475569"
+
+};
   
 const chartThetaE = thetaeHistory.map(r => {
 
@@ -3830,6 +3865,111 @@ document.getElementById(
   (
   cloudAnalysis.variability ?? 0
 ).toFixed(2);
+
+const cloudTypes = [
+
+  "Clear",
+  "Cirrus",
+  "Cirrostratus",
+  "Altocumulus",
+  "Altostratus",
+  "Cumulus",
+  "Stratocumulus",
+  "Stratus",
+  "Nimbostratus"
+
+];
+
+const cloudTimeline =
+  document.getElementById(
+    "cloudTypeTimeline"
+  );
+
+if(cloudTimeline){
+
+  let html = "";
+
+  html += `
+  <div
+    style="
+      display:grid;
+      grid-template-columns:140px repeat(${cloudHistory.length}, 10px);
+      gap:1px;
+      align-items:center;
+      font-size:12px;
+    "
+  >
+  `;
+
+  html += "<div></div>";
+
+cloudHistory.forEach((r,i) => {
+
+  const t =
+    new Date(r.time * 1000);
+
+  const mins =
+    t.getMinutes();
+
+  html += `
+    <div
+      style="
+        writing-mode:vertical-rl;
+        transform:rotate(180deg);
+        font-size:9px;
+        color:#aaa;
+      "
+    >
+      ${
+        mins === 0
+          ? t.getHours()
+          : ""
+      }
+    </div>
+  `;
+
+});
+
+  cloudTypes.forEach(type => {
+
+    html += `
+      <div
+        style="
+          text-align:left;
+          padding-right:8px;
+          white-space:nowrap;
+        "
+      >
+        ${type}
+      </div>
+    `;
+
+    cloudHistory.forEach(r => {
+
+      html += `
+        <div
+          style="
+            width:10px;
+            height:16px;
+            background:
+              ${r.type === type
+                ? cloudTypeColours[type]
+                : "transparent"};
+            border-radius:2px;
+          "
+        ></div>
+      `;
+
+    });
+
+  });
+
+  html += "</div>";
+
+  cloudTimeline.innerHTML =
+    html;
+
+}
   
 // RAIN
 rain_rate.innerText=iss.rain_rate_last_mm;
