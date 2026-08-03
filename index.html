@@ -2833,10 +2833,17 @@ const cloudLabels =
   );
 
 const cloudOkta =
-  cloudHistory.map(
-    r => r.okta
-  );
+  cloudHistory.map(r => {
 
+    if (
+      r.sky === "Unknown"
+    ) {
+      return null;
+    }
+
+    return r.okta;
+
+  });
 const cloudTypeColours = {
 
   Clear:         "#22c55e",
