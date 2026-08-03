@@ -3671,7 +3671,7 @@ const potentialSolarEnergyToNow =
     .reduce(
       (a, b) => a + b,
       0
-    ) * 0.036;
+    ) * 300 / 1000000;
 
 const solarPercentPossible =
   potentialSolarEnergyToNow > 0
