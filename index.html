@@ -4025,22 +4025,34 @@ cloudHistory.forEach((r,i) => {
       </div>
     `;
 
-    cloudHistory.forEach((r, i) => {
+cloudHistory.forEach((r, i) => {
 
-      html += `
-        <div
-          style="
-            height:16px;
-            background:
-              ${r.type === type
-                ? cloudTypeColours[type]
-                : "transparent"};
-            border-radius:2px;
-          "
-        ></div>
-      `;
+  const timeString =
+    new Date(r.time * 1000)
+      .toLocaleTimeString(
+        "en-AU",
+        {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false
+        }
+      );
 
-    });
+  html += `
+    <div
+      title="${timeString} - ${r.sky}"
+      style="
+        height:16px;
+        background:
+          ${r.type === type
+            ? cloudTypeColours[type]
+            : "transparent"};
+        border-radius:2px;
+      "
+    ></div>
+  `;
+
+});
 
   });
 
