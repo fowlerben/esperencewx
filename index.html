@@ -3989,7 +3989,7 @@ if(cloudTimeline){
     style="
       display:grid;
       grid-template-columns:
-        100px repeat(${cloudHistory.length}, 1fr);
+        0px repeat(${cloudHistory.length}, 1fr);
       gap:1px;
       align-items:center;
       font-size:12px;
@@ -4031,9 +4031,11 @@ cloudHistory.forEach((r,i) => {
     html += `
       <div
         style="
+          width:0;
+          overflow:visible;
           text-align:left;
-          padding-right:8px;
           white-space:nowrap;
+          transform:translateX(-65px);
         "
       >
         ${type}
