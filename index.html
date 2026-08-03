@@ -1205,29 +1205,6 @@ function analyseClouds(
     };
   }
 
-function coverageToOkta(coverage){
-
-  switch(coverage){
-
-    case "Few":
-      return 1.5;
-
-    case "Scattered":
-      return 3.5;
-
-    case "Broken":
-      return 6;
-
-    case "Overcast":
-      return 8;
-
-    default:
-      return 0;
-
-  }
-
-}
-
   if(
     mean > 0.90 &&
     variability < 0.05
@@ -1291,6 +1268,29 @@ function coverageToOkta(coverage){
     avgEventDuration,
     sky:`${coverage} ${type}`
   };
+
+}
+
+function coverageToOkta(coverage){
+
+  switch(coverage){
+
+    case "Few":
+      return 1.5;
+
+    case "Scattered":
+      return 3.5;
+
+    case "Broken":
+      return 6;
+
+    case "Overcast":
+      return 8;
+
+    default:
+      return 0;
+
+  }
 
 }
 
