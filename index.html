@@ -1196,8 +1196,6 @@ const minTransmission =
         ) / durations.length
       : 0;
 
-  let coverage;
-
 let coverage;
 
 if(cloudyFraction < 0.10)
@@ -2784,7 +2782,7 @@ const pulseEvents =
         (r.solar_rad_hi - r.solar_rad_avg)
         / r.solar_rad_hi;
 
-      return pulseRatio > 0.05;
+      return pulseRatio > 0.08;
 
     }).length;
 
