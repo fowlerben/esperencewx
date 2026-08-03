@@ -3665,6 +3665,21 @@ const solarEnergyToday =
       0
     ) * 0.036;
 
+const potentialSolarEnergyToday =
+  chartPotentialSolar.reduce(
+    (a, b) => a + (b ?? 0),
+    0
+  ) * 0.018;
+
+const solarPercentPossible =
+  potentialSolarEnergyToday > 0
+    ? Math.min(
+        100,
+        (solarEnergyToday /
+         potentialSolarEnergyToday) * 100
+      )
+    : 0;
+
 const uvDoseToday =
   solarHistory
     .map(r => r.uv_dose)
@@ -3753,9 +3768,16 @@ uv.innerText =
 
 document.getElementById(
   "solarEnergyDay"
-).innerText =
+).innerHTML =
   solarEnergyToday.toFixed(2) +
-  " MJ/m²";
+  " MJ/m²" +
+
+  "<br>" +
+
+  "<span style='font-size:12px;opacity:0.8;'>" +
+  solarPercentPossible.toFixed(0) +
+  "% of possible" +
+  "</span>";
 
 document.getElementById(
   "uvDoseDay"
