@@ -577,15 +577,11 @@
   class="card"
   style="
     margin-top:10px;
-    overflow-x:auto;
   "
 >
 
   <div
     id="cloudTypeTimeline"
-    style="
-      min-width:1200px;
-    "
   ></div>
 
 </div>
@@ -3893,7 +3889,8 @@ if(cloudTimeline){
   <div
     style="
       display:grid;
-      grid-template-columns:140px repeat(${cloudHistory.length}, 10px);
+      grid-template-columns:
+        100px repeat(${cloudHistory.length}, 1fr);
       gap:1px;
       align-items:center;
       font-size:12px;
@@ -3944,12 +3941,11 @@ cloudHistory.forEach((r,i) => {
       </div>
     `;
 
-    cloudHistory.forEach(r => {
+    cloudHistory.forEach((r, i) => {
 
       html += `
         <div
           style="
-            width:10px;
             height:16px;
             background:
               ${r.type === type
