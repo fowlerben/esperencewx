@@ -2803,7 +2803,7 @@ const pulseEvents =
         (r.solar_rad_hi - r.solar_rad_avg)
         / r.solar_rad_hi;
 
-      return pulseRatio > 0.08;
+      return pulseRatio > 0.25;
 
     }).length;
 
@@ -5069,10 +5069,10 @@ if (!solarChart) {
     chartSolar;
   
   solarChart.data.datasets[1].data =
-    chartSolarHi;
+    chartPotentialSolar;
   
   solarChart.data.datasets[2].data =
-    chartPotentialSolar;
+    chartSolarHi;
   
   solarChart.data.datasets[3].data =
     chartUV;
