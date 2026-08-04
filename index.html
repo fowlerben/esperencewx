@@ -3500,7 +3500,7 @@ const pulseEvents =
       (r.solar_rad_hi - r.solar_rad_avg)
       / r.solar_rad_hi;
 
-    return pulseRatio > 0.05;
+    return pulseRatio > 0.25;
 
   }).length;
 
@@ -3513,6 +3513,37 @@ cloudAnalysis =
   );
 
 }
+
+const typeCode = {
+
+  Cirrus: "CI",
+  Cirrostratus: "CS",
+
+  Altocumulus: "AC",
+  Altostratus: "AS",
+
+  Cumulus: "CU",
+  Stratocumulus: "SC",
+
+  Stratus: "ST",
+  Nimbostratus: "NS"
+
+};
+
+const coverageCode = {
+  Few: "FEW",
+  Scattered: "SCT",
+  Broken: "BKN",
+  Overcast: "OVC"
+};
+
+const cloudCode =
+  coverageCode[cloudAnalysis.coverage] &&
+  typeCode[cloudAnalysis.type]
+    ? coverageCode[cloudAnalysis.coverage] +
+      typeCode[cloudAnalysis.type]
+    : "";
+
 
 document.getElementById("sunrise").innerText =
   formatHour(sun.sunrise);
@@ -4577,6 +4608,7 @@ const metarText =
   "G" +
   String(gustWindKt).padStart(2, "0") +
   "KT " +
+  (cloudCode ? cloudCode + " " : "") +
   (rainCode ? rainCode + " " : "") +
   Math.round(tempC) +
   "/" +
