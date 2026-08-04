@@ -3541,6 +3541,7 @@ const cloudCode =
   coverageCode[cloudAnalysis.coverage] &&
   typeCode[cloudAnalysis.type]
     ? coverageCode[cloudAnalysis.coverage] +
+      " " +
       typeCode[cloudAnalysis.type]
     : "";
 
@@ -4012,8 +4013,8 @@ const cloudTypes = [
   "Cirrostratus",
   "Altocumulus",
   "Altostratus",
-  "Cumulus",
   "Stratocumulus",
+  "Cumulus",
   "Stratus",
   "Nimbostratus"
 
