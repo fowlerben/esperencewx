@@ -1173,6 +1173,15 @@ function analyseClouds(
 const minTransmission =
   Math.min(...ratios);
 
+const cloudyRatios =
+  ratios.filter(r => r < 0.95);
+
+const cloudTransmission =
+  cloudyRatios.length > 0
+    ? cloudyRatios.reduce((a,b) => a + b, 0) /
+      cloudyRatios.length
+    : 1;
+
   let durations = [];
   let current = 0;
 
@@ -1266,8 +1275,7 @@ else
 else if(
   rainRate > 0 ||
   avgEventDuration < 20 ||
-  mean > 0.40 ||
-  minTransmission < 0.15
+  cloudTransmission < 0.35
 ){
   type = "Cumulus";
 }
