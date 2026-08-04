@@ -2752,6 +2752,11 @@ const chartSolar =
     r => r.solar_rad_avg ?? null
   );
 
+const chartSolarHi =
+  solarHistory.map(
+    r => r.solar_rad_hi ?? null
+  );
+
 const chartPotentialSolar =
   solarHistory.map(
     r =>
@@ -4925,6 +4930,30 @@ if (!solarChart) {
                 "y"
             },
 
+                      {
+  type: "line",
+
+  label:
+    "Solar Max",
+
+  data:
+    chartSolarHi,
+
+  borderColor:
+    "#ff6b6b",
+
+  borderWidth: 1,
+
+  fill: false,
+
+  tension: 0.2,
+
+  pointRadius: 0,
+
+  yAxisID:
+    "y"
+},
+
             {
               type: "line",
 
@@ -5032,9 +5061,12 @@ if (!solarChart) {
     chartSolar;
   
   solarChart.data.datasets[1].data =
-    chartPotentialSolar;
+    chartSolarHi;
   
   solarChart.data.datasets[2].data =
+    chartPotentialSolar;
+  
+  solarChart.data.datasets[3].data =
     chartUV;
     solarChart.update();
 
