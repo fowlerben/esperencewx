@@ -4569,9 +4569,46 @@ if (
 document.getElementById("surfaceState").innerText =
   surfaceState;
 
+// Detect non-rainfall daytime wetting
+
+const oneHourAgo =
+  latestHistory.time - 3600;
+
+const lastHourRecords =
+  history.filter(
+    r => r.time >= oneHourAgo
+  );
+
+const noRainLastHour =
+  (iss.rainfall_last_60_min_mm ?? 0) === 0;
+
+const leafValuesLastHour =
+  lastHourRecords
+    .map(r => r.leaf)
+    .filter(v => v != null);
+
+const wasDry =
+  leafValuesLastHour.length > 0 &&
+  Math.min(...leafValuesLastHour) < 5;
+
+const nowWet =
+  (leafValue ?? 0) > 10;
+
+const daytimeLeafDrizzle =
+  currentHour >= 10 &&
+  currentHour < 18 &&
+  noRainLastHour &&
+  wasDry &&
+  nowWet;
+
 let rainCode = "";
 
-if (
+if (daytimeLeafDrizzle) {
+
+  rainCode = "-DZ";
+
+}
+else if (
   rainLast30Min > 0 &&
   rainRate <= 0
 ) {
