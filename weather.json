@@ -111,23 +111,23 @@
           "firmware_version": 1636079858,
           "tz_offset": 36000,
           "local_api_queries": 3123,
-          "rx_bytes": 725879,
+          "rx_bytes": 726342,
           "health_version": 1,
           "radio_version": 654705920,
           "ip_address_type": 1,
-          "link_uptime": 557558,
-          "input_voltage": 4562,
-          "tx_bytes": 19186905,
+          "link_uptime": 558458,
+          "input_voltage": 4556,
+          "tx_bytes": 19192229,
           "ip_v4_netmask": "255.255.255.0",
           "rapid_records_sent": 180561,
-          "uptime": 24967412,
-          "touchpad_wakeups": 34,
+          "uptime": 24968312,
+          "touchpad_wakeups": 19,
           "ip_v4_address": "192.168.1.100",
           "bootloader_version": 1550707628,
           "espressif_version": 1534381024,
           "dns_type_used": null,
           "network_type": 1,
-          "ts": 1785990600
+          "ts": 1785991500
         }
       ],
       "sensor_type": 504,
@@ -315,6 +315,6 @@
       "data_structure_type": 18
     }
   ],
-  "generated_at": 1785991259,
+  "generated_at": 1785991564,
   "station_id": 144429
 }
