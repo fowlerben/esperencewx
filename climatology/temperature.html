@@ -131,22 +131,28 @@ a:hover{
     </div>
 
     <div>
-      <label>Month</label><br>
-      <select id="period">
-        <option>All Months</option>
-        <option>January</option>
-        <option>February</option>
-        <option>March</option>
-        <option>April</option>
-        <option>May</option>
-        <option>June</option>
-        <option>July</option>
-        <option>August</option>
-        <option>September</option>
-        <option>October</option>
-        <option>November</option>
-        <option>December</option>
-      </select>
+<select id="month">
+  <option>All Months</option>
+  <option>January</option>
+  <option>February</option>
+  <option>March</option>
+  <option>April</option>
+  <option>May</option>
+  <option>June</option>
+  <option>July</option>
+  <option>August</option>
+  <option>September</option>
+  <option>October</option>
+  <option>November</option>
+  <option>December</option>
+
+  <option>──────────</option>
+
+  <option>Summer</option>
+  <option>Autumn</option>
+  <option>Winter</option>
+  <option>Spring</option>
+</select>
     </div>
 
     <div>
@@ -214,9 +220,9 @@ document.getElementById("generateBtn").addEventListener("click", () => {
   const aggregation =
     document.getElementById("aggregation").value;
 
-  const period =
-    document.getElementById("period").value;
-
+  const month =
+    document.getElementById("month").value;
+  
   const years =
     document.getElementById("years").value;
 
@@ -233,7 +239,7 @@ document.getElementById("generateBtn").addEventListener("click", () => {
 
       <p><strong>Aggregation:</strong> ${aggregation}</p>
 
-      <p><strong>Period:</strong> ${period}</p>
+      <p><strong>Month:</strong> ${month}</p>
 
       <p><strong>Years:</strong> ${years}</p>
 
