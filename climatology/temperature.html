@@ -69,9 +69,9 @@ a:hover{
 
 </style>
 
-</head>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
 
 <body>
 
@@ -380,15 +380,6 @@ function updatePreview() {
     <br>
     Using ${years}
   `;
-if (chartType === "Histogram") {
-
-  drawHistogram(
-    values,
-    variable,
-    config.unit
-  );
-
-}
 
 }
 
@@ -577,21 +568,15 @@ const maximum =
     document.getElementById("yearsAnalysed").textContent =
       "2025-2026";
 
-    document.getElementById("chartOutput").innerHTML = `
-      <div style="text-align:left;">
+if (chartType === "Histogram") {
 
-        <h3>${selectedMonth} ${variable} Statistics</h3>
+  drawHistogram(
+    values,
+    variable,
+    config.unit
+  );
 
-        <p><strong>Records Used:</strong> ${count.toLocaleString()}</p>
-
-        <p><strong>Mean:</strong> ${mean.toFixed(1)} ${config.unit}</p>
-
-        <p><strong>Minimum:</strong> ${minimum.toFixed(1)} ${config.unit}</p>
-
-        <p><strong>Maximum:</strong> ${maximum.toFixed(1)} ${config.unit}</p>
-
-      </div>
-    `;
+}
 
   } catch (error) {
 
