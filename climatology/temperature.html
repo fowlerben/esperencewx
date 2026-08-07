@@ -250,8 +250,8 @@ document.getElementById("generateBtn").addEventListener("click", () => {
   const chartType =
     document.getElementById("chartType").value;
 
- const analysisTitle =
-  `${month} ${statistic} ${variable} ${chartType}`;
+const analysisTitle =
+  `${month} ${statistic} ${variable}`;
 
 document.getElementById("chartOutput").innerHTML = `
   <div style="text-align:left;">
@@ -259,11 +259,37 @@ document.getElementById("chartOutput").innerHTML = `
     <h3>${analysisTitle}</h3>
 
     <p>
-      Using ${years}
+      <strong>Chart Type:</strong> ${chartType}
     </p>
 
     <p>
-      Aggregation: ${aggregation}
+      <strong>Aggregation:</strong> ${aggregation}
+    </p>
+
+    <p>
+      <strong>Years:</strong> ${years}
+    </p>
+
+    <hr>
+
+    <p>
+      <strong>Records Used:</strong> --
+    </p>
+
+    <p>
+      <strong>Mean:</strong> --
+    </p>
+
+    <p>
+      <strong>Median:</strong> --
+    </p>
+
+    <p>
+      <strong>Minimum:</strong> --
+    </p>
+
+    <p>
+      <strong>Maximum:</strong> --
     </p>
 
   </div>
