@@ -110,6 +110,16 @@ a:hover{
     </div>
 
     <div>
+  <label>Statistic</label><br>
+  <select id="statistic">
+    <option>Observed Value</option>
+    <option>Daily Maximum</option>
+    <option>Daily Minimum</option>
+    <option>Daily Mean</option>
+  </select>
+</div>
+
+    <div>
       <label>Aggregation</label><br>
       <select id="aggregation">
         <option>Hourly</option>
@@ -121,9 +131,9 @@ a:hover{
     </div>
 
     <div>
-      <label>Period</label><br>
+      <label>Month</label><br>
       <select id="period">
-        <option>All Data</option>
+        <option>All Months</option>
         <option>January</option>
         <option>February</option>
         <option>March</option>
@@ -198,6 +208,9 @@ document.getElementById("generateBtn").addEventListener("click", () => {
   const variable =
     document.getElementById("variable").value;
 
+  const statistic =
+  document.getElementById("statistic").value;
+
   const aggregation =
     document.getElementById("aggregation").value;
 
@@ -215,6 +228,8 @@ document.getElementById("generateBtn").addEventListener("click", () => {
       <h3>Selected Analysis</h3>
 
       <p><strong>Variable:</strong> ${variable}</p>
+
+      <p><strong>Statistic:</strong> ${statistic}</p>
 
       <p><strong>Aggregation:</strong> ${aggregation}</p>
 
