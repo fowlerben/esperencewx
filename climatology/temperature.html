@@ -130,8 +130,9 @@ a:hover{
       </select>
     </div>
 
-    <div>
-<select id="month">
+<div>
+  <label>Month</label><br>
+  <select id="month">
   <option>All Months</option>
   <option>January</option>
   <option>February</option>
@@ -194,11 +195,31 @@ a:hover{
 
 <div class="card">
 
+  <h2>Dataset Summary</h2>
+
+  <p>
+    <strong>Records Available:</strong>
+    <span id="recordCount">Not yet calculated</span>
+  </p>
+
+  <p>
+    <strong>Date Range:</strong>
+    <span id="dateRange">Not yet calculated</span>
+  </p>
+
+  <p>
+    <strong>Years Analysed:</strong>
+    <span id="yearsAnalysed">Not yet calculated</span>
+  </p>
+
+</div>
+
+<div class="card">
+
   <h2>Available Analyses</h2>
 
   <ul>
     <li>Monthly Tmax Boxplots</li>
-    <li>Monthly Tmin 
     <li>Monthly Tmin Boxplots</li>
     <li>Hourly Temperature Distributions</li>
     <li>Extreme Temperature Statistics</li>
