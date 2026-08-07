@@ -1,19 +1,123 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <title>Wind Climatology</title>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Wind Climatology</title>
+
+<style>
+
+body{
+  font-family:Arial,sans-serif;
+  background:#1e1e1e;
+  color:#ffffff;
+  max-width:1200px;
+  margin:auto;
+  padding:20px;
+}
+
+.card{
+  background:#2d2d2d;
+  border-radius:8px;
+  padding:20px;
+  margin-bottom:20px;
+}
+
+h1,h2,h3{
+  margin-top:0;
+}
+
+select{
+  padding:6px;
+  margin:5px;
+}
+
+button{
+  padding:8px 16px;
+  cursor:pointer;
+}
+
+.control-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+}
+
+.chart-placeholder{
+  height:400px;
+  border:2px dashed #666;
+  border-radius:8px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:#aaa;
+  margin-top:20px;
+}
+
+a{
+  color:#a0c4ff;
+  text-decoration:none;
+}
+
+a:hover{
+  text-decoration:underline;
+}
+
+</style>
+
 </head>
+
 <body>
 
-<h1>Wind Climatology</h1>
+<div class="card">
 
-<p>
-  ../climatology.html
-    Climate Dashboard
-  </a>
-</p>
+  ../index.htmlDashboard</a> |
+  ../monthly_observations.htmlMonthly Summary</a> |
+  ../daily_statistics.htmlDaily Statistics</a> |
+  ../climatology.htmlClimate Dashboard</a>
 
-<p>Coming Soon</p>
+</div>
 
-</body>
-</html>
+<div class="card">
+
+  <h1>Wind Climatology</h1>
+
+</div>
+
+<div class="card">
+
+  <h2>Climate Explorer</h2>
+
+  <div class="control-row">
+
+    <div>
+      <label>Variable</label><br>
+      <select id="variable">
+        <option>Wind Speed</option>
+        <option>Wind Gust</option>
+        <option>Gust Factor</option>
+        <option>Wind Direction</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Aggregation</label><br>
+      <select id="aggregation">
+        <option>Hourly</option>
+        <option>Daily</option>
+        <option>Monthly</option>
+        <option>Seasonal</option>
+        <option>Annual</option>
+        <option>Direction</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Period</label><br>
+      <select id="period">
+        <option>All Data</option>
+        <option>Summer</
