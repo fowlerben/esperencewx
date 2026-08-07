@@ -166,9 +166,9 @@ a:hover{
     Generate
   </button>
 
-  <div class="chart-placeholder">
-    Chart output will appear here
-  </div>
+<div class="chart-placeholder" id="chartOutput">
+  Select options and click Generate.
+</div>
   
   <p style="margin-top:15px;color:#aaa;">
     Climate Explorer functionality coming soon.
@@ -183,3 +183,52 @@ a:hover{
   <ul>
     <li>Monthly Tmax Boxplots</li>
     <li>Monthly Tmin 
+    <li>Monthly Tmin Boxplots</li>
+    <li>Hourly Temperature Distributions</li>
+    <li>Extreme Temperature Statistics</li>
+    <li>Temperature Range Climatology</li>
+  </ul>
+
+</div>
+
+<script>
+
+document.getElementById("generateBtn").addEventListener("click", () => {
+
+  const variable =
+    document.getElementById("variable").value;
+
+  const aggregation =
+    document.getElementById("aggregation").value;
+
+  const period =
+    document.getElementById("period").value;
+
+  const years =
+    document.getElementById("years").value;
+
+  const chartType =
+    document.getElementById("chartType").value;
+
+  document.getElementById("chartOutput").innerHTML = `
+    <div style="text-align:left;">
+      <h3>Selected Analysis</h3>
+
+      <p><strong>Variable:</strong> ${variable}</p>
+
+      <p><strong>Aggregation:</strong> ${aggregation}</p>
+
+      <p><strong>Period:</strong> ${period}</p>
+
+      <p><strong>Years:</strong> ${years}</p>
+
+      <p><strong>Chart Type:</strong> ${chartType}</p>
+    </div>
+  `;
+
+});
+
+</script>
+
+</body>
+</html>
