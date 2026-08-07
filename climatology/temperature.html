@@ -179,9 +179,7 @@ a:hover{
 
   <br>
 
-  <button id="generateBtn">
-    Generate
-  </button>
+<h3>Analysis Results</h3>
 
 <div class="chart-placeholder" id="chartOutput">
   Select options and click Generate.
@@ -240,71 +238,6 @@ a:hover{
 
 <script>
 
-document.getElementById("generateBtn").addEventListener("click", () => {
-
-  const variable =
-    document.getElementById("variable").value;
-
-  const statistic =
-  document.getElementById("statistic").value;
-
-  const aggregation =
-    document.getElementById("aggregation").value;
-
-  const month =
-    document.getElementById("month").value;
-  
-  const years =
-    document.getElementById("years").value;
-
-  const chartType =
-    document.getElementById("chartType").value;
-
-const analysisTitle =
-  `${month} ${statistic} ${variable}`;
-
-document.getElementById("chartOutput").innerHTML = `
-  <div style="text-align:left;">
-
-    <h3>${analysisTitle}</h3>
-
-    <p>
-      <strong>Chart Type:</strong> ${chartType}
-    </p>
-
-    <p>
-      <strong>Aggregation:</strong> ${aggregation}
-    </p>
-
-    <p>
-      <strong>Years:</strong> ${years}
-    </p>
-
-    <hr>
-
-    <p>
-      <strong>Records Used:</strong> --
-    </p>
-
-    <p>
-      <strong>Mean:</strong> --
-    </p>
-
-    <p>
-      <strong>Median:</strong> --
-    </p>
-
-    <p>
-      <strong>Minimum:</strong> --
-    </p>
-
-    <p>
-      <strong>Maximum:</strong> --
-    </p>
-
-  </div>
-`;
-});
 function updateControls() {
 
   const aggregation =
@@ -354,6 +287,43 @@ function updatePreview() {
     <br>
     Using ${years}
   `;
+  document.getElementById("chartOutput").innerHTML = `
+  <div style="text-align:left;">
+
+    <h3>${title}</h3>
+
+    <p>
+      <strong>Chart Type:</strong> ${chartType}
+    </p>
+
+    <p>
+      <strong>Years:</strong> ${years}
+    </p>
+
+    <hr>
+
+    <p>
+      <strong>Records Used:</strong> --
+    </p>
+
+    <p>
+      <strong>Mean:</strong> --
+    </p>
+
+    <p>
+      <strong>Median:</strong> --
+    </p>
+
+    <p>
+      <strong>Minimum:</strong> --
+    </p>
+
+    <p>
+      <strong>Maximum:</strong> --
+    </p>
+
+  </div>
+`;
 
 }
 
