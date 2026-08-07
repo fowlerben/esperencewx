@@ -195,6 +195,16 @@ a:hover{
 
 <div class="card">
 
+  <h2>Analysis Preview</h2>
+
+  <p id="analysisPreview">
+    Select options to begin.
+  </p>
+
+</div>
+
+<div class="card">
+
   <h2>Dataset Summary</h2>
 
   <p>
@@ -313,13 +323,66 @@ function updateControls() {
 
   }
 
+  updatePreview();
+
+}
+
+function updatePreview() {
+
+  const variable =
+    document.getElementById("variable").value;
+
+  const statistic =
+    document.getElementById("statistic").value;
+
+  const month =
+    document.getElementById("month").value;
+
+  const years =
+    document.getElementById("years").value;
+
+  const chartType =
+    document.getElementById("chartType").value;
+
+  let title =
+    `${month} ${statistic} ${variable}`;
+
+  document.getElementById("analysisPreview").innerHTML = `
+    <strong>${title}</strong>
+    <br><br>
+    ${chartType}
+    <br>
+    Using ${years}
+  `;
+
 }
 
 document
   .getElementById("aggregation")
   .addEventListener("change", updateControls);
 
+document
+  .getElementById("variable")
+  .addEventListener("change", updatePreview);
+
+document
+  .getElementById("statistic")
+  .addEventListener("change", updatePreview);
+
+document
+  .getElementById("month")
+  .addEventListener("change", updatePreview);
+
+document
+  .getElementById("years")
+  .addEventListener("change", updatePreview);
+
+document
+  .getElementById("chartType")
+  .addEventListener("change", updatePreview);
+
 updateControls();
+updatePreview();
 </script>
 
 </body>
