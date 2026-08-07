@@ -250,24 +250,24 @@ document.getElementById("generateBtn").addEventListener("click", () => {
   const chartType =
     document.getElementById("chartType").value;
 
-  document.getElementById("chartOutput").innerHTML = `
-    <div style="text-align:left;">
-      <h3>Selected Analysis</h3>
+ const analysisTitle =
+  `${month} ${statistic} ${variable} ${chartType}`;
 
-      <p><strong>Variable:</strong> ${variable}</p>
+document.getElementById("chartOutput").innerHTML = `
+  <div style="text-align:left;">
 
-      <p><strong>Statistic:</strong> ${statistic}</p>
+    <h3>${analysisTitle}</h3>
 
-      <p><strong>Aggregation:</strong> ${aggregation}</p>
+    <p>
+      Using ${years}
+    </p>
 
-      <p><strong>Month:</strong> ${month}</p>
+    <p>
+      Aggregation: ${aggregation}
+    </p>
 
-      <p><strong>Years:</strong> ${years}</p>
-
-      <p><strong>Chart Type:</strong> ${chartType}</p>
-    </div>
-  `;
-
+  </div>
+`;
 });
 
 </script>
