@@ -130,7 +130,7 @@ a:hover{
       </select>
     </div>
 
-<div>
+<div id="monthContainer">
   <label>Month</label><br>
   <select id="month">
   <option>All Months</option>
@@ -295,7 +295,31 @@ document.getElementById("chartOutput").innerHTML = `
   </div>
 `;
 });
+function updateControls() {
 
+  const aggregation =
+    document.getElementById("aggregation").value;
+
+  const monthContainer =
+    document.getElementById("monthContainer");
+
+  if (aggregation === "Annual") {
+
+    monthContainer.style.display = "none";
+
+  } else {
+
+    monthContainer.style.display = "block";
+
+  }
+
+}
+
+document
+  .getElementById("aggregation")
+  .addEventListener("change", updateControls);
+
+updateControls();
 </script>
 
 </body>
