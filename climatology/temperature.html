@@ -113,8 +113,92 @@ Ready.
 
 <script>
 
-// JavaScript goes here
+const variableMap = {
+  "Temperature": "temp_last",
+  "Dew Point": "dew_point_last",
+  "Humidity": "hum_last"
+};
 
+const monthNames = [
+  "Jan","Feb","Mar","Apr","May","Jun",
+  "Jul","Aug","Sep","Oct","Nov","Dec"
+];
+
+function buildArchiveList() {
+
+  const files = [];
+
+  const currentYear =
+    new Date().getFullYear();
+
+  for (let year = 2025; year <= currentYear; year++) {
+
+    for (let month = 1; month <= 12; month++) {
+
+      const mm =
+        String(month).padStart(2, "0");
+
+      files.push(
+        `../archives/${year}/${mm}.json`
+      );
+
+    }
+
+  }
+
+  return files;
+
+}
+
+async function loadAllRecords() {
+
+  const allRecords = [];
+
+  const files =
+    buildArchiveList();
+
+  for (const file of files) {
+
+    try {
+
+      const response =
+        await fetch(file);
+
+      if (!response.ok) {
+        continue;
+      }
+
+      const data =
+        await response.json();
+
+      allRecords.push(...data);
+
+    } catch {
+
+      continue;
+
+    }
+
+  }
+
+  return allRecords;
+
+}
+
+async function testLoad() {
+
+  const records =
+    await loadAllRecords();
+
+  document.getElementById("output").innerHTML =
+    `Loaded ${records.length} records`;
+
+}
+
+document
+  .getElementById("generateButton")
+  .addEventListener("click", testLoad);
+  
 </script>
 
 </body>
