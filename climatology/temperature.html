@@ -327,6 +327,36 @@ function updatePreview() {
 
 }
 
+async function loadTestData() {
+
+  try {
+
+    const response =
+      await fetch("../archives/2026/07.json");
+
+    const data =
+      await response.json();
+
+    document.getElementById("recordCount").textContent =
+      data.length;
+
+    document.getElementById("dateRange").textContent =
+      "2026/07 loaded successfully";
+
+    document.getElementById("yearsAnalysed").textContent =
+      "1";
+
+  } catch (error) {
+
+    document.getElementById("dateRange").textContent =
+      "Error loading archive";
+
+    console.error(error);
+
+  }
+
+}
+
 document
   .getElementById("aggregation")
   .addEventListener("change", updateControls);
@@ -353,6 +383,9 @@ document
 
 updateControls();
 updatePreview();
+
+loadTestData();
+
 </script>
 
 </body>
