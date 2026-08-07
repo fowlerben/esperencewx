@@ -87,8 +87,8 @@ a:hover{
   <h1>Temperature Climatology</h1>
 
   <p>
-    Explore temperature, dew point, humidity and pressure statistics
-    across different timescales and archive periods.
+    Explore temperature, dew point, humidity and related thermal
+    statistics across different timescales and archive periods.
   </p>
 
 </div>
@@ -105,7 +105,6 @@ a:hover{
         <option>Temperature</option>
         <option>Dew Point</option>
         <option>Humidity</option>
-        <option>Pressure</option>
       </select>
     </div>
 
@@ -248,6 +247,16 @@ function FtoC(value) {
 
 }
 
+function inHgTohPa(value) {
+
+  if (value === null || value === undefined) {
+    return null;
+  }
+
+  return value * 33.8639;
+
+}
+
 const monthMap = {
   "January": "01",
   "February": "02",
@@ -262,6 +271,36 @@ const monthMap = {
   "November": "11",
   "December": "12"
 };
+
+const variableMap = {
+
+  "Temperature": {
+    "Observed Value": "temp_last",
+    "Daily Maximum": "temp_hi",
+    "Daily Minimum": "temp_lo",
+    "Daily Mean": "temp_avg",
+    unit: "°C",
+    convert: FtoC
+  },
+
+  "Dew Point": {
+    "Observed Value": "dew_point_last",
+    "Daily Maximum": "dew_point_hi",
+    "Daily Minimum": "dew_point_lo",
+    unit: "°C",
+    convert: FtoC
+  },
+
+  "Humidity": {
+    "Observed Value": "hum_last",
+    "Daily Maximum": "hum_hi",
+    "Daily Minimum": "hum_lo",
+    unit: "%",
+    convert: value => value
+  },
+
+};
+
 
 function buildArchiveList() {
 
@@ -307,7 +346,8 @@ function updateControls() {
 
   }
 
-  updatePreview();
+updatePreview();
+loadTemperatureData();
 
 }
 
@@ -419,22 +459,34 @@ for (const file of files) {
   }
 
 }
-    const temperatures =
-      allRecords
-        .map(record => FtoC(record.temp_last))
-        .filter(value => value !== null);
+const variable =
+  document.getElementById("variable").value;
 
-    const count =
-      temperatures.length;
+const statistic =
+  document.getElementById("statistic").value;
 
-    const mean =
-      temperatures.reduce((a, b) => a + b, 0) / count;
+const config =
+  variableMap[variable];
 
-    const minimum =
-      Math.min(...temperatures);
+const field =
+  config[statistic];
 
-    const maximum =
-      Math.max(...temperatures);
+const values =
+  allRecords
+    .map(record => config.convert(record[field]))
+    .filter(value => value !== null);
+
+const count =
+  values.length;
+
+const mean =
+  values.reduce((a, b) => a + b, 0) / count;
+
+const minimum =
+  Math.min(...values);
+
+const maximum =
+  Math.max(...values);
 
     document.getElementById("recordCount").textContent =
       count.toLocaleString();
@@ -448,15 +500,15 @@ for (const file of files) {
     document.getElementById("chartOutput").innerHTML = `
       <div style="text-align:left;">
 
-        <h3>${selectedMonth} Temperature Statistics</h3>
+        <h3>${selectedMonth} ${variable} Statistics</h3>
 
         <p><strong>Records Used:</strong> ${count.toLocaleString()}</p>
 
-        <p><strong>Mean:</strong> ${mean.toFixed(1)} °C</p>
+        <p><strong>Mean:</strong> ${mean.toFixed(1)} ${config.unit}</p>
 
-        <p><strong>Minimum:</strong> ${minimum.toFixed(1)} °C</p>
+        <p><strong>Minimum:</strong> ${minimum.toFixed(1)} ${config.unit}</p>
 
-        <p><strong>Maximum:</strong> ${maximum.toFixed(1)} °C</p>
+        <p><strong>Maximum:</strong> ${maximum.toFixed(1)} ${config.unit}</p>
 
       </div>
     `;
@@ -478,11 +530,21 @@ document
 
 document
   .getElementById("variable")
-  .addEventListener("change", updatePreview);
+  .addEventListener("change", () => {
+
+    updatePreview();
+    loadTemperatureData();
+
+  });
 
 document
   .getElementById("statistic")
-  .addEventListener("change", updatePreview);
+  .addEventListener("change", () => {
+
+    updatePreview();
+    loadTemperatureData();
+
+  });
 
 document
   .getElementById("month")
@@ -495,8 +557,12 @@ document
   
 document
   .getElementById("years")
-  .addEventListener("change", updatePreview);
+  .addEventListener("change", () => {
 
+    updatePreview();
+    loadTemperatureData();
+
+  });
 document
   .getElementById("chartType")
   .addEventListener("change", updatePreview);
