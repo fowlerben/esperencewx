@@ -41,6 +41,8 @@ button {
 
 </style>
 
+<script src="https://lotly-latest.min.jsscript>
+
 </head>
 
 <body>
@@ -105,9 +107,7 @@ Generate Box Plot
 
 <div class="card">
 
-<div id="output">
-Ready.
-</div>
+<div id="output" style="height:700px;"></div>
 
 </div>
 
@@ -187,39 +187,50 @@ async function loadAllRecords() {
 
 async function testLoad() {
 
-  const records =
-    await loadAllRecords();
+  const records = await loadAllRecords();
 
-  const monthCounts =
-    new Array(12).fill(0);
+  const variable =
+    document.getElementById("variable").value;
 
-  for (const record of records) {
+  const field =
+    variableMap[variable];
 
-    const date =
-      new Date(record.time * 1000);
+  const traces = [];
 
-    const month =
-      date.getMonth();
+  for (let month = 0; month < 12; month++) {
 
-    monthCounts[month]++;
+    const values =
+      records
+        .filter(record =>
+          new Date(record.time * 1000).getMonth() === month
+        )
+        .map(record => record[field])
+        .filter(value =>
+          value !== null &&
+          value !== undefined
+        );
+
+    traces.push({
+      type: "box",
+      name: monthNames[month],
+      y: values,
+      boxpoints: false
+    });
 
   }
 
-  let html = "";
-
-  for (let i = 0; i < 12; i++) {
-
-    html += `
-      <p>
-        ${monthNames[i]}:
-        ${monthCounts[i].toLocaleString()}
-      </p>
-    `;
-
-  }
-
-  document.getElementById("output").innerHTML =
-    html;
+  Plotly.newPlot(
+    "output",
+    traces,
+    {
+      title: `${variable} Monthly Climatology`,
+      paper_bgcolor: "#2d2d2d",
+      plot_bgcolor: "#2d2d2d",
+      font: {
+        color: "white"
+      }
+    }
+  );
 
 }
 
