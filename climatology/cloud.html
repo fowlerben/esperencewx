@@ -1,19 +1,188 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <title> Cloud Climatology</title>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cloud Climatology</title>
+
+<style>
+
+body{
+  font-family:Arial,sans-serif;
+  background:#1e1e1e;
+  color:#ffffff;
+  max-width:1200px;
+  margin:auto;
+  padding:20px;
+}
+
+.card{
+  background:#2d2d2d;
+  border-radius:8px;
+  padding:20px;
+  margin-bottom:20px;
+}
+
+h1,h2,h3{
+  margin-top:0;
+}
+
+select{
+  padding:6px;
+  margin:5px;
+}
+
+button{
+  padding:8px 16px;
+  cursor:pointer;
+}
+
+.control-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+}
+
+.chart-placeholder{
+  height:400px;
+  border:2px dashed #666;
+  border-radius:8px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:#aaa;
+  margin-top:20px;
+}
+
+a{
+  color:#a0c4ff;
+  text-decoration:none;
+}
+
+a:hover{
+  text-decoration:underline;
+}
+
+</style>
+
 </head>
+
 <body>
 
-<h1> Cloud Climatology</h1>
+<div class="card">
 
-<p>
-  ../climatology.html
-    Climate Dashboard
-  </a>
-</p>
+  ../index.htmlDashboard</a> |
+  ../monthly_observations.htmlMonthly Summary</a> |
+  ../daily_statistics.htmlDaily Statistics</a> |
+  ../climatology.htmlClimate Dashboard</a>
 
-<p>Coming Soon</p>
+</div>
+
+<div class="card">
+
+  <h1>Cloud Climatology</h1>
+
+  <p>
+    Explore cloud cover, sky condition and cloud type climatology
+    across different timescales and archive periods.
+  </p>
+
+</div>
+
+<div class="card">
+
+  <h2>Climate Explorer</h2>
+
+  <div class="control-row">
+
+    <div>
+      <label>Variable</label><br>
+      <select id="variable">
+        <option>Cloud Cover</option>
+        <option>Cloud Type</option>
+        <option>Sky Condition</option>
+        <option>Fog Events</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Aggregation</label><br>
+      <select id="aggregation">
+        <option>Hourly</option>
+        <option>Daily</option>
+        <option>Monthly</option>
+        <option>Seasonal</option>
+        <option>Annual</option>
+        <option>Month × Hour</option>
+      </select>
+
+    </div>
+
+    <div>
+      <label>Period</label><br>
+      <select id="period">
+        <option>All Data</option>
+        <option>Summer</option>
+        <option>Autumn</option>
+        <option>Winter</option>
+        <option>Spring</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Years</label><br>
+      <select id="years">
+        <option>All Years</option>
+        <option>2025</option>
+        <option>2026</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Chart Type</label><br>
+      <select id="chartType">
+        <option>Bar Chart</option>
+        <option>Heatmap</option>
+        <option>Box Plot</option>
+        <option>Histogram</option>
+        <option>Line Chart</option>
+      </select>
+    </div>
+
+  </div>
+
+  <br>
+
+  <button id="generateBtn">
+    Generate
+  </button>
+
+  <div class="chart-placeholder">
+    Chart output will appear here
+  </div>
+
+  <p style="margin-top:15px;color:#aaa;">
+    Climate Explorer functionality coming soon.
+  </p>
+
+</div>
+
+<div class="card">
+
+  <h2>Available Analyses</h2>
+
+  <ul>
+    <li>Cloud Type Frequencies</li>
+    <li>Sky Cover Climatology Heatmap</li>
+    <li>Seasonal Cloud Statistics</li>
+    <li>Fog Event Climatology</li>
+  </ul>
+
+</div>
 
 </body>
 </html>
