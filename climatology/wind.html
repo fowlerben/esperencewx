@@ -86,6 +86,11 @@ a:hover{
 
   <h1>Wind Climatology</h1>
 
+  <p>
+    Explore wind speed, wind gust, gust factor and directional
+    climatology across different timescales and archive periods.
+  </p>
+
 </div>
 
 <div class="card">
@@ -120,4 +125,63 @@ a:hover{
       <label>Period</label><br>
       <select id="period">
         <option>All Data</option>
-        <option>Summer</
+        <option>Summer</option>
+        <option>Autumn</option>
+        <option>Winter</option>
+        <option>Spring</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Years</label><br>
+      <select id="years">
+        <option>All Years</option>
+        <option>2025</option>
+        <option>2026</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Chart Type</label><br>
+      <select id="chartType">
+        <option>Wind Rose</option>
+        <option>Gust Factor Rose</option>
+        <option>Heatmap</option>
+        <option>Box Plot</option>
+        <option>Histogram</option>
+      </select>
+    </div>
+
+  </div>
+
+  <br>
+
+  <button id="generateBtn">
+    Generate
+  </button>
+
+  <div class="chart-placeholder">
+    Chart output will appear here
+  </div>
+
+  <p style="margin-top:15px;color:#aaa;">
+    Climate Explorer functionality coming soon.
+  </p>
+
+</div>
+
+<div class="card">
+
+  <h2>Available Analyses</h2>
+
+  <ul>
+    <li>Gust Factor Rose</li>
+    <li>Gust Factor Heatmap</li>
+    <li>Seasonal Wind Roses</li>
+    <li>Wind Direction Climatology</li>
+  </ul>
+
+</div>
+
+</body>
+</html>
