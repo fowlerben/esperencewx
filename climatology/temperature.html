@@ -248,6 +248,47 @@ function FtoC(value) {
 
 }
 
+const monthMap = {
+  "January": "01",
+  "February": "02",
+  "March": "03",
+  "April": "04",
+  "May": "05",
+  "June": "06",
+  "July": "07",
+  "August": "08",
+  "September": "09",
+  "October": "10",
+  "November": "11",
+  "December": "12"
+};
+
+function buildArchiveList() {
+
+  const files = [];
+
+  const currentYear =
+    new Date().getFullYear();
+
+  for (let year = 2025; year <= currentYear; year++) {
+
+    for (let month = 1; month <= 12; month++) {
+
+      const mm =
+        String(month).padStart(2, "0");
+
+      files.push(
+        `../archives/${year}/${mm}.json`
+      );
+
+    }
+
+  }
+
+  return files;
+
+}
+
 function updateControls() {
 
   const aggregation =
@@ -337,21 +378,52 @@ function updatePreview() {
 
 }
 
-async function loadTestData() {
+async function loadTemperatureData() {
+
+  try {
+
+    const selectedMonth =
+      document.getElementById("month").value;
+
+    const allRecords = [];
+
+const files = buildArchiveList();
+
+for (const file of files) {
 
   try {
 
     const response =
-      await fetch("../archives/2026/07.json");
+      await fetch(file);
+
+    if (!response.ok) {
+      continue;
+    }
 
     const data =
       await response.json();
 
+    if (
+      selectedMonth === "All Months" ||
+      file.includes(`/${monthMap[selectedMonth]}.json`)
+    ) {
+
+      allRecords.push(...data);
+
+    }
+
+  } catch {
+
+    continue;
+
+  }
+
+}
     const temperatures =
-      data
+      allRecords
         .map(record => FtoC(record.temp_last))
         .filter(value => value !== null);
-    
+
     const count =
       temperatures.length;
 
@@ -365,38 +437,26 @@ async function loadTestData() {
       Math.max(...temperatures);
 
     document.getElementById("recordCount").textContent =
-      count;
+      count.toLocaleString();
 
     document.getElementById("dateRange").textContent =
-      "July 2026";
+      selectedMonth;
 
     document.getElementById("yearsAnalysed").textContent =
-      "1";
+      "2025-2026";
 
     document.getElementById("chartOutput").innerHTML = `
       <div style="text-align:left;">
 
-        <h3>July 2026 Temperature Statistics</h3>
+        <h3>${selectedMonth} Temperature Statistics</h3>
 
-        <p>
-          <strong>Records Used:</strong>
-          ${count}
-        </p>
+        <p><strong>Records Used:</strong> ${count.toLocaleString()}</p>
 
-        <p>
-          <strong>Mean:</strong>
-          ${mean.toFixed(1)} °C
-        </p>
+        <p><strong>Mean:</strong> ${mean.toFixed(1)} °C</p>
 
-        <p>
-          <strong>Minimum:</strong>
-          ${minimum.toFixed(1)} °C
-        </p>
+        <p><strong>Minimum:</strong> ${minimum.toFixed(1)} °C</p>
 
-        <p>
-          <strong>Maximum:</strong>
-          ${maximum.toFixed(1)} °C
-        </p>
+        <p><strong>Maximum:</strong> ${maximum.toFixed(1)} °C</p>
 
       </div>
     `;
@@ -426,8 +486,13 @@ document
 
 document
   .getElementById("month")
-  .addEventListener("change", updatePreview);
+  .addEventListener("change", () => {
 
+    updatePreview();
+    loadTemperatureData();
+
+  });
+  
 document
   .getElementById("years")
   .addEventListener("change", updatePreview);
@@ -439,7 +504,7 @@ document
 updateControls();
 updatePreview();
 
-loadTestData();
+loadTemperatureData();
 
 </script>
 
