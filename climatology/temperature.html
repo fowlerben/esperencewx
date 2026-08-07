@@ -337,14 +337,59 @@ async function loadTestData() {
     const data =
       await response.json();
 
+    const temperatures =
+      data
+        .map(record => record.temp_last)
+        .filter(value => value !== null);
+
+    const count =
+      temperatures.length;
+
+    const mean =
+      temperatures.reduce((a, b) => a + b, 0) / count;
+
+    const minimum =
+      Math.min(...temperatures);
+
+    const maximum =
+      Math.max(...temperatures);
+
     document.getElementById("recordCount").textContent =
-      data.length;
+      count;
 
     document.getElementById("dateRange").textContent =
-      "2026/07 loaded successfully";
+      "July 2026";
 
     document.getElementById("yearsAnalysed").textContent =
       "1";
+
+    document.getElementById("chartOutput").innerHTML = `
+      <div style="text-align:left;">
+
+        <h3>July 2026 Temperature Statistics</h3>
+
+        <p>
+          <strong>Records Used:</strong>
+          ${count}
+        </p>
+
+        <p>
+          <strong>Mean:</strong>
+          ${mean.toFixed(1)} °C
+        </p>
+
+        <p>
+          <strong>Minimum:</strong>
+          ${minimum.toFixed(1)} °C
+        </p>
+
+        <p>
+          <strong>Maximum:</strong>
+          ${maximum.toFixed(1)} °C
+        </p>
+
+      </div>
+    `;
 
   } catch (error) {
 
