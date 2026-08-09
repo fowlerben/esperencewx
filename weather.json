@@ -6,7 +6,7 @@
       "data": [
         {
           "rx_state": null,
-          "wind_speed_hi_last_2_min": 6,
+          "wind_speed_hi_last_2_min": 5,
           "hum": 93.7,
           "wind_dir_at_hi_speed_last_10_min": 53,
           "wind_chill": 52,
@@ -16,14 +16,14 @@
           "rain_size": 2,
           "uv_index": 0,
           "tz_offset": 36000,
-          "wind_speed_last": 5,
+          "wind_speed_last": 2,
           "rainfall_last_60_min_clicks": 0,
           "wet_bulb": 50.9,
           "rainfall_monthly_clicks": 62,
-          "wind_speed_avg_last_10_min": 2.43,
-          "wind_dir_at_hi_speed_last_2_min": 67,
+          "wind_speed_avg_last_10_min": 2.81,
+          "wind_dir_at_hi_speed_last_2_min": 52,
           "rainfall_daily_in": 0.27559054,
-          "wind_dir_last": 60,
+          "wind_dir_last": 58,
           "rainfall_daily_mm": 7,
           "rain_storm_last_clicks": 2,
           "tx_id": 1,
@@ -40,7 +40,7 @@
           "rain_storm_in": 0.39370078,
           "rain_storm_last_end_at": 1786104061,
           "rain_storm_mm": 10,
-          "wind_dir_scalar_avg_last_2_min": 55,
+          "wind_dir_scalar_avg_last_2_min": 64,
           "heat_index": 52.4,
           "rainfall_last_24_hr_in": 0.27559054,
           "rainfall_last_60_min_mm": 0,
@@ -52,13 +52,13 @@
           "wind_speed_hi_last_10_min": 6,
           "rainfall_last_15_min_clicks": 0,
           "rainfall_year_mm": 334.8,
-          "wind_dir_scalar_avg_last_1_min": 60,
+          "wind_dir_scalar_avg_last_1_min": 62,
           "temp": 52,
-          "wind_speed_avg_last_2_min": 2.81,
+          "wind_speed_avg_last_2_min": 2.62,
           "solar_rad": 0,
           "rainfall_monthly_mm": 12.4,
           "rain_storm_last_mm": 0.4,
-          "wind_speed_avg_last_1_min": 2.87,
+          "wind_speed_avg_last_1_min": 2.25,
           "thsw_index": 50.4,
           "rainfall_monthly_in": 0.48818898,
           "rain_rate_last_mm": 0,
@@ -68,7 +68,7 @@
           "rain_rate_last_in": 0,
           "rain_rate_hi_last_15_min_mm": 0,
           "rain_rate_hi_last_15_min_in": 0,
-          "ts": 1786278952
+          "ts": 1786279252
         }
       ],
       "sensor_type": 46,
@@ -86,13 +86,13 @@
           "wet_leaf_2": null,
           "wet_leaf_1": 15,
           "tx_id": 5,
-          "temp_1": 51.8,
+          "temp_1": 51.7,
           "temp_2": 52.3,
           "trans_battery_flag": 0,
           "tz_offset": 36000,
           "temp_3": 51.4,
           "temp_4": null,
-          "ts": 1786278952
+          "ts": 1786279252
         }
       ],
       "sensor_type": 56,
@@ -138,7 +138,7 @@
       "data": [
         {
           "rx_state": 0,
-          "wind_speed_hi_last_2_min": 6,
+          "wind_speed_hi_last_2_min": 5,
           "hum": null,
           "wind_dir_at_hi_speed_last_10_min": 53,
           "wind_chill": null,
@@ -148,14 +148,14 @@
           "rain_size": 1,
           "uv_index": null,
           "tz_offset": 36000,
-          "wind_speed_last": 5,
+          "wind_speed_last": 2,
           "rainfall_last_60_min_clicks": 0,
           "wet_bulb": null,
           "rainfall_monthly_clicks": 0,
-          "wind_speed_avg_last_10_min": 2.43,
-          "wind_dir_at_hi_speed_last_2_min": 67,
+          "wind_speed_avg_last_10_min": 2.81,
+          "wind_dir_at_hi_speed_last_2_min": 52,
           "rainfall_daily_in": 0,
-          "wind_dir_last": 60,
+          "wind_dir_last": 58,
           "rainfall_daily_mm": 0,
           "rain_storm_last_clicks": null,
           "tx_id": 3,
@@ -172,7 +172,7 @@
           "rain_storm_in": null,
           "rain_storm_last_end_at": null,
           "rain_storm_mm": null,
-          "wind_dir_scalar_avg_last_2_min": 55,
+          "wind_dir_scalar_avg_last_2_min": 64,
           "heat_index": null,
           "rainfall_last_24_hr_in": 0,
           "rainfall_last_60_min_mm": 0,
@@ -184,13 +184,13 @@
           "wind_speed_hi_last_10_min": 6,
           "rainfall_last_15_min_clicks": 0,
           "rainfall_year_mm": 0,
-          "wind_dir_scalar_avg_last_1_min": 60,
+          "wind_dir_scalar_avg_last_1_min": 62,
           "temp": null,
-          "wind_speed_avg_last_2_min": 2.81,
+          "wind_speed_avg_last_2_min": 2.62,
           "solar_rad": 0,
           "rainfall_monthly_mm": 0,
           "rain_storm_last_mm": null,
-          "wind_speed_avg_last_1_min": 2.87,
+          "wind_speed_avg_last_1_min": 2.25,
           "thsw_index": null,
           "rainfall_monthly_in": 0,
           "rain_rate_last_mm": 0,
@@ -200,7 +200,7 @@
           "rain_rate_last_in": 0,
           "rain_rate_hi_last_15_min_mm": 0,
           "rain_rate_hi_last_15_min_in": 0,
-          "ts": 1786278952
+          "ts": 1786279252
         }
       ],
       "sensor_type": 55,
@@ -210,12 +210,12 @@
       "lsid": 551509,
       "data": [
         {
-          "bar_absolute": 29.024,
+          "bar_absolute": 29.021,
           "tz_offset": 36000,
-          "bar_sea_level": 29.41,
+          "bar_sea_level": 29.407,
           "bar_offset": 0.012,
           "bar_trend": -0.046,
-          "ts": 1786278952
+          "ts": 1786279252
         }
       ],
       "sensor_type": 242,
@@ -229,7 +229,7 @@
           "tz_offset": 36000,
           "heat_index_in": 67,
           "dew_point_in": 49.9,
-          "ts": 1786278952,
+          "ts": 1786279252,
           "hum_in": 52.7
         }
       ],
@@ -315,6 +315,6 @@
       "data_structure_type": 18
     }
   ],
-  "generated_at": 1786278958,
+  "generated_at": 1786279262,
   "station_id": 144429
 }
