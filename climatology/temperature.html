@@ -109,6 +109,7 @@ button {
 <option>Monthly Climatology</option>
 <option>Hourly Climatology</option>
 <option>Heatmap Climatology</option>
+<option>Histogram</option>
 </select>
 </div>
 
@@ -567,8 +568,241 @@ function generateHeatmap(
       }
     }
   );
+}
 
 }
+
+function generateHistogram(
+  records,
+  variable,
+  statistic,
+  selectedMonth,
+  selectedYear
+) {
+
+let field;
+
+if (variable === "Temperature") {
+
+  if (statistic === "Mean") {
+    field = "temp_avg";
+  }
+
+  if (statistic === "Maximum") {
+    field = "temp_hi";
+  }
+
+  if (statistic === "Minimum") {
+    field = "temp_lo";
+  }
+
+}
+
+if (variable === "Humidity") {
+
+  if (statistic === "Mean") {
+    field = "hum_last";
+  }
+
+  if (statistic === "Maximum") {
+    field = "hum_hi";
+  }
+
+  if (statistic === "Minimum") {
+    field = "hum_lo";
+  }
+
+}
+
+if (variable === "Dew Point") {
+
+  if (statistic === "Mean") {
+    field = "dew_point_last";
+  }
+
+  if (statistic === "Maximum") {
+    field = "dew_point_hi";
+  }
+
+  if (statistic === "Minimum") {
+    field = "dew_point_lo";
+  }
+
+}
+
+const filteredRecords =
+  records.filter(record => {
+
+    const date =
+      new Date(record.time * 1000);
+
+    const year =
+      date.getFullYear();
+
+    const monthName =
+      monthNames[date.getMonth()];
+
+    return (
+
+      (selectedYear === "All Years" ||
+       String(year) === selectedYear)
+
+      &&
+
+      (
+
+        selectedMonth === "All Months"
+
+        ||
+
+        monthName === selectedMonth
+
+        ||
+
+        (
+          ["Summer","Autumn","Winter","Spring"]
+            .includes(selectedMonth)
+
+          &&
+
+          matchesSeason(
+            date.getMonth(),
+            selectedMonth
+          )
+        )
+
+      )
+
+    );
+
+  });
+
+  let values;
+
+  if (statistic === "Mean") {
+
+  values =
+    filteredRecords
+      .map(record => {
+
+        let value =
+          record[field];
+
+        if (
+          variable === "Temperature" ||
+          variable === "Dew Point"
+        ) {
+          value = FtoC(value);
+        }
+
+        return value;
+
+      })
+      .filter(value =>
+        value !== null &&
+        value !== undefined
+      );
+
+}
+else {
+
+  const dailyValues = {};
+
+  filteredRecords.forEach(record => {
+
+    const date =
+      new Date(record.time * 1000);
+
+    const key =
+      getReportingDay(
+        date,
+        variable,
+        statistic
+      );
+
+    let value =
+      record[field];
+
+    if (
+      variable === "Temperature" ||
+      variable === "Dew Point"
+    ) {
+      value = FtoC(value);
+    }
+
+    if (
+      value === null ||
+      value === undefined
+    ) {
+      return;
+    }
+
+    if (!(key in dailyValues)) {
+
+      dailyValues[key] =
+        value;
+
+    } else {
+
+      if (statistic === "Maximum") {
+
+        dailyValues[key] =
+          Math.max(
+            dailyValues[key],
+            value
+          );
+
+      } else {
+
+        dailyValues[key] =
+          Math.min(
+            dailyValues[key],
+            value
+          );
+
+      }
+
+    }
+
+  });
+
+  values =
+    Object.values(
+      dailyValues
+    );
+
+}
+
+Plotly.newPlot(
+  "output",
+  [{
+    x: values,
+    type: "histogram",
+    nbinsx: 30
+  }],
+  {
+    title:
+      `${variable} · ${statistic} · ${selectedMonth}`,
+
+    paper_bgcolor: "#2d2d2d",
+    plot_bgcolor: "#2d2d2d",
+
+    font: {
+      color: "white"
+    },
+
+    xaxis: {
+      title:
+        variable === "Humidity"
+          ? "Relative Humidity (%)"
+          : "Temperature (°C)"
+    },
+
+    yaxis: {
+      title: "Frequency"
+    }
+  }
+);
 
 function testLoad() {
 
@@ -595,6 +829,20 @@ const records =
   generateHeatmap(
     records,
     variable,
+    selectedYear
+  );
+
+  return;
+
+}
+
+if (plotType === "Histogram") {
+
+  generateHistogram(
+    records,
+    variable,
+    statistic,
+    selectedMonth,
     selectedYear
   );
 
