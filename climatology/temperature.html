@@ -244,6 +244,9 @@ async function testLoad() {
   const selectedYear =
   document.getElementById("year").value;
 
+  const selectedMonth =
+  document.getElementById("month").value;
+
   const plotType =
   document.getElementById("plotType").value;
 
@@ -269,17 +272,17 @@ for (let group = 0; group < groupCount; group++) {
   const year =
     date.getFullYear();
 
-return (
-  (
-    plotType === "Monthly Climatology"
-      ? date.getMonth() === group
-      : date.getHours() === group
-  ) &&
-  (
-    selectedYear === "All Years" ||
-    String(year) === selectedYear
-  )
-);
+if (plotType === "Monthly Climatology") {
+
+  return (
+    date.getMonth() === group &&
+    (
+      selectedYear === "All Years" ||
+      String(year) === selectedYear
+    )
+  );
+
+}
 
 })
         .map(record => {
