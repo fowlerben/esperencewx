@@ -913,13 +913,10 @@ const key =
 
 });
 
-const theta = [];
-const radius = [];
-const frequency = [];
 const smoothedMap = {};
 
 Object.entries(
-  smoothedMap
+  frequencyMap
 ).forEach(([key, count]) => {
 
   const parts =
@@ -959,7 +956,7 @@ Object.entries(
 
       smoothedMap[neighbourKey] =
         (smoothedMap[neighbourKey] || 0)
-        + count * weight;
+        + (count * weight);
 
     }
 
@@ -967,11 +964,19 @@ Object.entries(
 
 });
 
+const theta = [];
+const radius = [];
+const frequency = [];
+
+Object.entries(
+  smoothedMap
+).forEach(([key, count]) => {
+
   const parts =
     key.split("_");
 
   radius.push(
-    Number(parts[0]) + 2.5
+    Number(parts[0])
   );
 
   theta.push(
@@ -983,7 +988,6 @@ Object.entries(
   );
 
 });
-
   Plotly.newPlot(
   "output",
   [{
