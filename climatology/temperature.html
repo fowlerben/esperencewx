@@ -108,6 +108,7 @@ button {
 <select id="plotType">
 <option>Monthly Climatology</option>
 <option>Hourly Climatology</option>
+<option>Heatmap Climatology</option>
 </select>
 </div>
 
@@ -361,7 +362,11 @@ function updatePlotTypeAvailability() {
 
   }
 
-  if (statistic.value === "Mean") {
+if (
+  statistic.value === "Mean" ||
+  plotType.value ===
+    "Heatmap Climatology"
+) {
 
     hourlyOption.disabled = false;
 
@@ -390,6 +395,165 @@ function updatePlotTypeAvailability() {
   }
 
 }
+
+function generateHeatmap(
+  records,
+  variable,
+  selectedYear
+) {
+
+  let field;
+
+  if (variable === "Temperature") {
+    field = "temp_avg";
+  }
+
+  if (variable === "Humidity") {
+    field = "hum_last";
+  }
+
+  if (variable === "Dew Point") {
+    field = "dew_point_last";
+  }
+
+  const z = [];
+
+  for (let hour = 0; hour < 24; hour++) {
+
+    const row = [];
+
+    for (let month = 0; month < 12; month++) {
+
+      const values =
+        records
+          .filter(record => {
+
+            const date =
+              new Date(
+                record.time * 1000
+              );
+
+            return (
+              date.getHours() === hour &&
+              date.getMonth() === month &&
+              (
+                selectedYear === "All Years" ||
+                String(
+                  date.getFullYear()
+                ) === selectedYear
+              )
+            );
+
+          })
+          .map(record => {
+
+            let value =
+              record[field];
+
+            if (
+              variable === "Temperature" ||
+              variable === "Dew Point"
+            ) {
+              value = FtoC(value);
+            }
+
+            return value;
+
+          })
+          .filter(value =>
+            value !== null &&
+            value !== undefined
+          );
+
+      if (values.length === 0) {
+
+        row.push(null);
+
+      } else {
+
+        row.push(
+          values.reduce(
+            (a,b) => a + b,
+            0
+          ) / values.length
+        );
+
+      }
+
+    }
+
+    z.push(row);
+
+  }
+
+  let colorscale;
+
+  if (variable === "Humidity") {
+
+    colorscale = [
+      [0.0, "#8b0000"],
+      [0.1, "#ff0000"],
+      [0.2, "#ff7f00"],
+      [0.3, "#ffff00"],
+      [0.4, "#adff2f"],
+      [0.5, "#00ff00"],
+      [0.6, "#00ffff"],
+      [0.7, "#87ceeb"],
+      [0.8, "#4169e1"],
+      [0.9, "#0000ff"],
+      [1.0, "#00008b"]
+    ];
+
+  }
+  else if (variable === "Dew Point") {
+
+    colorscale = "RdYlBu";
+
+  }
+  else {
+
+    colorscale = "Turbo";
+
+  }
+
+  Plotly.newPlot(
+    "output",
+    [{
+      z: z,
+      x: axisMonths,
+      y: hourNames,
+      type: "heatmap",
+      colorscale: colorscale,
+      colorbar: {
+        title:
+          variable === "Humidity"
+            ? "%"
+            : "°C"
+      }
+    }],
+    {
+      title:
+        `${variable} Heatmap Climatology`,
+
+      paper_bgcolor: "#2d2d2d",
+      plot_bgcolor: "#2d2d2d",
+
+      font: {
+        color: "white"
+      },
+
+      xaxis: {
+        title: "Month"
+      },
+
+      yaxis: {
+        title: "Hour"
+      }
+    }
+  );
+
+}
+
 function testLoad() {
 
 const records =
@@ -409,6 +573,18 @@ const records =
 
   const statistic =
   document.getElementById("statistic").value;
+
+  if (plotType === "Heatmap Climatology") {
+
+  generateHeatmap(
+    records,
+    variable,
+    selectedYear
+  );
+
+  return;
+
+}
 
 let field;
 
