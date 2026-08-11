@@ -348,6 +348,18 @@ function updatePlotTypeAvailability() {
   const selectedMonth =
     month.value;
 
+  if (plotType.value === "Heatmap Climatology") {
+
+  statistic.value = "Mean";
+
+  for (let i = 1; i < statistic.options.length; i++) {
+    statistic.options[i].disabled = true;
+  }
+
+  return;
+
+}
+
   const hourlyOption =
     plotType.options[1];
 
@@ -361,6 +373,10 @@ function updatePlotTypeAvailability() {
     return;
 
   }
+
+  for (let i = 1; i < statistic.options.length; i++) {
+  statistic.options[i].disabled = false;
+}
 
 if (
   statistic.value === "Mean" ||
@@ -895,6 +911,14 @@ document
     "change",
     updatePlotTypeAvailability
   );
+
+  document
+  .getElementById("plotType")
+  .addEventListener(
+    "change",
+    updatePlotTypeAvailability
+  );
+
 
 document
   .getElementById("generateButton")
