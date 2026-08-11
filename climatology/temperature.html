@@ -306,6 +306,21 @@ if (plotType === "Monthly Climatology") {
 
 }
 
+const monthName =
+  monthNames[date.getMonth()];
+
+return (
+  date.getHours() === group &&
+  (
+    selectedYear === "All Years" ||
+    String(year) === selectedYear
+  ) &&
+  (
+    selectedMonth === "All Months" ||
+    monthName === selectedMonth
+  )
+);
+
 else {
 
   const monthName =
