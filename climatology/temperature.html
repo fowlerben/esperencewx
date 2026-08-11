@@ -233,6 +233,28 @@ function FtoC(value) {
 
 }
 
+function matchesSeason(month, season) {
+
+  if (season === "Summer") {
+    return [11, 0, 1].includes(month);
+  }
+
+  if (season === "Autumn") {
+    return [2, 3, 4].includes(month);
+  }
+
+  if (season === "Winter") {
+    return [5, 6, 7].includes(month);
+  }
+
+  if (season === "Spring") {
+    return [8, 9, 10].includes(month);
+  }
+
+  return false;
+
+}
+
 async function testLoad() {
 
   const records =
@@ -280,6 +302,37 @@ if (plotType === "Monthly Climatology") {
       selectedYear === "All Years" ||
       String(year) === selectedYear
     )
+  );
+
+}
+
+else {
+
+  const monthName =
+    monthNames[date.getMonth()];
+
+  return (
+    date.getHours() === group &&
+    (
+      selectedYear === "All Years" ||
+      String(year) === selectedYear
+    ) &&
+(
+  selectedMonth === "All Months" ||
+
+  monthName === selectedMonth ||
+
+  (
+    ["Summer","Autumn","Winter","Spring"]
+      .includes(selectedMonth) &&
+
+    matchesSeason(
+      date.getMonth(),
+      selectedMonth
+    )
+  )
+)
+
   );
 
 }
