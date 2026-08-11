@@ -95,6 +95,15 @@ button {
 </div>
 
 <div>
+<label>Statistic</label><br>
+<select id="statistic">
+<option>Mean</option>
+<option>Maximum</option>
+<option>Minimum</option>
+</select>
+</div>
+
+<div>
 <label>Plot Type</label><br>
 <select id="plotType">
 <option>Monthly Climatology</option>
@@ -262,6 +271,32 @@ function matchesSeason(month, season) {
 
 }
 
+function updatePlotTypeAvailability() {
+
+  const statistic =
+    document.getElementById("statistic");
+
+  const plotType =
+    document.getElementById("plotType");
+
+  const hourlyOption =
+    plotType.options[1];
+
+  if (statistic.value === "Mean") {
+
+    hourlyOption.disabled = false;
+
+  } else {
+
+    hourlyOption.disabled = true;
+
+    plotType.value =
+      "Monthly Climatology";
+
+  }
+
+}
+
 function testLoad() {
 
 const records =
@@ -402,6 +437,15 @@ loadAllRecords().then(records => {
   populateYears(records);
 
 });
+
+updatePlotTypeAvailability();
+
+document
+  .getElementById("statistic")
+  .addEventListener(
+    "change",
+    updatePlotTypeAvailability
+  );
 
 document
   .getElementById("generateButton")
