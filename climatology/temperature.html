@@ -110,6 +110,7 @@ button {
 <option>Hourly Climatology</option>
 <option>Heatmap Climatology</option>
 <option>Histogram</option>
+<option>Wind Rose Heatmap</option>
 </select>
 </div>
 
@@ -805,6 +806,167 @@ Plotly.newPlot(
 
 }
 
+function generateWindRoseHeatmap(
+  records,
+  selectedMonth,
+  selectedYear
+) {
+
+  const filteredRecords =
+  records.filter(record => {
+
+    const date =
+      new Date(record.time * 1000);
+
+    const year =
+      date.getFullYear();
+
+    const monthName =
+      monthNames[
+        date.getMonth()
+      ];
+
+    return (
+
+      (
+        selectedYear === "All Years" ||
+        String(year) === selectedYear
+      )
+
+      &&
+
+      (
+
+        selectedMonth === "All Months"
+
+        ||
+
+        monthName === selectedMonth
+
+        ||
+
+        (
+          ["Summer","Autumn","Winter","Spring"]
+            .includes(selectedMonth)
+
+          &&
+
+          matchesSeason(
+            date.getMonth(),
+            selectedMonth
+          )
+        )
+
+      )
+
+    );
+
+  });
+
+  const theta = [];
+const radius = [];
+
+  filteredRecords.forEach(record => {
+
+  const speed =
+    record.wind_speed_avg;
+
+  const direction =
+    record.wind_dir_of_prevail;
+
+  if (
+    speed == null ||
+    direction == null
+  ) {
+    return;
+  }
+
+  theta.push(direction);
+  radius.push(speed);
+
+});
+
+  Plotly.newPlot(
+  "output",
+  [{
+    type: "scatterpolar",
+
+    r: radius,
+    theta: theta,
+
+    mode: "markers",
+
+    marker: {
+
+      size: 5,
+
+      color: radius,
+
+      colorscale: "Turbo",
+
+      opacity: 0.2,
+
+      showscale: true,
+
+      colorbar: {
+        title: "Wind Speed"
+      }
+
+    }
+
+  }],
+  {
+    title:
+      `Wind Rose Heatmap · ${selectedMonth}`,
+
+    paper_bgcolor: "#2d2d2d",
+    plot_bgcolor: "#2d2d2d",
+
+    font: {
+      color: "white"
+    },
+
+    polar: {
+
+      radialaxis: {
+
+        title: "km/h",
+
+        angle: 90
+
+      },
+
+      angularaxis: {
+
+        rotation: 90,
+
+        direction: "clockwise",
+
+        tickmode: "array",
+
+        tickvals: [
+          0,22.5,45,67.5,
+          90,112.5,135,157.5,
+          180,202.5,225,247.5,
+          270,292.5,315,337.5
+        ],
+
+        ticktext: [
+          "N","NNE","NE","ENE",
+          "E","ESE","SE","SSE",
+          "S","SSW","SW","WSW",
+          "W","WNW","NW","NNW"
+        ]
+
+      }
+
+    }
+
+  }
+);
+
+}
+
 function testLoad() {
 
 const records =
@@ -850,6 +1012,19 @@ if (plotType === "Histogram") {
   return;
 
 }
+
+if (plotType === "Wind Rose Heatmap") {
+
+  generateWindRoseHeatmap(
+    records,
+    selectedMonth,
+    selectedYear
+  );
+
+  return;
+
+}
+
 
 let field;
 
