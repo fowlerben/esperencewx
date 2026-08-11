@@ -913,57 +913,8 @@ const key =
 
 });
 
-const smoothedMap = {};
-
-Object.entries(
-  frequencyMap
-).forEach(([key, count]) => {
-
-  const parts =
-    key.split("_");
-
-  const speed =
-    Number(parts[0]);
-
-  const direction =
-    Number(parts[1]);
-
-  for (let ds = -1; ds <= 1; ds++) {
-
-    for (let dd = -2; dd <= 2; dd++) {
-
-      const neighbourSpeed =
-        speed + (ds * 0.5);
-
-      let neighbourDir =
-        direction + (dd * 5);
-
-      if (neighbourDir < 0) {
-        neighbourDir += 360;
-      }
-
-      if (neighbourDir >= 360) {
-        neighbourDir -= 360;
-      }
-
-      const neighbourKey =
-        `${neighbourSpeed}_${neighbourDir}`;
-
-      const weight =
-        ds === 0 && dd === 0
-          ? 1
-          : 0.25;
-
-      smoothedMap[neighbourKey] =
-        (smoothedMap[neighbourKey] || 0)
-        + (count * weight);
-
-    }
-
-  }
-
-});
-
+const smoothedMap =
+  frequencyMap;
 const theta = [];
 const radius = [];
 const frequency = [];
