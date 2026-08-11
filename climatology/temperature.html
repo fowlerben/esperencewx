@@ -269,17 +269,17 @@ for (let group = 0; group < groupCount; group++) {
   const year =
     date.getFullYear();
 
-  const hour =
-    date.getHours();
-
-  return (
-plotType === "Monthly Climatology"
-  ? date.getMonth() === group
-  : date.getHours() === group
-    (
-      selectedYear === "All Years" ||
-      String(year) === selectedYear
-  );
+return (
+  (
+    plotType === "Monthly Climatology"
+      ? date.getMonth() === group
+      : date.getHours() === group
+  ) &&
+  (
+    selectedYear === "All Years" ||
+    String(year) === selectedYear
+  )
+);
 
 })
         .map(record => {
