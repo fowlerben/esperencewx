@@ -211,6 +211,27 @@ function populateYears(records) {
 
 }
 
+function populateHours() {
+
+  const hourSelect =
+    document.getElementById("hour");
+
+  for (let hour = 0; hour < 24; hour++) {
+
+    const option =
+      document.createElement("option");
+
+    option.value = hour;
+
+    option.textContent =
+      String(hour).padStart(2, "0");
+
+    hourSelect.appendChild(option);
+
+  }
+
+}
+
 function FtoC(value) {
 
   return (value - 32) * 5 / 9;
@@ -227,6 +248,9 @@ async function testLoad() {
 
   const selectedYear =
   document.getElementById("year").value;
+
+  const selectedHour =
+  document.getElementById("hour").value;
 
   const field =
     variableMap[variable];
@@ -245,11 +269,18 @@ async function testLoad() {
   const year =
     date.getFullYear();
 
+  const hour =
+    date.getHours();
+
   return (
     date.getMonth() === month &&
     (
       selectedYear === "All Years" ||
       String(year) === selectedYear
+    ) &&
+    (
+      selectedHour === "All Hours" ||
+      String(hour) === selectedHour
     )
   );
 
@@ -309,6 +340,8 @@ async function testLoad() {
 }
 
 loadAllRecords().then(populateYears);
+
+populateHours();
 
 document
   .getElementById("generateButton")
