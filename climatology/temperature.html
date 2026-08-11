@@ -273,6 +273,9 @@ function updatePlotTypeAvailability() {
   const plotType =
     document.getElementById("plotType");
 
+  const month =
+    document.getElementById("month");
+
   const hourlyOption =
     plotType.options[1];
 
@@ -280,12 +283,27 @@ function updatePlotTypeAvailability() {
 
     hourlyOption.disabled = false;
 
+    for (let i = 1; i <= 12; i++) {
+      month.options[i].disabled = false;
+    }
+
   } else {
 
     hourlyOption.disabled = true;
 
     plotType.value =
       "Monthly Climatology";
+
+    for (let i = 1; i <= 12; i++) {
+      month.options[i].disabled = true;
+    }
+
+    if (
+      month.selectedIndex >= 1 &&
+      month.selectedIndex <= 12
+    ) {
+      month.value = "All Months";
+    }
 
   }
 
