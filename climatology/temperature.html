@@ -78,6 +78,12 @@ button {
 <option>October</option>
 <option>November</option>
 <option>December</option>
+<option disabled>────────</option>
+
+<option>Summer</option>
+<option>Autumn</option>
+<option>Winter</option>
+<option>Spring</option>
 </select>
 </div>
 
@@ -89,9 +95,10 @@ button {
 </div>
 
 <div>
-<label>Hour</label><br>
-<select id="hour">
-<option>All Hours</option>
+<label>Plot Type</label><br>
+<select id="plotType">
+<option>Monthly Climatology</option>
+<option>Hourly Climatology</option>
 </select>
 </div>
 
@@ -211,27 +218,6 @@ function populateYears(records) {
 
 }
 
-function populateHours() {
-
-  const hourSelect =
-    document.getElementById("hour");
-
-  for (let hour = 0; hour < 24; hour++) {
-
-    const option =
-      document.createElement("option");
-
-    option.value = hour;
-
-    option.textContent =
-      String(hour).padStart(2, "0");
-
-    hourSelect.appendChild(option);
-
-  }
-
-}
-
 function FtoC(value) {
 
   return (value - 32) * 5 / 9;
@@ -248,9 +234,6 @@ async function testLoad() {
 
   const selectedYear =
   document.getElementById("year").value;
-
-  const selectedHour =
-  document.getElementById("hour").value;
 
   const field =
     variableMap[variable];
@@ -277,11 +260,6 @@ async function testLoad() {
     (
       selectedYear === "All Years" ||
       String(year) === selectedYear
-    ) &&
-    (
-      selectedHour === "All Hours" ||
-      String(hour) === selectedHour
-    )
   );
 
 })
@@ -340,8 +318,6 @@ async function testLoad() {
 }
 
 loadAllRecords().then(populateYears);
-
-populateHours();
 
 document
   .getElementById("generateButton")
