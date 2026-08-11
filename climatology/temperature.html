@@ -220,6 +220,8 @@ function populateYears(records) {
       )
     )].sort();
 
+  console.log(years);
+
   const yearSelect =
     document.getElementById("year");
 
@@ -398,17 +400,36 @@ for (let group = 0; group < groupCount; group++) {
   const year =
     date.getFullYear();
 
-  if (plotType === "Monthly Climatology") {
+if (plotType === "Monthly Climatology") {
 
-    return (
-      date.getMonth() === group &&
-      (
-        selectedYear === "All Years" ||
-        String(year) === selectedYear
-      )
+  let monthMatch = false;
+
+  if (selectedMonth === "All Months") {
+
+    monthMatch = true;
+
+  } else if (
+    ["Summer","Autumn","Winter","Spring"]
+      .includes(selectedMonth)
+  ) {
+
+    monthMatch = matchesSeason(
+      date.getMonth(),
+      selectedMonth
     );
 
   }
+
+  return (
+    date.getMonth() === group &&
+    monthMatch &&
+    (
+      selectedYear === "All Years" ||
+      String(year) === selectedYear
+    )
+  );
+
+}
 
   const monthName =
     monthNames[date.getMonth()];
@@ -496,6 +517,7 @@ loadAllRecords().then(records => {
   allRecords = records;
 
   populateYears(records);
+  console.log(records.length);
 
 });
 
