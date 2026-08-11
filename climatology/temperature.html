@@ -252,6 +252,65 @@ function FtoC(value) {
 
 }
 
+function getReportingDay(date, variable, statistic) {
+
+  const d = new Date(date);
+
+  const hour = d.getHours();
+  const minute = d.getMinutes();
+
+  if (variable === "Temperature") {
+
+    if (
+      statistic === "Maximum" &&
+      (
+        hour < 9 ||
+        (hour === 9 && minute < 5)
+      )
+    ) {
+      d.setDate(d.getDate() - 1);
+    }
+
+    if (
+      statistic === "Minimum" &&
+      (
+        hour > 18 ||
+        (hour === 18 && minute >= 5)
+      )
+    ) {
+      d.setDate(d.getDate() + 1);
+    }
+
+  }
+
+  if (variable === "Humidity") {
+
+    if (
+      statistic === "Maximum" &&
+      (
+        hour > 18 ||
+        (hour === 18 && minute >= 5)
+      )
+    ) {
+      d.setDate(d.getDate() + 1);
+    }
+
+    if (
+      statistic === "Minimum" &&
+      (
+        hour < 9 ||
+        (hour === 9 && minute < 5)
+      )
+    ) {
+      d.setDate(d.getDate() - 1);
+    }
+
+  }
+
+  return d.toISOString().slice(0,10);
+
+}
+
 function matchesSeason(month, season) {
 
   if (season === "Summer") {
@@ -417,7 +476,7 @@ for (let group = 0; group < groupCount; group++) {
   const seasonName =
     seasonNames[group];
 
-    const values =
+const filteredRecords =
       records
 .filter(record => {
 
@@ -499,9 +558,53 @@ if (plotType === "Monthly Climatology") {
   );
 
 })
-        .map(record => {
 
-  let value = record[field];
+  let values;
+
+  if (statistic === "Mean") {
+
+  values =
+    filteredRecords
+      .map(record => {
+
+        let value =
+          record[field];
+
+        if (
+          variable === "Temperature" ||
+          variable === "Dew Point"
+        ) {
+          value = FtoC(value);
+        }
+
+        return value;
+
+      })
+      .filter(value =>
+        value !== null &&
+        value !== undefined
+      );
+
+}
+else {
+
+
+  const dailyValues = {};
+
+  filteredRecords.forEach(record => {
+
+  const date =
+    new Date(record.time * 1000);
+
+  const key =
+    getReportingDay(
+      date,
+      variable,
+      statistic
+    );
+
+  let value =
+    record[field];
 
   if (
     variable === "Temperature" ||
@@ -510,28 +613,63 @@ if (plotType === "Monthly Climatology") {
     value = FtoC(value);
   }
 
-  return value;
+  if (
+    value === null ||
+    value === undefined
+  ) {
+    return;
+  }
 
-})
-        .filter(value =>
-          value !== null &&
-          value !== undefined
+  if (!(key in dailyValues)) {
+
+    dailyValues[key] =
+      value;
+
+  } else {
+
+    if (statistic === "Maximum") {
+
+      dailyValues[key] =
+        Math.max(
+          dailyValues[key],
+          value
         );
 
-    traces.push({
-      y: values,
-      type: "box",
-name:
-  selectedMonth === "Season"
-    ? seasonNames[group]
-    : (
-        plotType === "Monthly Climatology"
-          ? axisMonths[group]
-          : hourNames[group]
-      )
-    });
+    } else {
+
+      dailyValues[key] =
+        Math.min(
+          dailyValues[key],
+          value
+        );
+
+    }
 
   }
+
+});
+
+    values =
+    Object.values(
+      dailyValues
+    );
+
+  }
+
+traces.push({
+  y: values,
+  type: "box",
+  name:
+    selectedMonth === "Season"
+      ? seasonNames[group]
+      : (
+          plotType === "Monthly Climatology"
+            ? axisMonths[group]
+            : hourNames[group]
+        )
+});
+
+}
 
 Plotly.newPlot(
   "output",
