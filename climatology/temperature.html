@@ -129,12 +129,6 @@ Generate Box Plot
 
 <script>
 
-const variableMap = {
-  "Temperature": "temp_avg",
-  "Dew Point": "dew_point_last",
-  "Humidity": "hum_last"
-};
-
 const monthNames = [
   "January","February","March",
   "April","May","June",
@@ -314,8 +308,58 @@ const records =
   const plotType =
   document.getElementById("plotType").value;
 
-  const field =
-    variableMap[variable];
+  const statistic =
+  document.getElementById("statistic").value;
+
+let field;
+
+if (variable === "Temperature") {
+
+  if (statistic === "Mean") {
+    field = "temp_avg";
+  }
+
+  if (statistic === "Maximum") {
+    field = "temp_hi";
+  }
+
+  if (statistic === "Minimum") {
+    field = "temp_lo";
+  }
+
+} 
+
+if (variable === "Humidity") {
+
+  if (statistic === "Mean") {
+    field = "hum_last";
+  }
+
+    if (statistic === "Maximum") {
+    field = "hum_hi";
+  }
+
+  if (statistic === "Minimum") {
+    field = "hum_lo";
+  }
+
+}
+
+if (variable === "Dew Point") {
+
+  if (statistic === "Mean") {
+    field = "dew_point_last";
+  }
+
+    if (statistic === "Maximum") {
+    field = "dew_point_hi";
+  }
+
+  if (statistic === "Minimum") {
+    field = "dew_point_lo";
+  }
+
+}
 
   const traces = [];
 
@@ -405,12 +449,12 @@ name:
 
   }
 
- Plotly.newPlot(
+Plotly.newPlot(
   "output",
   traces,
   {
-title:
-  `${variable} · ${selectedMonth} · ${plotType}`,
+    title:
+      `${variable} · ${statistic} · ${selectedMonth} · ${plotType}`,
 
     yaxis: {
       title:
@@ -427,7 +471,6 @@ title:
     }
   }
 );
-
 }
 
 loadAllRecords().then(records => {
