@@ -131,6 +131,15 @@ const monthNames = [
   "Jul","Aug","Sep","Oct","Nov","Dec"
 ];
 
+const hourNames = [
+
+  "00","01","02","03","04","05",
+  "06","07","08","09","10","11",
+  "12","13","14","15","16","17",
+  "18","19","20","21","22","23"
+
+];
+
 function buildArchiveList() {
 
   const files = [];
@@ -235,12 +244,20 @@ async function testLoad() {
   const selectedYear =
   document.getElementById("year").value;
 
+  const plotType =
+  document.getElementById("plotType").value;
+
   const field =
     variableMap[variable];
 
   const traces = [];
 
-  for (let month = 0; month < 12; month++) {
+const groupCount =
+  plotType === "Monthly Climatology"
+    ? 12
+    : 24;
+
+for (let group = 0; group < groupCount; group++) {
 
     const values =
       records
@@ -256,7 +273,9 @@ async function testLoad() {
     date.getHours();
 
   return (
-    date.getMonth() === month &&
+plotType === "Monthly Climatology"
+  ? date.getMonth() === group
+  : date.getHours() === group
     (
       selectedYear === "All Years" ||
       String(year) === selectedYear
@@ -285,7 +304,10 @@ async function testLoad() {
     traces.push({
       y: values,
       type: "box",
-      name: monthNames[month]
+name:
+  plotType === "Monthly Climatology"
+    ? monthNames[group]
+    : hourNames[group]
     });
 
   }
