@@ -903,7 +903,7 @@ const speedBin =
   Math.round(speed * 2) / 2;
 
 const directionBin =
-  Math.floor(direction / 5) * 5;
+  Math.floor(direction / 2) * 2;
 
 const key =
   `${speedBin}_${directionBin}`;
@@ -913,8 +913,46 @@ const key =
 
 });
 
-const smoothedMap =
-  frequencyMap;
+const smoothedMap = {};
+
+Object.entries(
+  frequencyMap
+).forEach(([key, count]) => {
+
+  const [speed, direction] =
+    key.split("_").map(Number);
+
+  for (let ds = -2; ds <= 2; ds++) {
+
+    for (let dd = -3; dd <= 3; dd++) {
+
+      const s =
+        speed + ds * 0.5;
+
+      let d =
+        direction + dd * 2;
+
+      while (d < 0) d += 360;
+      while (d >= 360) d -= 360;
+
+      const neighbourKey =
+        `${s}_${d}`;
+
+      const distance =
+        Math.abs(ds) + Math.abs(dd);
+
+      const weight =
+        1 / (1 + distance);
+
+      smoothedMap[neighbourKey] =
+        (smoothedMap[neighbourKey] || 0)
+        + count * weight;
+
+    }
+
+  }
+
+});
 const theta = [];
 const radius = [];
 const frequency = [];
@@ -951,7 +989,7 @@ Object.entries(
 
     marker: {
 
-      size: 12,
+      size: 20,
 
       color: frequency,
 
