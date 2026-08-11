@@ -882,10 +882,9 @@ function generateWindRoseHeatmap(
 
   });
 
-  const theta = [];
-const radius = [];
+const frequencyMap = {};
 
-  filteredRecords.forEach(record => {
+filteredRecords.forEach(record => {
 
   const speed =
     record.wind_speed_avg;
@@ -900,8 +899,42 @@ const radius = [];
     return;
   }
 
-  theta.push(direction);
-  radius.push(speed);
+  const speedBin =
+    Math.floor(speed / 5) * 5;
+
+  const directionBin =
+    Math.floor(direction / 5) * 5;
+
+  const key =
+    `${speedBin}_${directionBin}`;
+
+  frequencyMap[key] =
+    (frequencyMap[key] || 0) + 1;
+
+});
+
+const theta = [];
+const radius = [];
+const frequency = [];
+
+Object.entries(
+  frequencyMap
+).forEach(([key, count]) => {
+
+  const parts =
+    key.split("_");
+
+  radius.push(
+    Number(parts[0]) + 2.5
+  );
+
+  theta.push(
+    Number(parts[1])
+  );
+
+  frequency.push(
+    count
+  );
 
 });
 
@@ -919,16 +952,16 @@ const radius = [];
 
       size: 5,
 
-      color: radius,
+      color: frequency,
 
       colorscale: "Turbo",
 
-      opacity: 0.2,
+      opacity: 0.9,
 
       showscale: true,
 
       colorbar: {
-        title: "Wind Speed"
+        title: "Frequency"
       }
 
     }
