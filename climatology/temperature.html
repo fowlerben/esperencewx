@@ -171,6 +171,8 @@ function buildArchiveList() {
 
 }
 
+let allRecords = [];
+
 async function loadAllRecords() {
 
   const allRecords = [];
@@ -260,10 +262,10 @@ function matchesSeason(month, season) {
 
 }
 
-async function testLoad() {
+function testLoad() {
 
-  const records =
-    await loadAllRecords();
+const records =
+  allRecords;
 
   const variable =
     document.getElementById("variable").value;
@@ -393,7 +395,13 @@ title:
 
 }
 
-loadAllRecords().then(populateYears);
+loadAllRecords().then(records => {
+
+  allRecords = records;
+
+  populateYears(records);
+
+});
 
 document
   .getElementById("generateButton")
