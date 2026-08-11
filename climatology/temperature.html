@@ -185,6 +185,32 @@ async function loadAllRecords() {
 
 }
 
+function populateYears(records) {
+
+  const years =
+    [...new Set(
+      records.map(record =>
+        new Date(record.time * 1000).getFullYear()
+      )
+    )].sort();
+
+  const yearSelect =
+    document.getElementById("year");
+
+  for (const year of years) {
+
+    const option =
+      document.createElement("option");
+
+    option.value = year;
+    option.textContent = year;
+
+    yearSelect.appendChild(option);
+
+  }
+
+}
+
 function FtoC(value) {
 
   return (value - 32) * 5 / 9;
@@ -199,6 +225,9 @@ async function testLoad() {
   const variable =
     document.getElementById("variable").value;
 
+  const selectedYear =
+  document.getElementById("year").value;
+
   const field =
     variableMap[variable];
 
@@ -208,9 +237,23 @@ async function testLoad() {
 
     const values =
       records
-        .filter(record =>
-          new Date(record.time * 1000).getMonth() === month
-        )
+.filter(record => {
+
+  const date =
+    new Date(record.time * 1000);
+
+  const year =
+    date.getFullYear();
+
+  return (
+    date.getMonth() === month &&
+    (
+      selectedYear === "All Years" ||
+      String(year) === selectedYear
+    )
+  );
+
+})
         .map(record => {
 
   let value = record[field];
@@ -264,6 +307,8 @@ async function testLoad() {
 );
 
 }
+
+loadAllRecords().then(populateYears);
 
 document
   .getElementById("generateButton")
