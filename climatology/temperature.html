@@ -114,7 +114,7 @@ Generate Box Plot
 <script>
 
 const variableMap = {
-  "Temperature": "temp_last",
+  "Temperature": "temp_avg",
   "Dew Point": "dew_point_last",
   "Humidity": "hum_last"
 };
@@ -185,6 +185,12 @@ async function loadAllRecords() {
 
 }
 
+function FtoC(value) {
+
+  return (value - 32) * 5 / 9;
+
+}
+
 async function testLoad() {
 
   const records =
@@ -205,7 +211,20 @@ async function testLoad() {
         .filter(record =>
           new Date(record.time * 1000).getMonth() === month
         )
-        .map(record => record[field])
+        .map(record => {
+
+  let value = record[field];
+
+  if (
+    variable === "Temperature" ||
+    variable === "Dew Point"
+  ) {
+    value = FtoC(value);
+  }
+
+  return value;
+
+})
         .filter(value =>
           value !== null &&
           value !== undefined
