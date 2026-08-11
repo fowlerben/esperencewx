@@ -187,49 +187,12 @@ async function loadAllRecords() {
 
 async function testLoad() {
 
-  const records = await loadAllRecords();
-
-  const variable =
-    document.getElementById("variable").value;
-
-  const field =
-    variableMap[variable];
-
-  const traces = [];
-
-  for (let month = 0; month < 12; month++) {
-
-    const values =
-      records
-        .filter(record =>
-          new Date(record.time * 1000).getMonth() === month
-        )
-        .map(record => record[field])
-        .filter(value =>
-          value !== null &&
-          value !== undefined
-        );
-
-    traces.push({
-      type: "box",
-      name: monthNames[month],
-      y: values,
-      boxpoints: false
-    });
-
-  }
-
   Plotly.newPlot(
     "output",
-    traces,
-    {
-      title: `${variable} Monthly Climatology`,
-      paper_bgcolor: "#2d2d2d",
-      plot_bgcolor: "#2d2d2d",
-      font: {
-        color: "white"
-      }
-    }
+    [{
+      y: [1, 2, 3, 4, 5],
+      type: "box"
+    }]
   );
 
 }
