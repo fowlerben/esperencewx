@@ -238,18 +238,30 @@ async function testLoad() {
 
   }
 
-  Plotly.newPlot(
-    "output",
-    traces,
-    {
-      title: `${variable} Monthly Climatology`,
-      paper_bgcolor: "#2d2d2d",
-      plot_bgcolor: "#2d2d2d",
-      font: {
-        color: "white"
-      }
+ Plotly.newPlot(
+  "output",
+  traces,
+  {
+    title:
+      variable === "Humidity"
+        ? "Humidity Monthly Climatology (%)"
+        : `${variable} Monthly Climatology (°C)`,
+
+    yaxis: {
+      title:
+        variable === "Humidity"
+          ? "Relative Humidity (%)"
+          : "Temperature (°C)"
+    },
+
+    paper_bgcolor: "#2d2d2d",
+    plot_bgcolor: "#2d2d2d",
+
+    font: {
+      color: "white"
     }
-  );
+  }
+);
 
 }
 
