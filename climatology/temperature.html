@@ -54,11 +54,11 @@ button {
 <div class="control-row">
 
 <div>
-<label>Variable</label><br>
 <select id="variable">
 <option>Temperature</option>
 <option>Dew Point</option>
 <option>Humidity</option>
+<option>Wind</option>
 </select>
 </div>
 
@@ -110,7 +110,6 @@ button {
 <option>Hourly Climatology</option>
 <option>Heatmap Climatology</option>
 <option>Histogram</option>
-<option>Wind Rose Heatmap</option>
 </select>
 </div>
 
@@ -350,7 +349,11 @@ function updatePlotTypeAvailability() {
   const selectedMonth =
     month.value;
 
-  if (plotType.value === "Heatmap Climatology") {
+  const variable =
+  document.getElementById("variable")
+    .value;
+
+if (plotType.value === "Heatmap Climatology") {
 
   statistic.value = "Mean";
 
@@ -359,6 +362,22 @@ function updatePlotTypeAvailability() {
   }
 
   return;
+
+}
+
+if (variable === "Wind") {
+
+  statistic.value = "Mean";
+
+  for (let i = 1; i < statistic.options.length; i++) {
+    statistic.options[i].disabled = true;
+  }
+
+} else {
+
+  for (let i = 1; i < statistic.options.length; i++) {
+    statistic.options[i].disabled = false;
+  }
 
 }
 
@@ -987,13 +1006,25 @@ const records =
   const statistic =
   document.getElementById("statistic").value;
 
-  if (plotType === "Heatmap Climatology") {
+if (plotType === "Heatmap Climatology") {
 
-  generateHeatmap(
-    records,
-    variable,
-    selectedYear
-  );
+  if (variable === "Wind") {
+
+    generateWindRoseHeatmap(
+      records,
+      selectedMonth,
+      selectedYear
+    );
+
+  } else {
+
+    generateHeatmap(
+      records,
+      variable,
+      selectedYear
+    );
+
+  }
 
   return;
 
@@ -1012,19 +1043,6 @@ if (plotType === "Histogram") {
   return;
 
 }
-
-if (plotType === "Wind Rose Heatmap") {
-
-  generateWindRoseHeatmap(
-    records,
-    selectedMonth,
-    selectedYear
-  );
-
-  return;
-
-}
-
 
 let field;
 
@@ -1343,6 +1361,12 @@ document
     updatePlotTypeAvailability
   );
 
+  document
+  .getElementById("variable")
+  .addEventListener(
+    "change",
+    updatePlotTypeAvailability
+  );
 
 document
   .getElementById("generateButton")
