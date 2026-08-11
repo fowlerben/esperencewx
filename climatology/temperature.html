@@ -88,7 +88,7 @@ button {
 <option>November</option>
 <option>December</option>
 <option disabled>────────</option>
-
+<option>Season</option>
 <option>Summer</option>
 <option>Autumn</option>
 <option>Winter</option>
@@ -139,6 +139,13 @@ const monthNames = [
 const axisMonths = [
   "Jan","Feb","Mar","Apr","May","Jun",
   "Jul","Aug","Sep","Oct","Nov","Dec"
+];
+
+const seasonNames = [
+  "Summer",
+  "Autumn",
+  "Winter",
+  "Spring"
 ];
 
 const hourNames = [
@@ -278,14 +285,28 @@ function updatePlotTypeAvailability() {
   const month =
     document.getElementById("month");
 
+  const selectedMonth =
+    month.value;
+
   const hourlyOption =
     plotType.options[1];
+
+  if (selectedMonth === "Season") {
+
+    plotType.value =
+      "Monthly Climatology";
+
+    hourlyOption.disabled = true;
+
+    return;
+
+  }
 
   if (statistic.value === "Mean") {
 
     hourlyOption.disabled = false;
 
-    for (let i = 1; i <= 12; i++) {
+    for (let i = 2; i <= 13; i++) {
       month.options[i].disabled = false;
     }
 
@@ -296,13 +317,13 @@ function updatePlotTypeAvailability() {
     plotType.value =
       "Monthly Climatology";
 
-    for (let i = 1; i <= 12; i++) {
+    for (let i = 2; i <= 13; i++) {
       month.options[i].disabled = true;
     }
 
     if (
-      month.selectedIndex >= 1 &&
-      month.selectedIndex <= 12
+      month.selectedIndex >= 2 &&
+      month.selectedIndex <= 13
     ) {
       month.value = "All Months";
     }
@@ -384,11 +405,18 @@ if (variable === "Dew Point") {
   const traces = [];
 
 const groupCount =
-  plotType === "Monthly Climatology"
-    ? 12
-    : 24;
+  selectedMonth === "Season"
+    ? 4
+    : (
+        plotType === "Monthly Climatology"
+          ? 12
+          : 24
+      );
 
 for (let group = 0; group < groupCount; group++) {
+
+  const seasonName =
+    seasonNames[group];
 
     const values =
       records
@@ -402,27 +430,23 @@ for (let group = 0; group < groupCount; group++) {
 
 if (plotType === "Monthly Climatology") {
 
-  let monthMatch = false;
+  if (selectedMonth === "Season") {
 
-  if (selectedMonth === "All Months") {
-
-    monthMatch = true;
-
-  } else if (
-    ["Summer","Autumn","Winter","Spring"]
-      .includes(selectedMonth)
-  ) {
-
-    monthMatch = matchesSeason(
-      date.getMonth(),
-      selectedMonth
+    return (
+      matchesSeason(
+        date.getMonth(),
+        seasonName
+      ) &&
+      (
+        selectedYear === "All Years" ||
+        String(year) === selectedYear
+      )
     );
 
   }
 
   return (
     date.getMonth() === group &&
-    monthMatch &&
     (
       selectedYear === "All Years" ||
       String(year) === selectedYear
@@ -481,9 +505,13 @@ if (plotType === "Monthly Climatology") {
       y: values,
       type: "box",
 name:
-  plotType === "Monthly Climatology"
-    ? axisMonths[group]
-    : hourNames[group]
+  selectedMonth === "Season"
+    ? seasonNames[group]
+    : (
+        plotType === "Monthly Climatology"
+          ? axisMonths[group]
+          : hourNames[group]
+      )
     });
 
   }
@@ -525,6 +553,13 @@ updatePlotTypeAvailability();
 
 document
   .getElementById("statistic")
+  .addEventListener(
+    "change",
+    updatePlotTypeAvailability
+  );
+
+document
+  .getElementById("month")
   .addEventListener(
     "change",
     updatePlotTypeAvailability
