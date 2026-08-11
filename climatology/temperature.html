@@ -955,15 +955,18 @@ Object.entries(
 
       color: frequency,
 
-      colorscale: "Turbo",
+colorscale: [
+  [0.00, "#001122"],
+  [0.20, "#003366"],
+  [0.40, "#0066cc"],
+  [0.60, "#00cc66"],
+  [0.80, "#ffff00"],
+  [1.00, "#ff3300"]
+],
 
       opacity: 1,
 
-      showscale: true,
-
-      colorbar: {
-        title: "Frequency"
-      }
+showscale: false,
 
     }
 
@@ -979,17 +982,29 @@ Object.entries(
       color: "white"
     },
 
-    polar: {
+polar: {
 
-      radialaxis: {
+  radialaxis: {
 
-        title: "km/h",
+    title: "km/h",
 
-        angle: 90
+    angle: 90,
 
-      },
+    tickfont: {
+      color: "#444444"
+    },
 
-      angularaxis: {
+    gridcolor: "#999999"
+
+  },
+
+angularaxis: {
+
+  tickfont: {
+    color: "white"
+  },
+
+  gridcolor: "#999999",
 
         rotation: 90,
 
