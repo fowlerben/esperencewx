@@ -900,10 +900,10 @@ filteredRecords.forEach(record => {
   }
 
 const speedBin =
-  Math.round(speed * 2) / 2;
+  Math.round(speed * 5) / 5;
 
 const directionBin =
-  Math.floor(direction / 2) * 2;
+  Math.floor(direction / 5) * 5;
 
 const key =
   `${speedBin}_${directionBin}`;
@@ -930,7 +930,7 @@ Object.entries(
         speed + ds * 0.5;
 
       let d =
-        direction + dd * 2;
+        direction + dd * 5;
 
       while (d < 0) d += 360;
       while (d >= 360) d -= 360;
