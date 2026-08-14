@@ -370,6 +370,22 @@ const springOption =
   month.options[18];
 
   if (
+  plotType.value === "Histogram"
+) {
+
+  seasonOption.disabled = true;
+
+  if (month.value === "Season") {
+    month.value = "All Months";
+  }
+
+} else {
+
+  seasonOption.disabled = false;
+
+}
+
+  if (
   variable === "Wind" &&
   plotType.value === "Heatmap Climatology"
 ) {
@@ -518,6 +534,12 @@ function generateHeatmap(
   if (variable === "Dew Point") {
     field = "dew_point_last";
   }
+
+  if (variable === "Wind") {
+
+  field = "wind_speed_avg";
+
+}
 
   const z = [];
 
@@ -876,12 +898,14 @@ Plotly.newPlot(
       color: "white"
     },
 
-    xaxis: {
-      title:
-        variable === "Humidity"
-          ? "Relative Humidity (%)"
-          : "Temperature (°C)"
-    },
+xaxis: {
+  title:
+    variable === "Humidity"
+      ? "Relative Humidity (%)"
+      : variable === "Wind"
+        ? "Wind Speed (km/h)"
+        : "Temperature (°C)"
+},
 
     yaxis: {
       title: "Frequency"
