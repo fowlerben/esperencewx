@@ -1103,23 +1103,6 @@ const records =
   const variable =
     document.getElementById("variable").value;
 
-  const seasonOption =
-  month.options[13];
-
-if (variable === "Wind") {
-
-  seasonOption.disabled = true;
-
-  if (month.value === "Season") {
-    month.value = "All Months";
-  }
-
-} else {
-
-  seasonOption.disabled = false;
-
-}
-
   const selectedYear =
   document.getElementById("year").value;
 
