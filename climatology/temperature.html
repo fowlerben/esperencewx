@@ -1490,22 +1490,28 @@ traces.push({
   type: "box",
 name:
 
-  plotType ===
-    "Monthly Climatology"
+  selectedMonth === "Season"
 
-    ? (
+    ? seasonNames[group]
 
-        specificMonth
+    : (
 
-          ? String(
-              group + 1
+        plotType ===
+          "Monthly Climatology"
+
+          ? (
+
+              specificMonth
+
+                ? String(group + 1)
+
+                : axisMonths[group]
+
             )
 
-          : axisMonths[group]
+          : hourNames[group]
 
       )
-
-    : hourNames[group]
 });
 
 }
