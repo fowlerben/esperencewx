@@ -357,6 +357,18 @@ function updatePlotTypeAvailability() {
   const seasonOption =
   month.options[14]; // "Season"
 
+  const summerOption =
+  month.options[15];
+
+const autumnOption =
+  month.options[16];
+
+const winterOption =
+  month.options[17];
+
+const springOption =
+  month.options[18];
+
   if (
   variable === "Wind" &&
   plotType.value === "Heatmap Climatology"
@@ -371,6 +383,38 @@ function updatePlotTypeAvailability() {
 } else {
 
   seasonOption.disabled = false;
+
+}
+
+if (
+  plotType.value === "Monthly Climatology"
+) {
+
+  seasonOption.disabled = true;
+  summerOption.disabled = true;
+  autumnOption.disabled = true;
+  winterOption.disabled = true;
+  springOption.disabled = true;
+
+  if (
+    [
+      "Season",
+      "Summer",
+      "Autumn",
+      "Winter",
+      "Spring"
+    ].includes(month.value)
+  ) {
+    month.value = "All Months";
+  }
+
+} else {
+
+  seasonOption.disabled = false;
+  summerOption.disabled = false;
+  autumnOption.disabled = false;
+  winterOption.disabled = false;
+  springOption.disabled = false;
 
 }
 
@@ -1211,14 +1255,19 @@ if (variable === "Dew Point") {
 
   const traces = [];
 
+const specificMonth =
+  monthNames.includes(
+    selectedMonth
+  );
+
 const groupCount =
-  selectedMonth === "Season"
-    ? 4
-    : (
-        plotType === "Monthly Climatology"
-          ? 12
-          : 24
-      );
+  plotType === "Monthly Climatology"
+    ? (
+        specificMonth
+          ? 31
+          : 12
+      )
+    : 24;
 
 for (let group = 0; group < groupCount; group++) {
 
@@ -1270,13 +1319,43 @@ if (plotType === "Monthly Climatology") {
 
   }
 
+if (specificMonth) {
+
   return (
-    date.getMonth() === group &&
+
+    date.getMonth() ===
+      monthNames.indexOf(
+        selectedMonth
+      )
+
+    &&
+
+    date.getDate() ===
+      group + 1
+
+    &&
+
     (
       selectedYear === "All Years" ||
       String(year) === selectedYear
     )
+
   );
+
+}
+
+return (
+
+  date.getMonth() === group
+
+  &&
+
+  (
+    selectedYear === "All Years" ||
+    String(year) === selectedYear
+  )
+
+);
 
 }
 
@@ -1408,14 +1487,24 @@ else {
 traces.push({
   y: values,
   type: "box",
-  name:
-    selectedMonth === "Season"
-      ? seasonNames[group]
-      : (
-          plotType === "Monthly Climatology"
-            ? axisMonths[group]
-            : hourNames[group]
-        )
+name:
+
+  plotType ===
+    "Monthly Climatology"
+
+    ? (
+
+        specificMonth
+
+          ? String(
+              group + 1
+            )
+
+          : axisMonths[group]
+
+      )
+
+    : hourNames[group]
 });
 
 }
