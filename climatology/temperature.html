@@ -426,7 +426,11 @@ if (
 
 } else {
 
-  seasonOption.disabled = false;
+  if (
+    plotType.value !== "Histogram"
+  ) {
+    seasonOption.disabled = false;
+  }
 
   summerOption.disabled = false;
   autumnOption.disabled = false;
@@ -434,7 +438,6 @@ if (
   springOption.disabled = false;
 
 }
-
 if (plotType.value === "Heatmap Climatology") {
 
   statistic.value = "Mean";
@@ -688,6 +691,12 @@ function generateHistogram(
 ) {
 
 let field;
+
+if (variable === "Wind") {
+
+  field = "wind_speed_avg";
+
+}
 
 if (variable === "Temperature") {
 
