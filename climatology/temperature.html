@@ -354,6 +354,26 @@ function updatePlotTypeAvailability() {
   document.getElementById("variable")
     .value;
 
+  const seasonOption =
+  month.options[13]; // "Season"
+
+  if (
+  variable === "Wind" &&
+  plotType.value === "Heatmap Climatology"
+) {
+
+  seasonOption.disabled = true;
+
+  if (month.value === "Season") {
+    month.value = "All Months";
+  }
+
+} else {
+
+  seasonOption.disabled = false;
+
+}
+
 if (plotType.value === "Heatmap Climatology") {
 
   statistic.value = "Mean";
