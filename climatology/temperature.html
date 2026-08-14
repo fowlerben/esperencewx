@@ -370,22 +370,6 @@ const springOption =
   month.options[18];
 
   if (
-  plotType.value === "Histogram"
-) {
-
-  seasonOption.disabled = true;
-
-  if (month.value === "Season") {
-    month.value = "All Months";
-  }
-
-} else {
-
-  seasonOption.disabled = false;
-
-}
-
-  if (
   variable === "Wind" &&
   plotType.value === "Heatmap Climatology"
 ) {
@@ -515,6 +499,19 @@ if (
     }
 
   }
+
+  if (
+  plotType.value === "Histogram"
+) {
+
+  seasonOption.disabled = true;
+
+  if (month.value === "Season") {
+    month.value = "All Months";
+  }
+
+}
+
 
 }
 
