@@ -1103,6 +1103,23 @@ const records =
   const variable =
     document.getElementById("variable").value;
 
+  const seasonOption =
+  month.options[13];
+
+if (variable === "Wind") {
+
+  seasonOption.disabled = true;
+
+  if (month.value === "Season") {
+    month.value = "All Months";
+  }
+
+} else {
+
+  seasonOption.disabled = false;
+
+}
+
   const selectedYear =
   document.getElementById("year").value;
 
@@ -1155,7 +1172,13 @@ if (plotType === "Histogram") {
 
 let field;
 
-if (variable === "Temperature") {
+  if (variable === "Wind") {
+  
+    field = "wind_speed_avg";
+  
+  }
+  
+  if (variable === "Temperature") {
 
   if (statistic === "Mean") {
     field = "temp_avg";
@@ -1425,7 +1448,9 @@ Plotly.newPlot(
       title:
         variable === "Humidity"
           ? "Relative Humidity (%)"
-          : "Temperature (°C)"
+          : variable === "Wind"
+            ? "Wind Speed (km/h)"
+            : "Temperature (°C)"
     },
 
     paper_bgcolor: "#2d2d2d",
