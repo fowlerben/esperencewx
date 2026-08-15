@@ -1981,7 +1981,41 @@ return (
 
   let values;
 
-  if (statistic === "Mean") {
+if (
+  variable === "Wind" &&
+  statistic === "Gust Factor"
+) {
+
+  values =
+    filteredRecords
+      .map(record => {
+
+        const meanSpeed =
+          record.wind_speed_avg;
+
+        const gustSpeed =
+          record.wind_speed_hi;
+
+        if (
+          meanSpeed == null ||
+          gustSpeed == null ||
+          meanSpeed <= 0
+        ) {
+          return null;
+        }
+
+        return (
+          gustSpeed /
+          meanSpeed
+        );
+
+      })
+      .filter(value =>
+        value !== null
+      );
+
+}
+else if (statistic === "Mean") {
 
   values =
     filteredRecords
@@ -2114,14 +2148,19 @@ Plotly.newPlot(
     title:
       `${variable} · ${statistic} · ${selectedMonth} · ${plotType}`,
 
-    yaxis: {
-      title:
-        variable === "Humidity"
-          ? "Relative Humidity (%)"
+yaxis: {
+  title:
+    variable === "Humidity"
+      ? "Relative Humidity (%)"
+      : (
+          variable === "Wind" &&
+          statistic === "Gust Factor"
+        )
+          ? "Gust Factor"
           : variable === "Wind"
             ? "Wind Speed (km/h)"
             : "Temperature (°C)"
-    },
+},
 
     paper_bgcolor: "#2d2d2d",
     plot_bgcolor: "#2d2d2d",
