@@ -1727,17 +1727,26 @@ generateGustFactorHeatmap(
 
 return;
   }
-  else if (
-    variable === "Wind"
-  ) {
+else if (
+  variable === "Wind"
+) {
 
-    generateWindRoseHeatmap(
-      records,
-      selectedMonth,
-      selectedYear
-    );
+  document.getElementById(
+    "output"
+  ).style.display = "none";
 
-  } else {
+  document.getElementById(
+    "gustContainer"
+  ).style.display = "flex";
+
+  generateWindRoseHeatmap(
+    records,
+    selectedMonth,
+    selectedYear
+  );
+
+}
+  else {
 
     generateHeatmap(
       records,
