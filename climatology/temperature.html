@@ -1185,17 +1185,274 @@ function generateGustFactorRose(
   selectedYear
 ) {
 
+  const filteredRecords =
+    records.filter(record => {
+
+      const date =
+        new Date(record.time * 1000);
+
+      const year =
+        date.getFullYear();
+
+      const monthName =
+        monthNames[
+          date.getMonth()
+        ];
+
+      return (
+
+        (
+          selectedYear === "All Years" ||
+          String(year) === selectedYear
+        )
+
+        &&
+
+        (
+
+          selectedMonth === "All Months"
+
+          ||
+
+          monthName === selectedMonth
+
+          ||
+
+          (
+            [
+              "Summer",
+              "Autumn",
+              "Winter",
+              "Spring"
+            ].includes(selectedMonth)
+
+            &&
+
+            matchesSeason(
+              date.getMonth(),
+              selectedMonth
+            )
+          )
+
+        )
+
+      );
+
+    });
+
+  const bins = {};
+
+  filteredRecords.forEach(record => {
+
+    const meanSpeed =
+      record.wind_speed_avg;
+
+    const gustSpeed =
+      record.wind_speed_hi;
+
+    const direction =
+      record.wind_dir_of_prevail;
+
+    if (
+      meanSpeed == null ||
+      gustSpeed == null ||
+      direction == null
+    ) {
+      return;
+    }
+
+    const speedKmh =
+      meanSpeed * 1.60934;
+
+    if (speedKmh < 5) {
+      return;
+    }
+
+    const gustFactor =
+      gustSpeed / meanSpeed;
+
+    const directionBin =
+      Math.floor(direction / 10) * 10;
+
+    if (!bins[directionBin]) {
+      bins[directionBin] = [];
+    }
+
+    bins[directionBin].push(
+      gustFactor
+    );
+
+  });
+
+  const theta = [];
+  const p10 = [];
+  const p50 = [];
+  const p90 = [];
+
+  for (
+    let direction = 0;
+    direction < 360;
+    direction += 10
+  ) {
+
+    const values =
+      bins[direction]
+      ? [...bins[direction]]
+      : [];
+
+    if (values.length < 5) {
+      continue;
+    }
+
+    values.sort(
+      (a,b) => a - b
+    );
+
+    const percentile =
+      p => {
+
+        const index =
+          Math.floor(
+            (values.length - 1) * p
+          );
+
+        return values[index];
+
+      };
+
+    theta.push(direction);
+
+    p10.push(
+      percentile(0.10)
+    );
+
+    p50.push(
+      percentile(0.50)
+    );
+
+    p90.push(
+      percentile(0.90)
+    );
+
+  }
+
+  if (theta.length > 0) {
+
+    theta.push(theta[0]);
+
+    p10.push(p10[0]);
+    p50.push(p50[0]);
+    p90.push(p90[0]);
+
+  }
+
   Plotly.newPlot(
     "output",
-    [],
+    [
+
+      {
+        type: "scatterpolar",
+
+        mode: "lines",
+
+        name: "10th",
+
+        theta: theta,
+
+        r: p10,
+
+        line: {
+          color: "#66ccff",
+          width: 2
+        }
+      },
+
+      {
+        type: "scatterpolar",
+
+        mode: "lines",
+
+        name: "50th",
+
+        theta: theta,
+
+        r: p50,
+
+        line: {
+          color: "#ffff00",
+          width: 3
+        }
+      },
+
+      {
+        type: "scatterpolar",
+
+        mode: "lines",
+
+        name: "90th",
+
+        theta: theta,
+
+        r: p90,
+
+        line: {
+          color: "#ff4444",
+          width: 3
+        }
+      }
+
+    ],
+
     {
+
       title:
-        "Gust Factor Rose"
+        `Gust Factor Rose · ${selectedMonth}`,
+
+      paper_bgcolor: "#2d2d2d",
+
+      plot_bgcolor: "#2d2d2d",
+
+      font: {
+        color: "white"
+      },
+
+      polar: {
+
+        radialaxis: {
+
+          title:
+            "Gust Factor",
+
+          angle: 90,
+
+          tickfont: {
+            color: "white"
+          },
+
+          gridcolor:
+            "#999999"
+
+        },
+
+        angularaxis: {
+
+          rotation: 90,
+
+          direction:
+            "clockwise",
+
+          gridcolor:
+            "#999999"
+
+        }
+
+      }
+
     }
+
   );
 
 }
-
 function testLoad() {
 
 const records =
