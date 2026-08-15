@@ -133,6 +133,19 @@ Generate Box Plot
 ></div>
 
 <div
+  id="windContainer"
+  style="
+    display:none;
+    height:700px;
+  "
+>
+  <div
+    id="windRose"
+    style="height:700px;"
+  ></div>
+</div>
+
+<div
   id="gustContainer"
   style="
     display:none;
@@ -141,7 +154,6 @@ Generate Box Plot
     height:700px;
   "
 >
-
   <div
     id="gustRose"
     style="flex:1;"
@@ -151,7 +163,6 @@ Generate Box Plot
     id="gustHeatmap"
     style="flex:1;"
   ></div>
-
 </div>
 
 </div>
@@ -1116,8 +1127,8 @@ frequency.push(
 );
 
 });
-  Plotly.newPlot(
-    "gustRose",
+Plotly.newPlot(
+  "windRose",
     [
 
       {
@@ -1690,9 +1701,13 @@ const records =
   const statistic =
   document.getElementById("statistic").value;
 
-  document.getElementById(
+document.getElementById(
   "output"
 ).style.display = "block";
+
+document.getElementById(
+  "windContainer"
+).style.display = "none";
 
 document.getElementById(
   "gustContainer"
@@ -1736,8 +1751,8 @@ else if (
   ).style.display = "none";
 
   document.getElementById(
-    "gustContainer"
-  ).style.display = "flex";
+    "windContainer"
+  ).style.display = "block";
 
   generateWindRoseHeatmap(
     records,
