@@ -127,31 +127,7 @@ Generate Box Plot
 
 <div class="card">
 
-  <div
-    id="output"
-    style="height:700px;"
-  ></div>
-
-  <div
-    id="gustContainer"
-    style="
-      display:none;
-      height:700px;
-      gap:20px;
-    "
-  >
-
-    <div
-      id="gustRose"
-      style="flex:1;"
-    ></div>
-
-    <div
-      id="gustHeatmap"
-      style="flex:1;"
-    ></div>
-
-  </div>
+<div id="output" style="height:700px;"></div>
 
 </div>
 
@@ -674,8 +650,8 @@ function generateHeatmap(
 
   }
 
-Plotly.newPlot(
-  "gustRose",
+  Plotly.newPlot(
+    "output",
     [{
       z: z,
       x: axisMonths,
@@ -1508,178 +1484,6 @@ angularaxis: {
   );
 
 }
-
-function generateGustFactorHeatmap(
-  records,
-  selectedMonth,
-  selectedYear
-) {
-
-  const bins = {};
-
-  records.forEach(record => {
-
-    const date =
-      new Date(record.time * 1000);
-
-    const year =
-      date.getFullYear();
-
-    const monthName =
-      monthNames[date.getMonth()];
-
-    const matches =
-
-      (
-        selectedYear === "All Years" ||
-        String(year) === selectedYear
-      )
-
-      &&
-
-      (
-
-        selectedMonth === "All Months"
-
-        ||
-
-        monthName === selectedMonth
-
-        ||
-
-        (
-          ["Summer","Autumn","Winter","Spring"]
-            .includes(selectedMonth)
-
-          &&
-
-          matchesSeason(
-            date.getMonth(),
-            selectedMonth
-          )
-        )
-
-      );
-
-    if (!matches) return;
-
-    const meanSpeed =
-      record.wind_speed_avg;
-
-    const gustSpeed =
-      record.wind_speed_hi;
-
-    const direction =
-      record.wind_dir_of_prevail;
-
-    if (
-      meanSpeed == null ||
-      gustSpeed == null ||
-      direction == null
-    ) {
-      return;
-    }
-
-    const speedKmh =
-      meanSpeed * 1.60934;
-
-    if (speedKmh < 5) {
-      return;
-    }
-
-    const gustFactor =
-      gustSpeed / meanSpeed;
-
-    const speedBin =
-      Math.floor(speedKmh / 5) * 5;
-
-    const directionBin =
-      Math.floor(direction / 10) * 10;
-
-    const key =
-      `${speedBin}_${directionBin}`;
-
-    if (!bins[key]) {
-      bins[key] = [];
-    }
-
-    bins[key].push(gustFactor);
-
-  });
-
-  const theta = [];
-  const radius = [];
-  const colour = [];
-
-  Object.entries(bins)
-    .forEach(([key, values]) => {
-
-      const [
-        speed,
-        direction
-      ] =
-        key.split("_").map(Number);
-
-      theta.push(direction);
-
-      radius.push(speed);
-
-      colour.push(
-
-        values.reduce(
-          (a,b) => a + b,
-          0
-        ) / values.length
-
-      );
-
-    });
-
-  Plotly.newPlot(
-    "gustHeatmap",
-    [{
-      type: "scatterpolar",
-
-      mode: "markers",
-
-      theta: theta,
-
-      r: radius,
-
-      marker: {
-
-        size: 18,
-
-        color: colour,
-
-        colorscale: "Turbo",
-
-        colorbar: {
-          title: "GF"
-        }
-
-      }
-
-    }],
-    {
-
-      title:
-        "Gust Factor Heatmap",
-
-      paper_bgcolor: "#2d2d2d",
-
-      plot_bgcolor: "#2d2d2d",
-
-      font: {
-        color: "white"
-      }
-
-    }
-
-  );
-
-}
-  
 function testLoad() {
 
 const records =
@@ -1700,14 +1504,6 @@ const records =
   const statistic =
   document.getElementById("statistic").value;
 
-  document.getElementById(
-  "output"
-).style.display = "block";
-
-document.getElementById(
-  "gustContainer"
-).style.display = "none";
-
 if (plotType === "Heatmap Climatology") {
 
   if (
@@ -1715,25 +1511,11 @@ if (plotType === "Heatmap Climatology") {
     statistic === "Gust Factor"
   ) {
 
-document.getElementById(
-  "output"
-).style.display = "none";
-
-document.getElementById(
-  "gustContainer"
-).style.display = "flex";
-
-generateGustFactorRose(
-  records,
-  selectedMonth,
-  selectedYear
-);
-
-generateGustFactorHeatmap(
-  records,
-  selectedMonth,
-  selectedYear
-);
+    generateGustFactorRose(
+      records,
+      selectedMonth,
+      selectedYear
+    );
 
   }
   else if (
