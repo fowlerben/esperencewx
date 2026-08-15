@@ -674,8 +674,8 @@ function generateHeatmap(
 
   }
 
-Plotly.newPlot(
-  "gustRose",
+  Plotly.newPlot(
+    "output",
     [{
       z: z,
       x: axisMonths,
@@ -920,7 +920,7 @@ else {
 }
 
 Plotly.newPlot(
-  "gustRose",
+  "output",
   [{
     x: values,
     type: "histogram",
@@ -1107,9 +1107,11 @@ frequency.push(
 
 });
   Plotly.newPlot(
-  "output",
-  [{
-    type: "scatterpolar",
+    "gustRose",
+    [
+
+      {
+        type: "scatterpolar",
 
     r: radius,
     theta: theta,
