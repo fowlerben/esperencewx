@@ -2149,6 +2149,7 @@ Plotly.newPlot(
       `${variable} · ${statistic} · ${selectedMonth} · ${plotType}`,
 
 yaxis: {
+
   title:
     variable === "Humidity"
       ? "Relative Humidity (%)"
@@ -2159,7 +2160,15 @@ yaxis: {
           ? "Gust Factor"
           : variable === "Wind"
             ? "Wind Speed (km/h)"
-            : "Temperature (°C)"
+            : "Temperature (°C)",
+
+  ...(variable === "Wind" &&
+     statistic === "Gust Factor"
+       ? {
+           range: [1, 3]
+         }
+       : {})
+
 },
 
     paper_bgcolor: "#2d2d2d",
