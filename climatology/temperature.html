@@ -920,7 +920,7 @@ else {
 }
 
 Plotly.newPlot(
-  "output",
+  "gustRose",
   [{
     x: values,
     type: "histogram",
@@ -1587,9 +1587,14 @@ function generateGustFactorHeatmap(
 
     radius.push(meanSpeed);
 
-    colour.push(
-      gustSpeed / meanSpeed
-    );
+const gf =
+  gustSpeed / meanSpeed;
+
+if (gf > 3) {
+  return;
+}
+
+colour.push(gf);
 
   });
 
@@ -1612,9 +1617,12 @@ function generateGustFactorHeatmap(
 
         colorscale: "Turbo",
 
-        colorbar: {
-          title: "GF"
-        }
+colorbar: {
+  title: "GF"
+},
+
+cmin: 1,
+cmax: 3
 
       }
 
