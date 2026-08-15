@@ -397,12 +397,22 @@ const winterOption =
 const springOption =
   month.options[18];
 
-  if (
+if (
   variable === "Wind" &&
+  statistic.value === "Gust Factor" &&
   plotType.value === "Heatmap Climatology"
 ) {
 
   seasonOption.disabled = true;
+
+  summerOption.disabled = false;
+  autumnOption.disabled = false;
+  winterOption.disabled = false;
+  springOption.disabled = false;
+
+  for (let i = 1; i <= 12; i++) {
+    month.options[i].disabled = false;
+  }
 
   if (month.value === "Season") {
     month.value = "All Months";
@@ -418,7 +428,7 @@ if (
   plotType.value === "Monthly Climatology"
 ) {
 
-  seasonOption.disabled = true;
+  seasonOption.disabled = false;
 
   summerOption.disabled = true;
   autumnOption.disabled = true;
@@ -427,17 +437,14 @@ if (
 
   if (
     [
-      "Season",
       "Summer",
       "Autumn",
       "Winter",
       "Spring"
     ].includes(month.value)
   ) {
-    month.value = "All Months";
+    month.value = "Season";
   }
-
-}
 
 } else {
 
