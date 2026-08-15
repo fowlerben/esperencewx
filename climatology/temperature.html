@@ -1585,16 +1585,16 @@ function generateGustFactorHeatmap(
       return;
     }
 
-    theta.push(direction);
-
-    radius.push(meanSpeed);
-
-const gf =
+    const gf =
   gustSpeed / meanSpeed;
 
 if (gf > 3) {
   return;
 }
+
+    theta.push(direction);
+
+    radius.push(meanSpeed);
 
 colour.push(gf);
 
