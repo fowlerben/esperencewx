@@ -1845,20 +1845,37 @@ function generateRainFrequency(
 
       });
 
-    const rainy =
-      matching.filter(record =>
-        record.rainfall > 0
-      );
+const rainyDays =
+  new Set();
 
-    const frequency =
-      matching.length === 0
+const allDays =
+  new Set();
 
-        ? 0
+matching.forEach(record => {
 
-        : (
-            rainy.length /
-            matching.length
-          ) * 100;
+  const date =
+    new Date(record.time * 1000);
+
+  const dayKey =
+    date.toISOString().slice(0,10);
+
+  allDays.add(dayKey);
+
+  if (record.rainfall_mm > 0) {
+    rainyDays.add(dayKey);
+  }
+
+});
+
+const frequency =
+  allDays.size === 0
+
+    ? 0
+
+    : (
+        rainyDays.size /
+        allDays.size
+      ) * 100;
 
     frequencies.push(
       frequency
