@@ -420,25 +420,24 @@ if (
 
   seasonOption.disabled = true;
 
-  if (month.value === "Season") {
-    month.value = "All Months";
-  }
-
-  summerOption.disabled = false;
-  autumnOption.disabled = false;
-  winterOption.disabled = false;
-  springOption.disabled = false;
+  summerOption.disabled = true;
+  autumnOption.disabled = true;
+  winterOption.disabled = true;
+  springOption.disabled = true;
 
   if (
     [
+      "Season",
       "Summer",
       "Autumn",
       "Winter",
       "Spring"
     ].includes(month.value)
   ) {
-    month.value = "Season";
+    month.value = "All Months";
   }
+
+}
 
 } else {
 
