@@ -457,7 +457,8 @@ if (
     month.value = "Season";
   }
 
-} else {
+} 
+else {
 
   if (
     plotType.value !== "Histogram"
@@ -523,10 +524,24 @@ if (variable === "Wind") {
 }
 
 if (
-  statistic.value === "Mean" ||
+
+  statistic.value === "Mean"
+
+  ||
+
+  (
+    variable === "Wind" &&
+    statistic.value === "Gust Factor" &&
+    plotType.value === "Monthly Climatology"
+  )
+
+  ||
+
   plotType.value ===
     "Heatmap Climatology"
-) {
+
+)
+{
 
     hourlyOption.disabled = false;
 
