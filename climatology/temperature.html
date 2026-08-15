@@ -1418,33 +1418,55 @@ function generateGustFactorRose(
 
       polar: {
 
-        radialaxis: {
+radialaxis: {
 
-          title:
-            "Gust Factor",
+  title: "Gust Factor",
 
-          angle: 90,
+  range: [1,3],
 
-          tickfont: {
-            color: "white"
-          },
+  tick0: 1,
 
-          gridcolor:
-            "#999999"
+  dtick: 0.2,
 
-        },
+  angle: 90,
 
-        angularaxis: {
+  tickfont: {
+    color: "white"
+  },
 
-          rotation: 90,
+  gridcolor: "#999999"
 
-          direction:
-            "clockwise",
+},
 
-          gridcolor:
-            "#999999"
+angularaxis: {
 
-        }
+  tickfont: {
+    color: "white"
+  },
+
+  gridcolor: "#999999",
+
+  rotation: 90,
+
+  direction: "clockwise",
+
+  tickmode: "array",
+
+  tickvals: [
+    0,22.5,45,67.5,
+    90,112.5,135,157.5,
+    180,202.5,225,247.5,
+    270,292.5,315,337.5
+  ],
+
+  ticktext: [
+    "N","NNE","NE","ENE",
+    "E","ESE","SE","SSE",
+    "S","SSW","SW","WSW",
+    "W","WNW","NW","NNW"
+  ]
+
+}
 
       }
 
