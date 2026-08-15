@@ -418,12 +418,16 @@ if (
   plotType.value === "Monthly Climatology"
 ) {
 
-  seasonOption.disabled = false;
+  seasonOption.disabled = true;
 
-  summerOption.disabled = true;
-  autumnOption.disabled = true;
-  winterOption.disabled = true;
-  springOption.disabled = true;
+  if (month.value === "Season") {
+    month.value = "All Months";
+  }
+
+  summerOption.disabled = false;
+  autumnOption.disabled = false;
+  winterOption.disabled = false;
+  springOption.disabled = false;
 
   if (
     [
