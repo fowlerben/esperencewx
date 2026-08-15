@@ -69,6 +69,7 @@ button {
 <option>Mean</option>
 <option>Maximum</option>
 <option>Minimum</option>
+<option>Gust Factor</option>
 </select>
 </div>
 
@@ -341,6 +342,9 @@ function updatePlotTypeAvailability() {
   const statistic =
     document.getElementById("statistic");
 
+  const gustFactorOption =
+  statistic.options[3];
+
   const plotType =
     document.getElementById("plotType");
 
@@ -424,10 +428,14 @@ if (
 }
 if (plotType.value === "Heatmap Climatology") {
 
-  statistic.value = "Mean";
+  if (variable !== "Wind") {
 
-  for (let i = 1; i < statistic.options.length; i++) {
-    statistic.options[i].disabled = true;
+    statistic.value = "Mean";
+
+    for (let i = 1; i < statistic.options.length; i++) {
+      statistic.options[i].disabled = true;
+    }
+
   }
 
   return;
@@ -436,16 +444,17 @@ if (plotType.value === "Heatmap Climatology") {
 
 if (variable === "Wind") {
 
-  statistic.value = "Mean";
-
-  for (let i = 1; i < statistic.options.length; i++) {
-    statistic.options[i].disabled = true;
-  }
+  gustFactorOption.hidden = false;
 
 } else {
 
-  for (let i = 1; i < statistic.options.length; i++) {
-    statistic.options[i].disabled = false;
+  gustFactorOption.hidden = true;
+
+  if (
+    statistic.value ===
+      "Gust Factor"
+  ) {
+    statistic.value = "Mean";
   }
 
 }
@@ -1170,6 +1179,23 @@ angularaxis: {
 
 }
 
+function generateGustFactorRose(
+  records,
+  selectedMonth,
+  selectedYear
+) {
+
+  Plotly.newPlot(
+    "output",
+    [],
+    {
+      title:
+        "Gust Factor Rose"
+    }
+  );
+
+}
+
 function testLoad() {
 
 const records =
@@ -1192,7 +1218,21 @@ const records =
 
 if (plotType === "Heatmap Climatology") {
 
-  if (variable === "Wind") {
+  if (
+    variable === "Wind" &&
+    statistic === "Gust Factor"
+  ) {
+
+    generateGustFactorRose(
+      records,
+      selectedMonth,
+      selectedYear
+    );
+
+  }
+  else if (
+    variable === "Wind"
+  ) {
 
     generateWindRoseHeatmap(
       records,
