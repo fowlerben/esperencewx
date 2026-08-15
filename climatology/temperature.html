@@ -60,6 +60,7 @@ button {
 <option>Dew Point</option>
 <option>Humidity</option>
 <option>Wind</option>
+<option>Rainfall</option>
 </select>
 </div>
 
@@ -70,6 +71,7 @@ button {
 <option>Maximum</option>
 <option>Minimum</option>
 <option>Gust Factor</option>
+<option>Frequency</option>
 </select>
 </div>
 
@@ -380,6 +382,9 @@ function updatePlotTypeAvailability() {
   const gustFactorOption =
   statistic.options[3];
 
+  const frequencyOption =
+  statistic.options[4];
+
   const plotType =
     document.getElementById("plotType");
 
@@ -392,6 +397,16 @@ function updatePlotTypeAvailability() {
   const variable =
   document.getElementById("variable")
     .value;
+
+  if (
+  variable === "Rainfall" &&
+  statistic.value === "Frequency"
+) {
+
+  plotType.value =
+    "Hourly Climatology";
+
+}
 
   const seasonOption =
   month.options[14]; // "Season"
@@ -407,6 +422,19 @@ const winterOption =
 
 const springOption =
   month.options[18];
+
+if (
+  variable === "Rainfall" &&
+  statistic.value === "Frequency"
+) {
+
+  seasonOption.disabled = true;
+
+  if (month.value === "Season") {
+    month.value = "All Months";
+  }
+
+}
 
 if (
   variable === "Wind" &&
@@ -497,16 +525,54 @@ if (variable === "Wind") {
   gustFactorOption.hidden = true;
 
   if (
-    statistic.value ===
-      "Gust Factor"
+    statistic.value === "Gust Factor"
   ) {
     statistic.value = "Mean";
   }
 
 }
 
-  const hourlyOption =
-    plotType.options[1];
+if (variable === "Rainfall") {
+
+  frequencyOption.hidden = false;
+
+} else {
+
+  frequencyOption.hidden = true;
+
+  if (
+    statistic.value === "Frequency"
+  ) {
+    statistic.value = "Mean";
+  }
+
+}
+
+const hourlyOption =
+  plotType.options[1];
+
+const heatmapOption =
+  plotType.options[2];
+
+const histogramOption =
+  plotType.options[3];
+
+  if (
+  variable === "Rainfall" &&
+  statistic.value === "Frequency"
+) {
+
+  hourlyOption.disabled = false;
+
+  heatmapOption.disabled = true;
+  histogramOption.disabled = true;
+
+} else {
+
+  heatmapOption.disabled = false;
+  histogramOption.disabled = false;
+
+}
 
   if (selectedMonth === "Season") {
 
@@ -532,6 +598,13 @@ if (
   (
     variable === "Wind" &&
     statistic.value === "Gust Factor"
+  )
+
+  ||
+
+  (
+    variable === "Rainfall" &&
+    statistic.value === "Frequency"
   )
 
   ||
@@ -580,6 +653,14 @@ if (
 
 }
 
+if (
+  variable === "Rainfall" &&
+  statistic.value === "Frequency"
+) {
+
+  seasonOption.disabled = true;
+
+}
 
 }
 
@@ -1695,6 +1776,129 @@ cmax: 3
 
 }
 
+function generateRainFrequency(
+  records,
+  selectedMonth,
+  selectedYear
+) {
+
+  const frequencies = [];
+
+  for (let hour = 0; hour < 24; hour++) {
+
+    const matching =
+      records.filter(record => {
+
+        const date =
+          new Date(record.time * 1000);
+
+        const monthName =
+          monthNames[
+            date.getMonth()
+          ];
+
+        const year =
+          date.getFullYear();
+
+        return (
+
+          date.getHours() === hour
+
+          &&
+
+          (
+            selectedYear === "All Years" ||
+            String(year) === selectedYear
+          )
+
+          &&
+
+          (
+
+            selectedMonth === "All Months"
+
+            ||
+
+            monthName === selectedMonth
+
+            ||
+
+            (
+              [
+                "Summer",
+                "Autumn",
+                "Winter",
+                "Spring"
+              ].includes(selectedMonth)
+
+              &&
+
+              matchesSeason(
+                date.getMonth(),
+                selectedMonth
+              )
+            )
+
+          )
+
+        );
+
+      });
+
+    const rainy =
+      matching.filter(record =>
+        record.rainfall > 0
+      );
+
+    const frequency =
+      matching.length === 0
+
+        ? 0
+
+        : (
+            rainy.length /
+            matching.length
+          ) * 100;
+
+    frequencies.push(
+      frequency
+    );
+
+  }
+
+  Plotly.newPlot(
+    "output",
+    [{
+      x: hourNames,
+      y: frequencies,
+      type: "bar"
+    }],
+    {
+
+      title:
+        `Rainfall Frequency · ${selectedMonth}`,
+
+      paper_bgcolor: "#2d2d2d",
+
+      plot_bgcolor: "#2d2d2d",
+
+      font: {
+        color: "white"
+      },
+
+      xaxis: {
+        title: "Hour"
+      },
+
+      yaxis: {
+        title: "Rain Frequency (%)"
+      }
+
+    }
+  );
+
+}
+
 function testLoad() {
 
 const records =
@@ -1714,6 +1918,21 @@ const records =
 
   const statistic =
   document.getElementById("statistic").value;
+
+  if (
+  variable === "Rainfall" &&
+  statistic === "Frequency"
+) {
+
+  generateRainFrequency(
+    records,
+    selectedMonth,
+    selectedYear
+  );
+
+  return;
+
+}
 
 document.getElementById(
   "output"
