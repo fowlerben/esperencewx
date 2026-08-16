@@ -130,6 +130,42 @@ Generate Box Plot
 <div class="card">
 
 <div
+  id="rainThresholdContainer"
+  style="
+    display:none;
+    margin-bottom:10px;
+  "
+>
+
+  <label>Threshold</label>
+
+  <select id="rainThreshold">
+
+    <option value="0">
+      > 0 mm
+    </option>
+
+    <option value="1">
+      ≥ 1 mm
+    </option>
+
+    <option value="5">
+      ≥ 5 mm
+    </option>
+
+    <option value="10">
+      ≥ 10 mm
+    </option>
+
+    <option value="25">
+      ≥ 25 mm
+    </option>
+
+  </select>
+
+</div>
+
+<div
   id="output"
   style="height:700px;"
 ></div>
@@ -659,6 +695,28 @@ if (
 ) {
 
   seasonOption.disabled = true;
+
+}
+
+const rainThresholdContainer =
+  document.getElementById(
+    "rainThresholdContainer"
+  );
+
+if (
+  variable === "Rainfall" &&
+  statistic.value === "Frequency" &&
+  plotType.value === "Hourly Climatology"
+) {
+
+  rainThresholdContainer.style.display =
+    "block";
+
+}
+else {
+
+  rainThresholdContainer.style.display =
+    "none";
 
 }
 
@@ -1779,8 +1837,10 @@ cmax: 3
 function generateRainFrequency(
   records,
   selectedMonth,
-  selectedYear
-) {
+  selectedYear,
+  threshold
+)
+{
 
   const frequencies = [];
 
@@ -1861,10 +1921,21 @@ matching.forEach(record => {
 
   allDays.add(dayKey);
 
-  if (record.rainfall_mm > 0) {
-    rainyDays.add(dayKey);
-  }
+if (
 
+  (threshold === 0 &&
+   record.rainfall_mm > 0)
+
+  ||
+
+  (threshold > 0 &&
+   record.rainfall_mm >= threshold)
+
+) {
+
+  rainyDays.add(dayKey);
+
+}
 });
 
 const frequency =
@@ -1892,8 +1963,12 @@ const frequency =
     }],
     {
 
-      title:
-        `Rainfall Frequency · ${selectedMonth}`,
+title:
+  `Rainfall Frequency · ${
+    threshold === 0
+      ? ">0 mm"
+      : `≥${threshold} mm`
+  } · ${selectedMonth}`,
 
       paper_bgcolor: "#2d2d2d",
 
@@ -1936,16 +2011,24 @@ const records =
   const statistic =
   document.getElementById("statistic").value;
 
+  const threshold =
+  Number(
+    document.getElementById(
+      "rainThreshold"
+    ).value
+  );
+
   if (
   variable === "Rainfall" &&
   statistic === "Frequency"
 ) {
 
-  generateRainFrequency(
-    records,
-    selectedMonth,
-    selectedYear
-  );
+generateRainFrequency(
+  records,
+  selectedMonth,
+  selectedYear,
+  threshold
+);
 
   return;
 
@@ -2429,6 +2512,7 @@ yaxis: {
     }
   }
 );
+
 }
 
 loadAllRecords().then(records => {
@@ -2473,6 +2557,13 @@ document
 document
   .getElementById("generateButton")
   .addEventListener("click", testLoad);
+
+  document
+  .getElementById("rainThreshold")
+  .addEventListener(
+    "change",
+    testLoad
+  );
   
 </script>
 
