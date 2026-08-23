@@ -588098,5 +588098,13 @@
     "bar_sea_level": 30.258,
     "bar_hi": 30.262,
     "bar_lo": 30.258
+  },
+  {
+    "time": 1787453100,
+    "solar_rad_avg_552869": 366,
+    "solar_rad_hi_552869": 401,
+    "uv_index_avg_552869": null,
+    "uv_index_hi_552869": null,
+    "solar_energy_552869": 2.6243331
   }
 ]
