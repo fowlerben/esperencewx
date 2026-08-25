@@ -278,10 +278,17 @@ async function loadAllRecords() {
         continue;
       }
 
-      const data =
-        await response.json();
+const data =
+  await response.json();
 
-      allRecords.push(...data);
+data.forEach(record => {
+
+  record.theta_e =
+    calculateThetaE(record);
+
+});
+
+allRecords.push(...data);
 
     } catch {
 
@@ -326,6 +333,55 @@ function populateYears(records) {
 function FtoC(value) {
 
   return (value - 32) * 5 / 9;
+
+}
+
+function calculateThetaE(record) {
+
+  const tempC =
+    FtoC(record.temp_avg);
+
+  const dewpointC =
+    FtoC(record.dew_point_last);
+
+  const tempK =
+    tempC + 273.15;
+
+  const dewpointK =
+    dewpointC + 273.15;
+
+  const e =
+    6.112 *
+    Math.exp(
+      (
+        17.67 * dewpointC
+      ) /
+      (
+        dewpointC + 243.5
+      )
+    );
+
+  const q =
+    (
+      0.622 * e
+    ) /
+    (
+      1013.25 - 0.378 * e
+    );
+
+  return (
+    tempK *
+    Math.exp(
+      (
+        (3376 / dewpointK)
+        - 2.54
+      ) *
+      q *
+      (
+        1 + 0.81 * q
+      )
+    )
+  );
 
 }
 
