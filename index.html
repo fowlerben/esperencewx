@@ -2735,7 +2735,7 @@ const terrLabels =
         }
       )
   );
-const chartLabels = todayHistory.map(r =>
+const chartLabels = todayArchive.map(r =>
   new Date(r.time * 1000).toLocaleTimeString(
     "en-AU",
     {
@@ -2746,10 +2746,35 @@ const chartLabels = todayHistory.map(r =>
   )
 );
 
-const chartTemps = todayHistory.map(r => r.temp_c);
-const chartDews = todayHistory.map(r => r.dew_c);
-const chartHumidity = todayHistory.map(r => r.humidity);
-const chartPressure = todayHistory.map(r => r.pressure_hpa);
+const chartTemps =
+  todayArchive.map(r =>
+    r.temp_last != null
+      ? toC(r.temp_last)
+      : null
+  );
+
+const chartDews =
+  todayArchive.map(r =>
+    r.dew_point_last != null
+      ? toC(r.dew_point_last)
+      : null
+  );
+
+const chartHumidity =
+  todayArchive.map(r =>
+    r.hum_last ?? null
+  );
+
+const chartPressure =
+  todayArchive.map(r =>
+    r.bar_sea_level != null
+      ? Number(
+          inHgToHpa(
+            r.bar_sea_level
+          )
+        )
+      : null
+  );
 const solarLabels =
   solarHistory.map(r =>
     new Date(r.time * 1000)
