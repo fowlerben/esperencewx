@@ -57,6 +57,7 @@ button {
 <label>Variable</label><br>
 <select id="variable">
 <option>Temperature</option>
+<option>Equivalent Potential Temperature</option>
 <option>Dew Point</option>
 <option>Humidity</option>
 <option>Wind</option>
@@ -790,6 +791,13 @@ function generateHeatmap(
     field = "temp_avg";
   }
 
+  if (
+    variable ===
+    "Equivalent Potential Temperature"
+  ) {
+    field = "theta_e";
+  }
+
   if (variable === "Humidity") {
     field = "hum_last";
   }
@@ -838,12 +846,12 @@ function generateHeatmap(
             let value =
               record[field];
 
-            if (
-              variable === "Temperature" ||
-              variable === "Dew Point"
-            ) {
-              value = FtoC(value);
-            }
+if (
+  variable === "Temperature" ||
+  variable === "Dew Point"
+) {
+  value = FtoC(value);
+}
 
             return value;
 
@@ -912,12 +920,15 @@ function generateHeatmap(
       y: hourNames,
       type: "heatmap",
       colorscale: colorscale,
-      colorbar: {
-        title:
-          variable === "Humidity"
-            ? "%"
-            : "°C"
-      }
+colorbar: {
+  title:
+    variable === "Humidity"
+      ? "%"
+      : variable ===
+          "Equivalent Potential Temperature"
+        ? "K"
+        : "°C"
+}
     }],
     {
       title:
@@ -971,6 +982,15 @@ if (variable === "Temperature") {
   if (statistic === "Minimum") {
     field = "temp_lo";
   }
+
+}
+
+  if (
+  variable ===
+  "Equivalent Potential Temperature"
+) {
+
+  field = "theta_e";
 
 }
 
