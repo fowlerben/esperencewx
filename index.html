@@ -4400,11 +4400,9 @@ if (
     tempC - dewC;
 
   if (
-    dpdVal < 0.5 ||
-    (
+    dpdVal <= 0.5 &&
       fogTempDelta != null &&
       fogTempDelta <= -3
-    )
   ) {
 
     fogAlert.innerText =
@@ -4416,7 +4414,7 @@ if (
 
   }
   else if (
-    dpdVal < 1
+    dpdVal <= 1
   ) {
 
     fogAlert.innerText =
