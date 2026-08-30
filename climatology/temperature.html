@@ -2345,16 +2345,18 @@ function generateSolarClimatology(
 
   });
 
-  const labels = [];
+const labels = [];
 
-  const mean = [];
+const mean = [];
 
-  const p10 = [];
-  const p25 = [];
-  const p75 = [];
-  const p90 = [];
+const p10 = [];
+const p25 = [];
+const p75 = [];
+const p90 = [];
 
-  const potential = [];
+const potential = [];
+
+const percentPotential = [];
 
   for (
     let slot = 0;
@@ -2434,6 +2436,26 @@ function generateSolarClimatology(
     );
 
   }
+
+  for (let i = 0; i < mean.length; i++) {
+
+  if (
+    mean[i] == null ||
+    potential[i] == null ||
+    potential[i] <= 0
+  ) {
+
+    percentPotential.push(null);
+
+  } else {
+
+    percentPotential.push(
+      mean[i] / potential[i] * 100
+    );
+
+  }
+
+}
 
   Plotly.newPlot(
 
@@ -2550,17 +2572,33 @@ function generateSolarClimatology(
         name: "Mean Solar"
       },
 
-      {
-        x: labels,
-        y: potential,
-        mode: "lines",
-        line: {
-          color: "#ffffff",
-          width: 3
-        },
-        name: "Potential Solar"
-      }
+{
+  x: labels,
+  y: potential,
+  mode: "lines",
+  line: {
+    color: "#ffffff",
+    width: 3
+  },
+  name: "Potential Solar"
+},
 
+{
+  x: labels,
+  y: percentPotential,
+
+  mode: "lines",
+
+  yaxis: "y2",
+
+  line: {
+    color: "#00ffff",
+    width: 3,
+    dash: "dash"
+  },
+
+  name: "% Potential"
+}
     ],
 
     {
@@ -2601,12 +2639,25 @@ function generateSolarClimatology(
 
       },
 
-      yaxis: {
+yaxis: {
 
-        title:
-          "Solar Radiation (W/m²)"
+  title:
+    "Solar Radiation (W/m²)"
 
-      }
+},
+
+yaxis2: {
+
+  title:
+    "% Potential",
+
+  overlaying: "y",
+
+  side: "right",
+
+  range: [0,120]
+
+}
 
     }
 
