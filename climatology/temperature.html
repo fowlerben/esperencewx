@@ -62,6 +62,7 @@ button {
 <option>Humidity</option>
 <option>Wind</option>
 <option>Rainfall</option>
+<option>Solar Radiation</option>
 </select>
 </div>
 
@@ -442,6 +443,26 @@ function getReportingDay(date, variable, statistic) {
   }
 
   return d.toISOString().slice(0,10);
+
+}
+
+function percentile(values, p) {
+
+  if (!values.length) {
+    return null;
+  }
+
+  const sorted =
+    [...values].sort(
+      (a,b) => a - b
+    );
+
+  const index =
+    Math.floor(
+      (sorted.length - 1) * p
+    );
+
+  return sorted[index];
 
 }
 
@@ -966,6 +987,16 @@ let field;
 if (variable === "Wind") {
 
   field = "wind_speed_avg";
+
+}
+
+if (
+  variable ===
+  "Solar Radiation"
+) {
+
+  field =
+    "solar_rad_avg";
 
 }
 
@@ -2067,6 +2098,374 @@ title:
 
 }
 
+function generateSolarClimatology(
+  records,
+  selectedMonth,
+  selectedYear
+)
+{
+
+  const bins =
+    Array.from(
+      {length:288},
+      () => []
+    );
+
+  const potentialBins =
+    Array.from(
+      {length:288},
+      () => []
+    );
+
+  records.forEach(record => {
+
+    const date =
+      new Date(record.time * 1000);
+
+    const year =
+      date.getFullYear();
+
+    const monthName =
+      monthNames[
+        date.getMonth()
+      ];
+
+    const matches =
+
+      (
+        selectedYear === "All Years" ||
+
+        String(year) === selectedYear
+
+      )
+
+      &&
+
+      (
+
+        selectedMonth === "All Months"
+
+        ||
+
+        monthName === selectedMonth
+
+        ||
+
+        (
+          [
+            "Summer",
+            "Autumn",
+            "Winter",
+            "Spring"
+          ].includes(selectedMonth)
+
+          &&
+
+          matchesSeason(
+            date.getMonth(),
+            selectedMonth
+          )
+        )
+
+      );
+
+    if (!matches) {
+      return;
+    }
+
+    const solar =
+      record.solar_rad_avg;
+
+    if (solar == null) {
+      return;
+    }
+
+    const slot =
+      date.getHours() * 12 +
+
+      Math.floor(
+        date.getMinutes() / 5
+      );
+
+    bins[slot].push(solar);
+
+    potentialBins[slot].push(
+      clearSkySolar(
+        record.time
+      )
+    );
+
+  });
+
+  const labels = [];
+
+  const mean = [];
+
+  const p10 = [];
+  const p25 = [];
+  const p75 = [];
+  const p90 = [];
+
+  const potential = [];
+
+  for (
+    let slot = 0;
+    slot < 288;
+    slot++
+  ) {
+
+    const values =
+      bins[slot];
+
+    labels.push(
+
+      `${String(
+        Math.floor(slot / 12)
+      ).padStart(2,"0")}:${
+        String(
+          (slot % 12) * 5
+        ).padStart(2,"0")
+      }`
+
+    );
+
+    if (
+      values.length < 5
+    ) {
+
+      mean.push(null);
+
+      p10.push(null);
+      p25.push(null);
+      p75.push(null);
+      p90.push(null);
+
+      potential.push(null);
+
+      continue;
+
+    }
+
+    mean.push(
+
+      values.reduce(
+        (a,b) => a+b,
+        0
+      ) / values.length
+
+    );
+
+    p10.push(
+      percentile(values,0.10)
+    );
+
+    p25.push(
+      percentile(values,0.25)
+    );
+
+    p75.push(
+      percentile(values,0.75)
+    );
+
+    p90.push(
+      percentile(values,0.90)
+    );
+
+    potential.push(
+
+      potentialBins[slot]
+        .reduce(
+          (a,b)=>a+b,
+          0
+        )
+
+      /
+
+      potentialBins[slot].length
+
+    );
+
+  }
+
+  Plotly.newPlot(
+
+    "output",
+
+    [
+
+      {
+        x: labels,
+        y: p90,
+        mode: "lines",
+        line: {
+          color:
+            "rgba(255,255,0,0)"
+        },
+        showlegend: false
+      },
+
+      {
+        x: labels,
+        y: p10,
+        mode: "lines",
+        fill: "tonexty",
+        fillcolor:
+          "rgba(255,255,0,0.10)",
+        line: {
+          color:
+            "rgba(255,255,0,0)"
+        },
+        name: "10-90%"
+      },
+
+      {
+        x: labels,
+        y: p75,
+        mode: "lines",
+        line: {
+          color:
+            "rgba(255,255,0,0)"
+        },
+        showlegend: false
+      },
+
+      {
+        x: labels,
+        y: p25,
+        mode: "lines",
+        fill: "tonexty",
+        fillcolor:
+          "rgba(255,255,0,0.30)",
+        line: {
+          color:
+            "rgba(255,255,0,0)"
+        },
+        name: "25-75%"
+      },
+
+      {
+        x: labels,
+        y: p10,
+        mode: "lines",
+        line: {
+          color: "#ffff99",
+          width: 1,
+          dash: "dot"
+        },
+        name: "10th"
+      },
+
+      {
+        x: labels,
+        y: p25,
+        mode: "lines",
+        line: {
+          color: "#ffff00",
+          width: 1,
+          dash: "dot"
+        },
+        name: "25th"
+      },
+
+      {
+        x: labels,
+        y: p75,
+        mode: "lines",
+        line: {
+          color: "#ffff00",
+          width: 1,
+          dash: "dot"
+        },
+        name: "75th"
+      },
+
+      {
+        x: labels,
+        y: p90,
+        mode: "lines",
+        line: {
+          color: "#ffff99",
+          width: 1,
+          dash: "dot"
+        },
+        name: "90th"
+      },
+
+      {
+        x: labels,
+        y: mean,
+        mode: "lines",
+        line: {
+          color: "#ffd700",
+          width: 4
+        },
+        name: "Mean Solar"
+      },
+
+      {
+        x: labels,
+        y: potential,
+        mode: "lines",
+        line: {
+          color: "#ffffff",
+          width: 3
+        },
+        name: "Potential Solar"
+      }
+
+    ],
+
+    {
+
+      title:
+        `Solar Radiation Climatology · ${selectedMonth}`,
+
+      paper_bgcolor:
+        "#2d2d2d",
+
+      plot_bgcolor:
+        "#2d2d2d",
+
+      font: {
+        color: "white"
+      },
+
+      xaxis: {
+
+        title:
+          "Time of Day",
+
+        tickmode:
+          "array",
+
+        tickvals: [
+
+          "00:00",
+          "03:00",
+          "06:00",
+          "09:00",
+          "12:00",
+          "15:00",
+          "18:00",
+          "21:00"
+
+        ]
+
+      },
+
+      yaxis: {
+
+        title:
+          "Solar Radiation (W/m²)"
+
+      }
+
+    }
+
+  );
+
+}
+
 function testLoad() {
 
 const records =
@@ -2105,6 +2504,21 @@ generateRainFrequency(
   selectedYear,
   threshold
 );
+
+  return;
+
+}
+
+if (
+  variable === "Solar Radiation" &&
+  plotType === "Hourly Climatology"
+) {
+
+  generateSolarClimatology(
+    records,
+    selectedMonth,
+    selectedYear
+  );
 
   return;
 
