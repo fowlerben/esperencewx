@@ -466,6 +466,154 @@ function percentile(values, p) {
 
 }
 
+function clearSkySolar(
+  timestamp,
+  elevationM = 130
+) {
+
+  const lat =
+    -38.16330;
+
+  const date =
+    new Date(timestamp * 1000);
+
+  const start =
+    new Date(
+      date.getFullYear(),
+      0,
+      0
+    );
+
+  const day =
+    Math.floor(
+      (date - start) /
+      86400000
+    );
+
+const gamma =
+  (2 * Math.PI / 365) *
+  (day - 1);
+
+const earthSunFactor =
+  1.00011 +
+  0.034221 * Math.cos(gamma) +
+  0.00128 * Math.sin(gamma) +
+  0.000719 * Math.cos(2 * gamma) +
+  0.000077 * Math.sin(2 * gamma);
+
+const decl =
+  0.006918 -
+  0.399912 * Math.cos(gamma) +
+  0.070257 * Math.sin(gamma) -
+  0.006758 * Math.cos(2 * gamma) +
+  0.000907 * Math.sin(2 * gamma) -
+  0.002697 * Math.cos(3 * gamma) +
+  0.00148 * Math.sin(3 * gamma);
+
+   const eqTime =
+    229.18 * (
+      0.000075 +
+      0.001868 * Math.cos(gamma) -
+      0.032077 * Math.sin(gamma) -
+      0.014615 * Math.cos(2 * gamma) -
+      0.040849 * Math.sin(2 * gamma)
+    );
+  
+  const timezoneOffset =
+    -date.getTimezoneOffset() / 60;
+  
+  const minutes =
+    date.getHours() * 60 +
+    date.getMinutes() +
+    date.getSeconds() / 60;
+  
+  const solarTime =
+    minutes +
+    eqTime +
+    4 * (144.30763 - 15 * timezoneOffset);
+  
+  const hourAngle =
+    (solarTime / 4 - 180) *
+    Math.PI / 180;
+
+  const latRad =
+    lat *
+    Math.PI / 180;
+
+  const solarElevation =
+    Math.asin(
+
+      Math.sin(latRad) *
+      Math.sin(decl)
+
+      +
+
+      Math.cos(latRad) *
+      Math.cos(decl) *
+      Math.cos(hourAngle)
+
+    );
+
+  if (
+    solarElevation <= 0
+  ) {
+    return 0;
+  }
+
+  const solarElevationDeg =
+    solarElevation *
+    180 /
+    Math.PI;
+
+  const airMass =
+    1 /
+    (
+      Math.sin(solarElevation)
+      +
+      0.50572 *
+      Math.pow(
+        solarElevationDeg +
+        6.07995,
+        -1.6364
+      )
+    );
+
+  const pressureFactor =
+    Math.exp(
+      -elevationM /
+      8434.5
+    );
+
+  const adjustedAirMass =
+    airMass *
+    pressureFactor;
+
+const irradiance =
+  1361 *
+  earthSunFactor *
+  Math.sin(
+    solarElevation
+  ) *
+  Math.pow(
+    0.88,
+    adjustedAirMass
+  );
+
+const seasonalFactor =
+  0.995 +
+  0.08 *
+  Math.cos(
+    2 * Math.PI *
+    (day - 196) / 365
+  );
+
+return Math.max(
+  0,
+  irradiance * seasonalFactor
+);
+
+}
+
 function matchesSeason(month, season) {
 
   if (season === "Summer") {
