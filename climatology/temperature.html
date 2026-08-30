@@ -63,6 +63,7 @@ button {
 <option>Wind</option>
 <option>Rainfall</option>
 <option>Solar Radiation</option>
+<option>Solar Energy</option>
 </select>
 </div>
 
@@ -2771,6 +2772,238 @@ yaxis2: {
 
 }
 
+function generateSolarEnergyClimatology(
+  records,
+  selectedYear
+) {
+
+  const energyTraces = [];
+  const transmissionTraces = [];
+
+  for (let month = 0; month < 12; month++) {
+
+    const dailyTotals = {};
+
+    records.forEach(record => {
+
+      const date =
+        new Date(record.time * 1000);
+
+      if (
+        selectedYear !== "All Years" &&
+        String(date.getFullYear()) !== selectedYear
+      ) {
+        return;
+      }
+
+      if (
+        date.getMonth() !== month
+      ) {
+        return;
+      }
+
+      const solar =
+        getSolarValue(
+          record,
+          date
+        );
+
+      if (solar == null) {
+        return;
+      }
+
+      const dayKey =
+        date.toISOString().slice(0,10);
+
+      if (!dailyTotals[dayKey]) {
+
+        dailyTotals[dayKey] = {
+
+          energy: 0,
+          potential: 0
+
+        };
+
+      }
+
+      dailyTotals[dayKey].energy +=
+        solar * 300 / 1000000;
+
+      dailyTotals[dayKey].potential +=
+        clearSkySolar(
+          record.time
+        ) * 300 / 1000000;
+
+    });
+
+    const monthlyEnergy = [];
+    const monthlyTransmission = [];
+
+    Object.values(
+      dailyTotals
+    ).forEach(day => {
+
+      monthlyEnergy.push(
+        day.energy
+      );
+
+      if (day.potential > 0) {
+
+        monthlyTransmission.push(
+          day.energy /
+          day.potential *
+          100
+        );
+
+      }
+
+    });
+
+    energyTraces.push({
+
+      y: monthlyEnergy,
+
+      type: "box",
+
+      name:
+        axisMonths[month]
+
+    });
+
+    transmissionTraces.push({
+
+      y: monthlyTransmission,
+
+      type: "box",
+
+      name:
+        axisMonths[month],
+
+      visible: false
+
+    });
+
+  }
+
+  Plotly.newPlot(
+    "output",
+    [
+
+      ...energyTraces,
+
+      ...transmissionTraces
+
+    ],
+    {
+
+      title:
+        "Monthly Solar Energy Climatology",
+
+      paper_bgcolor:
+        "#2d2d2d",
+
+      plot_bgcolor:
+        "#2d2d2d",
+
+      font: {
+        color: "white"
+      },
+
+      yaxis: {
+        title:
+          "Daily Solar Energy (MJ/m²)"
+      },
+
+      updatemenus: [
+        {
+          type: "buttons",
+
+          direction: "right",
+
+          x: 0.5,
+
+          y: 1.15,
+
+          buttons: [
+
+            {
+              label: "Energy",
+
+              method: "update",
+
+              args: [
+
+                {
+                  visible: [
+
+                    true,true,true,true,
+                    true,true,true,true,
+                    true,true,true,true,
+
+                    false,false,false,false,
+                    false,false,false,false,
+                    false,false,false,false
+
+                  ]
+                },
+
+                {
+                  title:
+                    "Monthly Solar Energy Climatology",
+
+                  yaxis: {
+                    title:
+                      "Daily Solar Energy (MJ/m²)"
+                  }
+                }
+
+              ]
+            },
+
+            {
+              label: "Transmission",
+
+              method: "update",
+
+              args: [
+
+                {
+                  visible: [
+
+                    false,false,false,false,
+                    false,false,false,false,
+                    false,false,false,false,
+
+                    true,true,true,true,
+                    true,true,true,true,
+                    true,true,true,true
+
+                  ]
+                },
+
+                {
+                  title:
+                    "Monthly Solar Transmission Climatology",
+
+                  yaxis: {
+                    title:
+                      "Transmission (%)"
+                  }
+                }
+
+              ]
+            }
+
+          ]
+        }
+      ]
+
+    }
+
+  );
+
+}
+
 function testLoad() {
 
 const records =
@@ -2809,6 +3042,20 @@ generateRainFrequency(
   selectedYear,
   threshold
 );
+
+  return;
+
+}
+
+if (
+  variable === "Solar Energy" &&
+  plotType === "Monthly Climatology"
+) {
+
+  generateSolarEnergyClimatology(
+    records,
+    selectedYear
+  );
 
   return;
 
