@@ -1089,6 +1089,108 @@ return Math.max(
 );
 
 }
+function getSolarValue(
+  record,
+  date
+) {
+
+  const mainSolar =
+    record.solar_rad_avg;
+
+  const roofSolar =
+    record.solar_rad_avg_552869;
+
+  const month =
+    date.getMonth();
+
+  const minutes =
+    date.getHours() * 60 +
+    date.getMinutes();
+
+  switch (month) {
+
+    case 0: // Jan
+      if (
+        minutes <= 505 ||
+        minutes >= 1080
+      ) {
+        return roofSolar ?? mainSolar;
+      }
+      break;
+
+    case 1: // Feb
+      if (
+        minutes <= 510 ||
+        minutes >= 1110
+      ) {
+        return roofSolar ?? mainSolar;
+      }
+      break;
+
+    case 2: // Mar
+      if (
+        minutes <= 505 ||
+        minutes >= 1105
+      ) {
+        return roofSolar ?? mainSolar;
+      }
+      break;
+
+    case 3: // Apr
+      if (
+        minutes >= 1010
+      ) {
+        return roofSolar ?? mainSolar;
+      }
+      break;
+
+    case 4: // May
+      if (
+        minutes <= 495
+      ) {
+        return roofSolar ?? mainSolar;
+      }
+      break;
+
+    case 5: // Jun
+      if (
+        minutes <= 535
+      ) {
+        return roofSolar ?? mainSolar;
+      }
+      break;
+
+    case 7: // Aug
+      if (
+        minutes >= 995
+      ) {
+        return roofSolar ?? mainSolar;
+      }
+      break;
+
+    case 10: // Nov
+      if (
+        minutes <= 485 ||
+        minutes >= 1060
+      ) {
+        return roofSolar ?? mainSolar;
+      }
+      break;
+
+    case 11: // Dec
+      if (
+        minutes <= 490 ||
+        minutes >= 1070
+      ) {
+        return roofSolar ?? mainSolar;
+      }
+      break;
+
+  }
+
+  return mainSolar;
+
+}
 function formatHour(hour) {
 
   let h = Math.floor(hour);
@@ -2788,8 +2890,11 @@ const solarLabels =
   );
 
 const chartSolar =
-  solarHistory.map(
-    r => r.solar_rad_avg ?? null
+  solarHistory.map(r =>
+    getSolarValue(
+      r,
+      new Date(r.time * 1000)
+    )
   );
 
 const chartSolarHi =
@@ -2831,9 +2936,15 @@ const pulseEvents =
         return false;
       }
 
-      const pulseRatio =
-        (r.solar_rad_hi - r.solar_rad_avg)
-        / r.solar_rad_hi;
+const solarValue =
+  getSolarValue(
+    r,
+    new Date(r.time * 1000)
+  );
+
+const pulseRatio =
+  (r.solar_rad_hi - solarValue)
+  / r.solar_rad_hi;
 
       return pulseRatio > 0.25;
 
@@ -3528,9 +3639,15 @@ const pulseEvents =
       return false;
     }
 
-    const pulseRatio =
-      (r.solar_rad_hi - r.solar_rad_avg)
-      / r.solar_rad_hi;
+const solarValue =
+  getSolarValue(
+    r,
+    new Date(r.time * 1000)
+  );
+
+const pulseRatio =
+  (r.solar_rad_hi - solarValue)
+  / r.solar_rad_hi;
 
     return pulseRatio > 0.25;
 
@@ -3909,9 +4026,19 @@ const uvPeakTime =
     : "";
 // SOLAR
 
+const currentSolar =
+  latestArchive
+    ? getSolarValue(
+        latestArchive,
+        new Date(
+          latestArchive.time * 1000
+        )
+      )
+    : null;
+
 solar.innerText =
-  latestArchive?.solar_rad_avg != null
-    ? latestArchive.solar_rad_avg.toFixed(0) +
+  currentSolar != null
+    ? currentSolar.toFixed(0) +
       " W/m²"
     : "N/A";
 
