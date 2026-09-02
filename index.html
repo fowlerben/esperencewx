@@ -1190,6 +1190,77 @@ function getSolarValue(
 
   return mainSolar;
 
+  function getSolarHighValue(
+  record,
+  date
+) {
+
+  const mainSolar =
+    record.solar_rad_hi;
+
+  const roofSolar =
+    record.solar_rad_hi_552869;
+
+  const month =
+    date.getMonth();
+
+  const minutes =
+    date.getHours() * 60 +
+    date.getMinutes();
+
+  switch (month) {
+
+    case 0:
+      if (minutes <= 505 || minutes >= 1080)
+        return roofSolar ?? mainSolar;
+      break;
+
+    case 1:
+      if (minutes <= 510 || minutes >= 1110)
+        return roofSolar ?? mainSolar;
+      break;
+
+    case 2:
+      if (minutes <= 505 || minutes >= 1105)
+        return roofSolar ?? mainSolar;
+      break;
+
+    case 3:
+      if (minutes >= 1010)
+        return roofSolar ?? mainSolar;
+      break;
+
+    case 4:
+      if (minutes <= 495)
+        return roofSolar ?? mainSolar;
+      break;
+
+    case 5:
+      if (minutes <= 535)
+        return roofSolar ?? mainSolar;
+      break;
+
+    case 7:
+      if (minutes >= 995)
+        return roofSolar ?? mainSolar;
+      break;
+
+    case 10:
+      if (minutes <= 485 || minutes >= 1060)
+        return roofSolar ?? mainSolar;
+      break;
+
+    case 11:
+      if (minutes <= 490 || minutes >= 1070)
+        return roofSolar ?? mainSolar;
+      break;
+
+  }
+
+  return mainSolar;
+
+}
+
 }
 function formatHour(hour) {
 
@@ -2898,8 +2969,11 @@ const chartSolar =
   );
 
 const chartSolarHi =
-  solarHistory.map(
-    r => r.solar_rad_hi ?? null
+  solarHistory.map(r =>
+    getSolarHighValue(
+      r,
+      new Date(r.time * 1000)
+    )
   );
 
 const chartPotentialSolar =
@@ -2928,23 +3002,29 @@ const pulseEvents =
     .slice(start, i + 1)
     .filter(r => {
 
-      if(
-        r.solar_rad_hi == null ||
-        r.solar_rad_avg == null ||
-        r.solar_rad_hi <= 0
-      ){
-        return false;
-      }
-
 const solarValue =
   getSolarValue(
     r,
     new Date(r.time * 1000)
   );
 
+const solarHi =
+  getSolarHighValue(
+    r,
+    new Date(r.time * 1000)
+  );
+
+if(
+  solarValue == null ||
+  solarHi == null ||
+  solarHi <= 0
+){
+  return false;
+}
+
 const pulseRatio =
-  (r.solar_rad_hi - solarValue)
-  / r.solar_rad_hi;
+  (solarHi - solarValue)
+  / solarHi;
 
       return pulseRatio > 0.25;
 
@@ -3631,23 +3711,29 @@ if (
 const pulseEvents =
   recentSolar.filter(r => {
 
-    if(
-      r.solar_rad_hi == null ||
-      r.solar_rad_avg == null ||
-      r.solar_rad_hi <= 0
-    ){
-      return false;
-    }
-
 const solarValue =
   getSolarValue(
     r,
     new Date(r.time * 1000)
   );
 
+const solarHi =
+  getSolarHighValue(
+    r,
+    new Date(r.time * 1000)
+  );
+
+if(
+  solarValue == null ||
+  solarHi == null ||
+  solarHi <= 0
+){
+  return false;
+}
+
 const pulseRatio =
-  (r.solar_rad_hi - solarValue)
-  / r.solar_rad_hi;
+  (solarHi - solarValue)
+  / solarHi;
 
     return pulseRatio > 0.25;
 
@@ -3962,7 +4048,12 @@ const uvDoseToday =
 
 const solarValues =
   solarHistory
-    .map(r => r.solar_rad_hi)
+    .map(r =>
+      getSolarHighValue(
+        r,
+        new Date(r.time * 1000)
+      )
+    )
     .filter(v => v != null);
 
 const solarPeak =
@@ -3980,10 +4071,13 @@ const uvPeak =
     ? Math.max(...uvValues)
     : 0;
 const solarPeakRecord =
-  solarHistory.find(
-    r =>
-      r.solar_rad_hi ===
-      solarPeak
+  solarHistory.find(r =>
+
+    getSolarHighValue(
+      r,
+      new Date(r.time * 1000)
+    ) === solarPeak
+
   );
 
 const uvPeakRecord =
