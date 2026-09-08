@@ -291,6 +291,119 @@ function minValue(values){
     : "";
 }
 
+function getSolarEnergyValue(
+  record,
+  date
+) {
+
+  const mainEnergy =
+    record.solar_energy;
+
+  const roofEnergy =
+    record.solar_energy_552869;
+
+  const month =
+    date.getMonth();
+
+  const minutes =
+    date.getHours() * 60 +
+    date.getMinutes();
+
+  switch (month) {
+
+    case 0:
+      if (minutes <= 505 || minutes >= 1080)
+        return roofEnergy ?? mainEnergy;
+      break;
+
+    case 1:
+      if (minutes <= 510 || minutes >= 1110)
+        return roofEnergy ?? mainEnergy;
+      break;
+
+    case 2:
+      if (minutes <= 505 || minutes >= 1105)
+        return roofEnergy ?? mainEnergy;
+      break;
+
+    case 3:
+      if (minutes >= 1010)
+        return roofEnergy ?? mainEnergy;
+      break;
+
+    case 4:
+      if (minutes <= 495)
+        return roofEnergy ?? mainEnergy;
+      break;
+
+    case 5:
+      if (minutes <= 535)
+        return roofEnergy ?? mainEnergy;
+      break;
+
+    case 7: {
+
+      const day =
+        date.getDate();
+
+      let morningSwitch;
+
+      if (day <= 10)
+        morningSwitch = 505;
+      else if (day <= 20)
+        morningSwitch = 495;
+      else
+        morningSwitch = 485;
+
+      if (
+        minutes <= morningSwitch ||
+        minutes >= 995
+      ) {
+        return roofEnergy ?? mainEnergy;
+      }
+
+      break;
+    }
+
+    case 8:
+
+      if (
+        minutes <= 475 ||
+        minutes >= 1000
+      ) {
+        return roofEnergy ?? mainEnergy;
+      }
+
+      break;
+
+    case 10:
+
+      if (
+        minutes <= 485 ||
+        minutes >= 1060
+      ) {
+        return roofEnergy ?? mainEnergy;
+      }
+
+      break;
+
+    case 11:
+
+      if (
+        minutes <= 490 ||
+        minutes >= 1070
+      ) {
+        return roofEnergy ?? mainEnergy;
+      }
+
+      break;
+
+  }
+
+  return mainEnergy;
+
+}
+
 function getPeriods(year, month, day){
 
   return {
@@ -894,14 +1007,22 @@ const maxSolar =
 
 const solarEnergyValues =
   dailyArchive
-    .map(r => r.solar_energy)
+    .map(r =>
+      getSolarEnergyValue(
+        r,
+        new Date(r.time * 1000)
+      )
+    )
     .filter(v => v != null);
 
 const solarEnergy =
   solarEnergyValues.length
-    ? solarEnergyValues.reduce((a,b)=>a+b,0) * 0.036
+    ? solarEnergyValues.reduce(
+        (a,b) => a + b,
+        0
+      ) * 0.04184
     : "";
-
+  
 const maxUv =
   maxValue(
     dailyArchive.map(r => r.uv_index_hi)
