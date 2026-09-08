@@ -1307,6 +1307,14 @@ case 7:
 
   break;
 
+      case 8:
+  if (
+    minutes <= 475 ||
+    minutes >= 1000
+  ) {
+    return roofSolar ?? mainSolar;
+  }
+  break;
 
     case 10:
       if (minutes <= 485 || minutes >= 1060)
