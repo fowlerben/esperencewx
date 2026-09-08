@@ -1075,13 +1075,17 @@ const irradiance =
     adjustedAirMass
   );
 
-const seasonalFactor =
+let seasonalFactor =
   0.995 +
   0.08 *
   Math.cos(
     2 * Math.PI *
     (day - 196) / 365
   );
+
+if (day > 220) {  // after ~8 Aug
+  seasonalFactor *= 0.97;
+}
 
 return Math.max(
   0,
