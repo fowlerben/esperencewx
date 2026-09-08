@@ -2926,116 +2926,158 @@ yaxis2: {
 
 function generateSolarEnergyClimatology(
   records,
+  selectedMonth,
   selectedYear
 ) {
 
-  const energyTraces = [];
-  const transmissionTraces = [];
+const energyTraces = [];
+const transmissionTraces = [];
 
-  for (let month = 0; month < 12; month++) {
-
-    const dailyTotals = {};
-
-    records.forEach(record => {
-
-      const date =
-        new Date(record.time * 1000);
-
-      if (
-        selectedYear !== "All Years" &&
-        String(date.getFullYear()) !== selectedYear
-      ) {
-        return;
-      }
-
-      if (
-        date.getMonth() !== month
-      ) {
-        return;
-      }
-
-const solarEnergy =
-  getSolarEnergyValue(
-    record,
-    date
+const specificMonth =
+  monthNames.includes(
+    selectedMonth
   );
 
-if (solarEnergy == null) {
-  return;
-}
+const groupCount =
+  specificMonth
+    ? 31
+    : 12;
 
-      const dayKey =
-        date.toISOString().slice(0,10);
+for (
+  let group = 0;
+  group < groupCount;
+  group++
+) {
 
-      if (!dailyTotals[dayKey]) {
+  const dailyTotals = {};
 
-        dailyTotals[dayKey] = {
+  records.forEach(record => {
 
-          energy: 0,
-          potential: 0
+    const date =
+      new Date(record.time * 1000);
 
-        };
+    const year =
+      date.getFullYear();
 
-      }
+    if (
+      selectedYear !== "All Years" &&
+      String(year) !== selectedYear
+    ) {
+      return;
+    }
 
-dailyTotals[dayKey].energy +=
-  solarEnergy * 0.04184;
+    let matches = false;
 
-      dailyTotals[dayKey].potential +=
-        clearSkySolar(
-          record.time
-        ) * 300 / 1000000;
+    if (specificMonth) {
 
-    });
+      matches =
 
-    const monthlyEnergy = [];
-    const monthlyTransmission = [];
+        date.getMonth() ===
+        monthNames.indexOf(
+          selectedMonth
+        )
 
-Object.entries(
-  dailyTotals
-).forEach(([dayKey, day]) => {
+        &&
 
-      monthlyEnergy.push(
-        day.energy
+        date.getDate() ===
+        group + 1;
+
+    } else {
+
+      matches =
+        date.getMonth() === group;
+
+    }
+
+    if (!matches) {
+      return;
+    }
+
+    const solarEnergy =
+      getSolarEnergyValue(
+        record,
+        date
       );
 
-      if (day.potential > 0) {
+    if (solarEnergy == null) {
+      return;
+    }
 
-        monthlyTransmission.push(
-          day.energy /
-          day.potential *
-          100
-        );
+    const dayKey =
+      date.toISOString()
+        .slice(0,10);
 
-      }
+    if (!dailyTotals[dayKey]) {
 
-    });
+      dailyTotals[dayKey] = {
+        energy: 0,
+        potential: 0
+      };
 
-    energyTraces.push({
+    }
 
-      y: monthlyEnergy,
+    dailyTotals[dayKey].energy +=
+      solarEnergy * 0.04184;
 
-      type: "box",
+    dailyTotals[dayKey].potential +=
+      clearSkySolar(
+        record.time
+      ) * 300 / 1000000;
 
-      name:
-        axisMonths[month]
+  });
 
-    });
+  const monthlyEnergy = [];
+  const monthlyTransmission = [];
 
-    transmissionTraces.push({
+  Object.values(
+    dailyTotals
+  ).forEach(day => {
 
-      y: monthlyTransmission,
+    monthlyEnergy.push(
+      day.energy
+    );
 
-      type: "box",
+    if (day.potential > 0) {
 
-      name:
-        axisMonths[month],
+      monthlyTransmission.push(
+        day.energy /
+        day.potential *
+        100
+      );
 
-      visible: false
+    }
 
-    });
+  });
 
-  }
+  energyTraces.push({
+
+    y: monthlyEnergy,
+
+    type: "box",
+
+    name:
+      specificMonth
+        ? String(group + 1)
+        : axisMonths[group]
+
+  });
+
+  transmissionTraces.push({
+
+    y: monthlyTransmission,
+
+    type: "box",
+
+    name:
+      specificMonth
+        ? String(group + 1)
+        : axisMonths[group],
+
+    visible: false
+
+  });
+
+}
 
   Plotly.newPlot(
     "output",
@@ -3048,8 +3090,10 @@ Object.entries(
     ],
     {
 
-      title:
-        "Monthly Solar Energy Climatology",
+title:
+  selectedMonth === "All Months"
+    ? "Monthly Solar Energy Climatology"
+    : `Solar Energy Climatology · ${selectedMonth}`,
 
       paper_bgcolor:
         "#2d2d2d",
@@ -3204,10 +3248,11 @@ if (
   plotType === "Monthly Climatology"
 ) {
 
-  generateSolarEnergyClimatology(
-    records,
-    selectedYear
-  );
+generateSolarEnergyClimatology(
+  records,
+  selectedMonth,
+  selectedYear
+);
 
   return;
 
