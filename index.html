@@ -1160,37 +1160,47 @@ function getSolarValue(
       }
       break;
 
-case 7: // Aug
+    case 7: // Aug
+    
+      const day =
+        date.getDate();
+    
+      let morningSwitch;
+    
+      if (day <= 10) {
+    
+        morningSwitch = 505; // 08:25
+    
+      }
+      else if (day <= 20) {
+    
+        morningSwitch = 495; // 08:15
+    
+      }
+      else {
+    
+        morningSwitch = 485; // 08:05
+    
+      }
+    
+      if (
+        minutes <= morningSwitch ||
+        minutes >= 995
+      ) {
+        return roofSolar ?? mainSolar;
+      }
+    
+      break;
 
-  const day =
-    date.getDate();
-
-  let morningSwitch;
-
-  if (day <= 10) {
-
-    morningSwitch = 505; // 08:25
-
-  }
-  else if (day <= 20) {
-
-    morningSwitch = 495; // 08:15
-
-  }
-  else {
-
-    morningSwitch = 485; // 08:05
-
-  }
-
-  if (
-    minutes <= morningSwitch ||
-    minutes >= 995
-  ) {
-    return roofSolar ?? mainSolar;
-  }
-
-  break;
+    case 8: // Sep
+      if (
+        minutes <= 475 ||  // 07:55
+        minutes >= 1000    // 16:40
+      ) {
+        return roofSolar ?? mainSolar;
+      }
+      break;
+      
     case 10: // Nov
       if (
         minutes <= 485 ||
