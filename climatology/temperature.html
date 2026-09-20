@@ -1017,14 +1017,20 @@ function generateHeatmap(
           })
           .map(record => {
 
-            let value =
-              record[field];
+let value =
+  record[field];
 
 if (
   variable === "Temperature" ||
   variable === "Dew Point"
 ) {
   value = FtoC(value);
+}
+
+if (
+  variable === "Wind"
+) {
+  value = value * 1.60934;
 }
 
             return value;
@@ -1265,15 +1271,21 @@ const filteredRecords =
     filteredRecords
       .map(record => {
 
-        let value =
-          record[field];
+let value =
+  record[field];
 
-        if (
-          variable === "Temperature" ||
-          variable === "Dew Point"
-        ) {
-          value = FtoC(value);
-        }
+if (
+  variable === "Temperature" ||
+  variable === "Dew Point"
+) {
+  value = FtoC(value);
+}
+
+if (
+  variable === "Wind"
+) {
+  value = value * 1.60934;
+}
 
         return value;
 
@@ -1300,15 +1312,21 @@ else {
         statistic
       );
 
-    let value =
-      record[field];
+let value =
+  record[field];
 
-    if (
-      variable === "Temperature" ||
-      variable === "Dew Point"
-    ) {
-      value = FtoC(value);
-    }
+if (
+  variable === "Temperature" ||
+  variable === "Dew Point"
+) {
+  value = FtoC(value);
+}
+
+if (
+  variable === "Wind"
+) {
+  value = value * 1.60934;
+}
 
     if (
       value === null ||
@@ -1450,7 +1468,7 @@ const frequencyMap = {};
 filteredRecords.forEach(record => {
 
   const speed =
-    record.wind_speed_avg;
+    record.wind_speed_avg * 1.60934;
 
   const direction =
     record.wind_dir_of_prevail;
@@ -2028,7 +2046,9 @@ if (gf > 3) {
 
     theta.push(direction);
 
-    radius.push(meanSpeed);
+radius.push(
+  meanSpeed * 1.60934
+);
 
 colour.push(gf);
 
@@ -3602,17 +3622,20 @@ else if (statistic === "Mean") {
     filteredRecords
       .map(record => {
 
-        let value =
-          record[field];
+let value =
+  record[field];
 
-        if (
-          variable === "Temperature" ||
-          variable === "Dew Point"
-        ) {
-          value = FtoC(value);
-        }
+if (
+  variable === "Temperature" ||
+  variable === "Dew Point"
+) {
+  value = FtoC(value);
+}
 
-        return value;
+if (
+  variable === "Wind"
+) {
+  value = value * 1.60934;
 
       })
       .filter(value =>
@@ -3638,15 +3661,21 @@ else {
       statistic
     );
 
-  let value =
-    record[field];
+let value =
+  record[field];
 
-  if (
-    variable === "Temperature" ||
-    variable === "Dew Point"
-  ) {
-    value = FtoC(value);
-  }
+if (
+  variable === "Temperature" ||
+  variable === "Dew Point"
+) {
+  value = FtoC(value);
+}
+
+if (
+  variable === "Wind"
+) {
+  value = value * 1.60934;
+}
 
   if (
     value === null ||
