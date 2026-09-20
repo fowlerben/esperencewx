@@ -2342,7 +2342,7 @@ function getSolarValue(
       }
       break;
 
-case 7: // Aug
+case 7: { // Aug
 
   const day =
     date.getDate();
@@ -2373,6 +2373,7 @@ case 7: // Aug
   }
 
   break;
+}
 
       case 8: // Sep
   if (
@@ -2463,7 +2464,7 @@ function getSolarEnergyValue(
       }
       break;
 
-case 7:
+case 7: {
 
   const day =
     date.getDate();
@@ -2494,6 +2495,7 @@ case 7:
   }
 
   break;
+}
 
       case 8: // Sep
   if (
@@ -3622,26 +3624,31 @@ else if (statistic === "Mean") {
     filteredRecords
       .map(record => {
 
-let value =
-  record[field];
+        let value =
+          record[field];
 
-if (
-  variable === "Temperature" ||
-  variable === "Dew Point"
-) {
-  value = FtoC(value);
-}
+        if (
+          variable === "Temperature" ||
+          variable === "Dew Point"
+        ) {
+          value = FtoC(value);
+        }
 
-if (
-  variable === "Wind"
-) {
-  value = value * 1.60934;
+        if (
+          variable === "Wind"
+        ) {
+          value = value * 1.60934;
+        }
+
+        return value;
 
       })
       .filter(value =>
         value !== null &&
         value !== undefined
       );
+
+}
 
 }
 else {
