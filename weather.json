@@ -102,8 +102,8 @@
       "lsid": 551508,
       "data": [
         {
-          "battery_voltage": 5161,
-          "wifi_rssi": -89,
+          "battery_voltage": 5163,
+          "wifi_rssi": -88,
           "network_error": null,
           "ip_v4_gateway": "192.168.1.1",
           "bluetooth_version": null,
@@ -111,23 +111,23 @@
           "firmware_version": 1636079858,
           "tz_offset": 36000,
           "local_api_queries": 3467,
-          "rx_bytes": 924217,
+          "rx_bytes": 924613,
           "health_version": 1,
           "radio_version": 654705920,
           "ip_address_type": 1,
-          "link_uptime": 2000580,
-          "input_voltage": 4567,
-          "tx_bytes": 22897450,
+          "link_uptime": 2001480,
+          "input_voltage": 4562,
+          "tx_bytes": 22902728,
           "ip_v4_netmask": "255.255.255.0",
           "rapid_records_sent": 201117,
-          "uptime": 28867102,
-          "touchpad_wakeups": 18,
+          "uptime": 28868002,
+          "touchpad_wakeups": 20,
           "ip_v4_address": "192.168.1.100",
           "bootloader_version": 1550707628,
           "espressif_version": 1534381024,
           "dns_type_used": null,
           "network_type": 1,
-          "ts": 1789890300
+          "ts": 1789891200
         }
       ],
       "sensor_type": 504,
@@ -315,6 +315,6 @@
       "data_structure_type": 18
     }
   ],
-  "generated_at": 1789890969,
+  "generated_at": 1789891285,
   "station_id": 144429
 }
