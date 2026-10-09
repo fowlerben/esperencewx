@@ -103,7 +103,7 @@
       "data": [
         {
           "battery_voltage": 5141,
-          "wifi_rssi": -81,
+          "wifi_rssi": -82,
           "network_error": null,
           "ip_v4_gateway": "192.168.1.1",
           "bluetooth_version": null,
@@ -111,23 +111,23 @@
           "firmware_version": 1636079858,
           "tz_offset": 39600,
           "local_api_queries": 3635,
-          "rx_bytes": 1662210,
+          "rx_bytes": 1662606,
           "health_version": 1,
           "radio_version": 654705920,
           "ip_address_type": 1,
-          "link_uptime": 3625076,
-          "input_voltage": 4562,
-          "tx_bytes": 39941394,
+          "link_uptime": 3625976,
+          "input_voltage": 4565,
+          "tx_bytes": 39946672,
           "ip_v4_netmask": "255.255.255.0",
           "rapid_records_sent": 211065,
-          "uptime": 30491598,
-          "touchpad_wakeups": 30,
+          "uptime": 30492498,
+          "touchpad_wakeups": 54,
           "ip_v4_address": "192.168.1.100",
           "bootloader_version": 1550707628,
           "espressif_version": 1534381024,
           "dns_type_used": null,
           "network_type": 1,
-          "ts": 1791514800
+          "ts": 1791515700
         }
       ],
       "sensor_type": 504,
@@ -315,6 +315,6 @@
       "data_structure_type": 18
     }
   ],
-  "generated_at": 1791515494,
+  "generated_at": 1791515776,
   "station_id": 144429
 }
