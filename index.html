@@ -1196,15 +1196,22 @@ function getSolarValue(
     
       break;
 
-case 8:
+case 8: // Sep
+
+  const day =
+    date.getDate();
 
   let morningSwitch;
 
-  if (date.getDate() <= 15) {
-    morningSwitch = 475;
+  if (day <= 15) {
+
+    morningSwitch = 475; // 07:55
+
   }
   else {
-    morningSwitch = 450;
+
+    morningSwitch = 450; // 07:30
+
   }
 
   if (
@@ -1215,17 +1222,22 @@ case 8:
   }
 
   break;
-case 9:
+
+case 9: // Oct
 
   let morningSwitch;
 
   if (
     (-date.getTimezoneOffset() / 60) === 11
   ) {
-    morningSwitch = 490;
+
+    morningSwitch = 490; // 08:10 AEDT
+
   }
   else {
-    morningSwitch = 430;
+
+    morningSwitch = 430; // 07:10 AEST
+
   }
 
   if (
