@@ -1326,7 +1326,7 @@ case 9: { // Oct
         return roofSolar ?? mainSolar;
       break;
 
-case 7:
+case 7: { // Aug
 
   const day =
     date.getDate();
@@ -1358,14 +1358,64 @@ case 7:
 
   break;
 
-      case 8:
+}
+
+case 8: { // Sep
+
+  const day =
+    date.getDate();
+
+  let morningSwitch;
+
+  if (day <= 15) {
+
+    morningSwitch = 475; // 07:55
+
+  }
+  else {
+
+    morningSwitch = 450; // 07:30
+
+  }
+
   if (
-    minutes <= 475 ||
+    minutes <= morningSwitch ||
     minutes >= 1000
   ) {
     return roofSolar ?? mainSolar;
   }
+
   break;
+
+}
+
+case 9: { // Oct
+
+  let morningSwitch;
+
+  if (
+    (-date.getTimezoneOffset() / 60) === 11
+  ) {
+
+    morningSwitch = 490; // 08:10 AEDT
+
+  }
+  else {
+
+    morningSwitch = 430; // 07:10 AEST
+
+  }
+
+  if (
+    minutes <= morningSwitch ||
+    minutes >= 1030
+  ) {
+    return roofSolar ?? mainSolar;
+  }
+
+  break;
+
+}
 
     case 10:
       if (minutes <= 485 || minutes >= 1060)
@@ -1433,41 +1483,79 @@ function getSolarEnergyValue(
         return roofEnergy ?? mainEnergy;
       break;
 
-    case 7:
+case 7: { // Aug
 
-      const day =
-        date.getDate();
+  const day =
+    date.getDate();
 
-      let morningSwitch;
+  let morningSwitch;
 
-      if (day <= 10) {
-        morningSwitch = 505;
-      }
-      else if (day <= 20) {
-        morningSwitch = 495;
-      }
-      else {
-        morningSwitch = 485;
-      }
+  if (day <= 10) {
+    morningSwitch = 505; // 08:25
+  }
+  else if (day <= 20) {
+    morningSwitch = 495; // 08:15
+  }
+  else {
+    morningSwitch = 485; // 08:05
+  }
 
-      if (
-        minutes <= morningSwitch ||
-        minutes >= 995
-      ) {
-        return roofEnergy ?? mainEnergy;
-      }
+  if (
+    minutes <= morningSwitch ||
+    minutes >= 995
+  ) {
+    return roofEnergy ?? mainEnergy;
+  }
 
-      break;
+  break;
+}
 
-    case 8:
-      if (
-        minutes <= 475 ||
-        minutes >= 1000
-      ) {
-        return roofEnergy ?? mainEnergy;
-      }
-      break;
+case 8: { // Sep
 
+  const day =
+    date.getDate();
+
+  let morningSwitch;
+
+  if (day <= 15) {
+    morningSwitch = 475; // 07:55
+  }
+  else {
+    morningSwitch = 450; // 07:30
+  }
+
+  if (
+    minutes <= morningSwitch ||
+    minutes >= 1000
+  ) {
+    return roofEnergy ?? mainEnergy;
+  }
+
+  break;
+}
+
+case 9: { // Oct
+
+  let morningSwitch;
+
+  if (
+    (-date.getTimezoneOffset() / 60) === 11
+  ) {
+    morningSwitch = 490; // 08:10 AEDT
+  }
+  else {
+    morningSwitch = 430; // 07:10 AEST
+  }
+
+  if (
+    minutes <= morningSwitch ||
+    minutes >= 1030
+  ) {
+    return roofEnergy ?? mainEnergy;
+  }
+
+  break;
+}
     case 10:
       if (minutes <= 485 || minutes >= 1060)
         return roofEnergy ?? mainEnergy;
