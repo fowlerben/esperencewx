@@ -1196,14 +1196,43 @@ function getSolarValue(
     
       break;
 
-    case 8: // Sep
-      if (
-        minutes <= 475 ||  // 07:55
-        minutes >= 1000    // 16:40
-      ) {
-        return roofSolar ?? mainSolar;
-      }
-      break;
+case 8: // Sep
+
+  const sepDay =
+    date.getDate();
+
+  const morningSwitch =
+    sepDay <= 15
+      ? 475  // 07:55
+      : 450; // 07:30
+
+  if (
+    minutes <= morningSwitch ||
+    minutes >= 1000
+  ) {
+    return roofSolar ?? mainSolar;
+  }
+
+  break;
+
+case 9: // Oct
+
+  const isDST =
+    (-date.getTimezoneOffset() / 60) === 11;
+
+  const morningSwitch =
+    isDST
+      ? 490  // 08:10 AEDT
+      : 430; // 07:10 AEST
+
+  if (
+    minutes <= morningSwitch ||
+    minutes >= 1030
+  ) {
+    return roofSolar ?? mainSolar;
+  }
+
+  break;
       
     case 10: // Nov
       if (
