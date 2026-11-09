@@ -1033910,5 +1033910,33 @@
     "temp2_c": 12.722222222222221,
     "temp3_c": 12.166666666666666,
     "dpd_c": 2.9999999999999982
+  },
+  {
+    "time": 1794228085,
+    "temp_c": 13,
+    "dew_c": 10,
+    "wetbulb_c": 11.166666666666666,
+    "heatindex_c": 13,
+    "windchill_c": 13,
+    "thw_c": 13,
+    "thsw_c": 11.88888888888889,
+    "humidity": 82,
+    "pressure_hpa": 1016.8990531000001,
+    "station_pressure_hpa": 1003.3534931,
+    "wind10_kmh": 4.1199104,
+    "wind10_dir": 124,
+    "gust10_kmh": 6.43736,
+    "wind1_kmh": 3.5083612000000004,
+    "wind2_kmh": 3.621015,
+    "gust2_kmh": 4.82802,
+    "solar_wm2": 0,
+    "uv": 0,
+    "rainrate_mmhr": 0,
+    "rain_daily_mm": 0,
+    "leaf": 0.3,
+    "temp1_c": 12,
+    "temp2_c": 12.555555555555555,
+    "temp3_c": 11.88888888888889,
+    "dpd_c": 3
   }
 ]
