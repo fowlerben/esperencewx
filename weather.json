@@ -102,7 +102,7 @@
       "lsid": 551508,
       "data": [
         {
-          "battery_voltage": 5117,
+          "battery_voltage": 5119,
           "wifi_rssi": -79,
           "network_error": null,
           "ip_v4_gateway": "192.168.1.1",
@@ -111,23 +111,23 @@
           "firmware_version": 1636079858,
           "tz_offset": 39600,
           "local_api_queries": 4060,
-          "rx_bytes": 3110961,
+          "rx_bytes": 3111357,
           "health_version": 1,
           "radio_version": 654705920,
           "ip_address_type": 1,
-          "link_uptime": 2052506,
-          "input_voltage": 4558,
-          "tx_bytes": 77259101,
+          "link_uptime": 2053406,
+          "input_voltage": 4567,
+          "tx_bytes": 77264379,
           "ip_v4_netmask": "255.255.255.0",
           "rapid_records_sent": 235526,
-          "uptime": 33616388,
-          "touchpad_wakeups": 52,
+          "uptime": 33617288,
+          "touchpad_wakeups": 51,
           "ip_v4_address": "192.168.1.100",
           "bootloader_version": 1550707628,
           "espressif_version": 1534381024,
           "dns_type_used": null,
           "network_type": 1,
-          "ts": 1794639600
+          "ts": 1794640500
         }
       ],
       "sensor_type": 504,
@@ -315,6 +315,6 @@
       "data_structure_type": 18
     }
   ],
-  "generated_at": 1794640276,
+  "generated_at": 1794640578,
   "station_id": 144429
 }
